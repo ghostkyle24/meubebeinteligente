@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Bebê Inteligente - O lugar seguro e educativo para seu filho</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="meta-pixel-config.js"></script>
+    
+    <!-- Meta Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        
+        // Pixel ID real
+        fbq('init', '636104805955276');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=636104805955276&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Meta Pixel Code -->
+    <style>
+        /* Menu mobile para navbar da página de vendas */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            color: var(--color-blue);
+            cursor: pointer;
+        }
+
+        .nav-menu.mobile-open {
+            display: flex;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            flex-direction: column;
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-lg);
+            border-top: 1px solid var(--color-gray-light);
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+        
+        /* Estilos para os novos ícones de recursos */
+        .feature-icon.devocional {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+        }
+        
+        .feature-icon.english {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+        
+        .feature-icon.censura {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+        }
+        
+        /* Estilos para os cards de ilustração expandidos */
+        .illustration-card {
+            background: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            transition: transform 0.3s ease;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .illustration-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .illustration-card i {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+        
+        .illustration-card span {
+            font-weight: 600;
+            color: var(--color-gray-dark);
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .illustration-card p {
+            color: var(--color-gray-medium);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+        
+        /* Cores dos ícones */
+        .illustration-card.music i { color: var(--color-blue); }
+        .illustration-card.video i { color: var(--color-pink); }
+        .illustration-card.english i { color: #4facfe; }
+        .illustration-card.color i { color: var(--color-green); }
+        .illustration-card.family i { color: var(--color-pink); }
+        .illustration-card.diy i { color: var(--color-orange); }
+        .illustration-card.game i { color: var(--color-orange); }
+        .illustration-card.devocional i { color: #8B5CF6; }
+        .illustration-card.shield i { color: #E74C3C; }
+        
+        /* Grid responsivo para os cards */
+        .hero-illustration {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-illustration {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+            
+            .illustration-card {
+                padding: var(--spacing-lg);
+            }
+            
+            .illustration-card i {
+                font-size: var(--font-size-2xl);
+            }
+            
+            .illustration-card span {
+                font-size: 1rem;
+            }
+            
+            .illustration-card p {
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Modal de Sucesso */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .success-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+        
+        .success-content h2 {
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .success-details {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: left;
+        }
+        
+        .success-details p {
+            margin: 0.5rem 0;
+            color: var(--color-gray-dark);
+        }
+        
+        .success-message {
+            color: var(--color-gray-medium);
+            margin: 1.5rem 0;
+            line-height: 1.6;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Melhorias no QR Code */
+        .qr-code-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #qrcode canvas {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Timer de pagamento */
+        .payment-timer {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            color: #856404;
+            font-weight: 500;
+        }
+        
+        /* Botões de ação do pagamento */
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .payment-actions .btn {
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        /* Modal de Login */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .login-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: slideUp 0.3s ease;
+        }
+        
+        .login-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .login-header h2 {
+            color: var(--color-primary);
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #999;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .login-form .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .login-form .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .login-form .form-group input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+        
+        .login-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .login-footer p {
+            color: #666;
+            margin: 0;
+        }
+        
+        .login-footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .admin-hint {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .admin-hint small {
+            color: #667eea;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .admin-hint i {
+            color: #667eea;
+        }
+        
+        /* Botão de Login */
+        .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+        
+        .login-btn i {
+            font-size: 16px;
+        }
+        
+        /* Link login no mobile */
+        .login-link {
+            color: #667eea !important;
+            font-weight: 600 !important;
+        }
+        
+        .login-link:hover {
+            color: #764ba2 !important;
+        }
+        
+        .login-link i {
+            margin-right: 8px;
+        }
+        
+        /* Responsivo para mobile */
+        @media (max-width: 768px) {
+            .login-btn {
+                width: 35px;
+                height: 35px;
+                margin-left: 5px;
+            }
+            
+            .login-btn i {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="nav-brand">
+                    <i class="fas fa-heart"></i>
+                    <span>Meu Bebê Inteligente</span>
+                </div>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="nav-menu" id="navMenu">
+                    <a href="#home" class="nav-link active">Início</a>
+                    <a href="#features" class="nav-link">Recursos</a>
+                    <a href="#pricing" class="nav-link">Preços</a>
+                    <a href="#testimonials" class="nav-link">Depoimentos</a>
+                    <button class="btn btn-primary" onclick="scrollToPricing()">Começar Agora</button>
+                    <button class="login-btn" onclick="openLoginModal()" title="Fazer Login">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    O lugar seguro e educativo onde seu filho pode aprender, brincar e se divertir sem culpa.
+                </h1>
+                <p class="hero-subtitle">
+                    Playlists de músicas e vídeos realmente educativos, atividades offline criativas, brincadeiras em família e jogos interativos — tudo em um só lugar, sem anúncios, sem conteúdos impróprios e com valores que você confia.
+                </p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary btn-large" onclick="scrollToPricing()">
+                        <i class="fas fa-play"></i>
+                        Quero meu acesso agora
+                    </button>
+                    <p class="hero-guarantee">✨ Garantia de 7 dias</p>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-illustration">
+                    <div class="illustration-card music">
+                        <i class="fas fa-music"></i>
+                        <span>Músicas Educativas</span>
+                        <p>Playlists curadas com músicas que realmente ensinam cores, números, valores e princípios cristãos.</p>
+                    </div>
+                    <div class="illustration-card video">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Vídeos Seguros</span>
+                        <p>Conteúdo educativo selecionado e livre de anúncios, sem distrações ou conteúdos impróprios.</p>
+                    </div>
+                    <div class="illustration-card english">
+                        <i class="fas fa-globe"></i>
+                        <span>Inglês Infantil</span>
+                        <p>30 aulas completas para aprender inglês brincando com cores, animais, números e muito mais.</p>
+                    </div>
+                    <div class="illustration-card color">
+                        <i class="fas fa-palette"></i>
+                        <span>Desenhos Cristãos</span>
+                        <p>PDFs imprimíveis com desenhos que ensinam valores bíblicos enquanto a criança se diverte.</p>
+                    </div>
+                    <div class="illustration-card family">
+                        <i class="fas fa-heart"></i>
+                        <span>Brincadeiras em Família</span>
+                        <p>Atividades offline que fortalecem o vínculo entre mãe e filho, com jogos educativos e criativos.</p>
+                    </div>
+                    <div class="illustration-card diy">
+                        <i class="fas fa-tools"></i>
+                        <span>Brinquedos DIY</span>
+                        <p>Ideias de brinquedos que a própria criança pode criar, estimulando criatividade e independência.</p>
+                    </div>
+                    <div class="illustration-card game">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Jogos Interativos</span>
+                        <p>Mini-jogos educativos dentro do próprio site: memória, associação, quebra-cabeças e muito mais.</p>
+                    </div>
+                    <div class="illustration-card devocional">
+                        <i class="fas fa-pray"></i>
+                        <span>Devocional Kids</span>
+                        <p>Momentos especiais com Deus para crianças, ensinando valores cristãos de forma carinhosa e divertida.</p>
+                    </div>
+                    <div class="illustration-card shield">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Controle Parental</span>
+                        <p>Ferramentas para proteger seu filho online e configurar controles parentais de forma segura.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem">
+        <div class="container">
+            <h2 class="section-title">Você se identifica com isso?</h2>
+            <div class="problem-grid">
+                <div class="problem-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Seu filho passa horas na tela sem aprender nada?</h3>
+                </div>
+                <div class="problem-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Fica preocupada com os vídeos que aparecem mesmo em apps "para crianças"?</h3>
+                </div>
+                <div class="problem-item">
+                    <i class="fas fa-search"></i>
+                    <h3>Quer oferecer algo seguro e educativo, mas não encontra tudo em um só lugar?</h3>
+                </div>
+            </div>
+            <div class="problem-conclusion">
+                <h3>Você não está sozinha.</h3>
+                <p>Milhares de mães enfrentam os mesmos desafios todos os dias.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section id="features" class="solution">
+        <div class="container">
+            <h2 class="section-title">Apresentamos o Meu Bebê Inteligente</h2>
+            <p class="section-subtitle">Um espaço digital pensado para mães que querem mais do que distração — querem aprendizado, criatividade e segurança para seus filhos.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card" onclick="window.location.href='musicas.html'" style="cursor: pointer;">
+                    <div class="feature-icon music">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3>Músicas Educativas de Verdade</h3>
+                    <p>Playlists curadas com músicas que realmente ensinam cores, números, valores e princípios cristãos.</p>
+                </div>
+                
+                <div class="feature-card" onclick="window.location.href='videos.html'" style="cursor: pointer;">
+                    <div class="feature-icon video">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <h3>Vídeos Seguros do YouTube</h3>
+                    <p>Conteúdo educativo selecionado e livre de anúncios, sem distrações ou conteúdos impróprios.</p>
+                </div>
+                
+                <div class="feature-card" onclick="window.location.href='ingles.html'" style="cursor: pointer;">
+                    <div class="feature-icon english">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Inglês Infantil</h3>
+                    <p>30 aulas completas para aprender inglês brincando com cores, animais, números e muito mais.</p>
+                </div>
+                
+                <div class="feature-card" onclick="window.location.href='desenhos.html'" style="cursor: pointer;">
+                    <div class="feature-icon color">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Desenhos Cristãos para Colorir</h3>
+                    <p>PDFs imprimíveis com desenhos que ensinam valores bíblicos enquanto a criança se diverte.</p>
+                </div>
+                
+                <div class="feature-card" onclick="window.location.href='brincadeiras.html'" style="cursor: pointer;">
+                    <div class="feature-icon family">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Brincadeiras em Família</h3>
+                    <p>Atividades offline que fortalecem o vínculo entre mãe e filho, com jogos educativos e criativos.</p>
+                </div>
+                
+                <div class="feature-card" onclick="window.location.href='brinquedos.html'" style="cursor: pointer;">
+                    <div class="feature-icon diy">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Brinquedos DIY</h3>
+                    <p>Ideias de brinquedos que a própria criança pode criar, estimulando criatividade e independência.</p>
+                </div>
+                
+                <div class="feature-card" onclick="window.location.href='jogos.html'" style="cursor: pointer;">
+                    <div class="feature-icon game">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Jogos Interativos</h3>
+                    <p>Mini-jogos educativos dentro do próprio site: memória, associação, quebra-cabeças e muito mais.</p>
+                </div>
+                
+                <div class="feature-card" onclick="window.location.href='videos.html?filter=devocional'" style="cursor: pointer;">
+                    <div class="feature-icon devocional">
+                        <i class="fas fa-pray"></i>
+                    </div>
+                    <h3>Devocional Kids</h3>
+                    <p>Momentos especiais com Deus para crianças, ensinando valores cristãos de forma carinhosa e divertida.</p>
+                </div>
+                
+                <div class="feature-card" onclick="window.location.href='censura.html'" style="cursor: pointer;">
+                    <div class="feature-icon censura">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Controle Parental</h3>
+                    <p>Ferramentas para proteger seu filho online e configurar controles parentais de forma segura.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">Por que escolher o Meu Bebê Inteligente?</h2>
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Ambiente 100% seguro e sem propagandas</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Conteúdo curado por especialistas em educação infantil</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Valores cristãos em todas as atividades</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Atividades que estimulam o desenvolvimento cognitivo</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Fortece o vínculo familiar com brincadeiras offline</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Acesso ilimitado a todo conteúdo</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Devocionais infantis para ensinar valores cristãos</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Controle parental integrado para máxima segurança</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>30 aulas de inglês infantil para aprender brincando</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">O que as mães estão dizendo</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Finalmente encontrei um lugar onde posso confiar 100% no conteúdo que meu filho acessa. As atividades são lindas e realmente educativas!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Maria Silva</h4>
+                            <span>Mãe do João, 4 anos</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"As brincadeiras em família mudaram nossa rotina! Agora passamos mais tempo juntos e meu filho aprende brincando."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Ana Costa</h4>
+                            <span>Mãe da Sofia, 3 anos</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Adoro os desenhos cristãos! É uma forma linda de ensinar valores bíblicos para minha filha enquanto ela se diverte colorindo."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Patrícia Santos</h4>
+                            <span>Mãe da Lara, 5 anos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Escolha seu plano</h2>
+            <p class="section-subtitle">Transforme o tempo de tela do seu filho em aprendizado de verdade</p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Plano Mensal</h3>
+                        <div class="price">
+                            <span class="currency">R$</span>
+                            <span class="amount">29</span>
+                            <span class="period">/mês</span>
+                        </div>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Acesso a todas as playlists</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Vídeos educativos sem anúncios</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Desenhos para colorir</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Brincadeiras em família</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Jogos interativos</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Devocional Kids</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Controle parental</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Inglês infantil</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" onclick="openPaymentModal('monthly')">Assinar Agora</button>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Mais Popular</div>
+                    <div class="pricing-header">
+                        <h3>Plano Trimestral</h3>
+                        <div class="price">
+                            <span class="currency">R$</span>
+                            <span class="amount">79</span>
+                            <span class="period">/3 meses</span>
+                        </div>
+                        <div class="savings">Economize R$ 8</div>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Acesso a todas as playlists</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Vídeos educativos sem anúncios</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Desenhos para colorir</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Brincadeiras em família</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Jogos interativos</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Devocional Kids</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Controle parental</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Inglês infantil</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Suporte prioritário</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="openPaymentModal('quarterly')">Assinar Agora</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-badge">Melhor Valor</div>
+                    <div class="pricing-header">
+                        <h3>Plano Anual</h3>
+                        <div class="price">
+                            <span class="currency">R$</span>
+                            <span class="amount">290</span>
+                            <span class="period">/ano</span>
+                        </div>
+                        <div class="savings">Economize R$ 58</div>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Acesso a todas as playlists</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Vídeos educativos sem anúncios</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Desenhos para colorir</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Brincadeiras em família</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Jogos interativos</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Devocional Kids</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Controle parental</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Inglês infantil</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Conteúdo exclusivo</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Suporte VIP</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" onclick="openPaymentModal('yearly')">Assinar Agora</button>
+                </div>
+            </div>
+            
+            <div class="pricing-guarantee">
+                <i class="fas fa-shield-alt"></i>
+                <p>Garantia de 7 dias. Se não gostar, devolvemos seu dinheiro.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Pronta para transformar o aprendizado do seu filho?</h2>
+                <p>Junte-se a milhares de mães que já descobriram o lugar seguro e educativo para seus filhos crescerem aprendendo de verdade.</p>
+                <button class="btn btn-primary btn-large" onclick="scrollToPricing()">
+                    <i class="fas fa-rocket"></i>
+                    Começar Agora
+                </button>
+                <p class="cta-note">✨ Garantia de 7 dias, cancele quando quiser</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="nav-brand">
+                        <i class="fas fa-heart"></i>
+                        <span>Meu Bebê Inteligente</span>
+                    </div>
+                    <p>O lugar seguro e educativo para seu filho crescer aprendendo de verdade.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <a href="musicas.html">Músicas Educativas</a>
+                        <a href="videos.html">Vídeos Seguros</a>
+                        <a href="videos.html?filter=devocional">Devocional Kids</a>
+                        <a href="desenhos.html">Desenhos Cristãos</a>
+                        <a href="brincadeiras.html">Brincadeiras</a>
+                        <a href="jogos.html">Jogos Interativos</a>
+                        <a href="censura.html">Controle Parental</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Suporte</h4>
+                        <a href="#">Central de Ajuda</a>
+                        <a href="#">Contato</a>
+                        <a href="#">Política de Privacidade</a>
+                        <a href="#">Termos de Uso</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Meu Bebê Inteligente. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Login -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-modal-content">
+            <div class="login-header">
+                <h2><i class="fas fa-sign-in-alt"></i> Fazer Login</h2>
+                <button class="close-btn" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="login-form">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Senha:</label>
+                        <input type="password" id="loginPassword" placeholder="Digite sua senha" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="loginSubmitBtn">
+                        <i class="fas fa-sign-in-alt"></i> Entrar
+                    </button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Não tem conta? <a href="#" onclick="closeLoginModal(); openPaymentModal('quarterly')">Assine agora</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pagamento -->
+    <div id="paymentModal" class="payment-modal">
+        <div class="payment-modal-content">
+            <div class="payment-header">
+                <h2>Finalizar Assinatura</h2>
+                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            </div>
+            
+            <div class="payment-plan-info">
+                <h3 id="selectedPlan">Plano Anual</h3>
+                <div class="plan-price">
+                    <span class="currency">R$</span>
+                    <span class="amount" id="planAmount">290</span>
+                    <span class="period" id="planPeriod">/ano</span>
+                </div>
+            </div>
+            
+            <!-- Dados de Cadastro -->
+            <div class="registration-section">
+                <h4>📧 Crie sua conta</h4>
+                <p>Preencha seus dados para criar sua conta:</p>
+                <div class="registration-form">
+                    <div class="form-group">
+                        <label for="userEmail">Email:</label>
+                        <input type="email" id="userEmail" placeholder="seu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">Senha:</label>
+                        <input type="password" id="userPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirmar Senha:</label>
+                        <input type="password" id="confirmPassword" placeholder="Digite a senha novamente" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Orderbump -->
+            <div class="orderbump">
+                <h4>🎯 Ofertas Especiais para Você:</h4>
+                <div class="orderbump-items">
+                    <div class="orderbump-item">
+                        <input type="checkbox" id="orderbump1" value="19.90">
+                        <label for="orderbump1">
+                            <strong>R$ 19,90</strong> - Controle parental para nenhum dispositivo da casa ter acesso a sites adultos
+                        </label>
+                    </div>
+                    <div class="orderbump-item">
+                        <input type="checkbox" id="orderbump2" value="27.40">
+                        <label for="orderbump2">
+                            <strong>R$ 27,40</strong> - Um plano alimentar totalmente personalizado para o seu filho
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h4>Escolha a forma de pagamento:</h4>
+                <div class="payment-options">
+                    <button class="payment-btn pix-btn" onclick="processPayment('pix')">
+                        <i class="fas fa-qrcode"></i>
+                        PIX
+                    </button>
+                    <button class="payment-btn card-btn" onclick="processPayment('card')">
+                        <i class="fas fa-credit-card"></i>
+                        Cartão de Crédito
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Área de PIX -->
+            <div id="pixArea" class="pix-area" style="display: none;">
+                <div class="pix-info">
+                    <h4>PIX - Pagamento Instantâneo</h4>
+                    <p>Escaneie o QR Code ou copie o código PIX:</p>
+                </div>
+                <div class="pix-content">
+                    <div class="pix-qr">
+                        <div id="pixQRCode" class="qr-code-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                            <p>QR Code será gerado aqui</p>
+                        </div>
+                    </div>
+                    <div class="pix-copy">
+                        <label>Código PIX (Copiar e Colar):</label>
+                        <div class="pix-code-container">
+                            <input type="text" id="pixCode" readonly>
+                            <button onclick="copyPixCode()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="payment-status">
+                        <p><i class="fas fa-clock"></i> Aguardando pagamento...</p>
+                        <div class="payment-timer">
+                            <span id="paymentTimer">Aguardando...</span>
+                        </div>
+                    </div>
+                    <div class="payment-actions">
+                        <button onclick="checkPaymentStatus()" class="btn btn-primary">
+                            <i class="fas fa-sync"></i> Verificar Pagamento
+                        </button>
+                        <button onclick="cancelPayment()" class="btn btn-outline">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Área de Cartão -->
+            <div id="cardArea" class="card-area" style="display: none;">
+                <div class="card-info">
+                    <h4>Cartão de Crédito</h4>
+                    <p>Preencha os dados do seu cartão:</p>
+                </div>
+                <div class="card-form">
+                    <div class="form-group">
+                        <label>Número do Cartão:</label>
+                        <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Validade:</label>
+                            <input type="text" id="cardExpiry" placeholder="MM/AA">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV:</label>
+                            <input type="text" id="cardCvv" placeholder="000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nome no Cartão:</label>
+                        <input type="text" id="cardName" placeholder="Nome como está no cartão">
+                    </div>
+                    <button class="btn btn-primary" onclick="processCardPayment()">
+                        <i class="fas fa-lock"></i>
+                        Finalizar Pagamento
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+    </script>
+    <script src="script.js"></script>
+    <script>
+        // Usar configurações do arquivo config.js
+        const PAGARME_API_KEY = CONFIG.PAGARME_API_KEY;
+        const SUPABASE_URL = CONFIG.SUPABASE_URL;
+        const SUPABASE_ANON_KEY = CONFIG.SUPABASE_ANON_KEY;
+        const ADMIN_EMAIL = CONFIG.ADMIN_EMAIL;
+        const ADMIN_EMAIL_ALT = CONFIG.ADMIN_EMAIL_ALT;
+        
+        
+        
+        // Função para scroll suave para a seção de preços
+        function scrollToPricing() {
+            // Evento de Lead para Meta Pixel
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'Lead', {
+                    content_name: 'Interesse em Assinatura',
+                    content_category: 'Educação Infantil'
+                });
+            }
+            
+            const pricingSection = document.getElementById('pricing');
+            if (pricingSection) {
+                pricingSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+        
+        // Configuração dos planos
+        const PLANS = {
+            monthly: { price: 29, duration: 1, period: 'month', name: 'Mensal' },
+            quarterly: { price: 79, duration: 3, period: 'months', name: 'Trimestral' },
+            yearly: { price: 290, duration: 12, period: 'months', name: 'Anual' }
+        };
+        
+        let selectedPlan = 'quarterly';
+        let orderbumpTotal = 0;
+        
+        // Menu mobile para navbar da página de vendas
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (mobileMenuToggle && navMenu) {
+            mobileMenuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('mobile-open');
+            });
+            
+            // Fechar menu ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    navMenu.classList.remove('mobile-open');
+                }
+            });
+            
+            // Fechar menu ao redimensionar para desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    navMenu.classList.remove('mobile-open');
+                }
+            });
+        }
+        
+        // Funções do modal de pagamento
+        function openPaymentModal(plan) {
+            selectedPlan = plan;
+            
+            // Evento de InitiateCheckout para Meta Pixel
+            if (typeof fbq !== 'undefined') {
+                const planConfig = PLANS[plan];
+                fbq('track', 'InitiateCheckout', {
+                    value: planConfig.price,
+                    currency: 'BRL',
+                    content_name: `Plano ${planConfig.name} - Meu Bebê Inteligente`,
+                    content_category: 'Educação Infantil',
+                    content_type: 'subscription',
+                    num_items: 1
+                });
+            }
+            
+            const modal = document.getElementById('paymentModal');
+            const planTitle = document.getElementById('selectedPlan');
+            const planAmount = document.getElementById('planAmount');
+            const planPeriod = document.getElementById('planPeriod');
+            
+            const planConfig = PLANS[plan];
+            planTitle.textContent = `Plano ${planConfig.name}`;
+            planAmount.textContent = planConfig.price;
+            planPeriod.textContent = `/${planConfig.period === 'month' ? 'mês' : planConfig.period}`;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            // Resetar áreas de pagamento
+            document.getElementById('pixArea').style.display = 'none';
+            document.getElementById('cardArea').style.display = 'none';
+        }
+        
+        function processPayment(method) {
+            // Validar dados de cadastro primeiro
+            if (!validateRegistration()) {
+                return;
+            }
+            
+            // Calcular total com orderbump
+            calculateOrderbumpTotal();
+            
+            if (method === 'pix') {
+                document.getElementById('pixArea').style.display = 'block';
+                document.getElementById('cardArea').style.display = 'none';
+                generatePixPayment();
+            } else if (method === 'card') {
+                document.getElementById('cardArea').style.display = 'block';
+                document.getElementById('pixArea').style.display = 'none';
+            }
+        }
+        
+        function validateRegistration() {
+            const email = document.getElementById('userEmail').value.trim();
+            const password = document.getElementById('userPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validar email
+            if (!email) {
+                alert('Por favor, digite seu email.');
+                document.getElementById('userEmail').focus();
+                return false;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Por favor, digite um email válido.');
+                document.getElementById('userEmail').focus();
+                return false;
+            }
+            
+            // Validar senha
+            if (!password) {
+                alert('Por favor, digite uma senha.');
+                document.getElementById('userPassword').focus();
+                return false;
+            }
+            
+            if (password.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres.');
+                document.getElementById('userPassword').focus();
+                return false;
+            }
+            
+            // Validar confirmação de senha
+            if (!confirmPassword) {
+                alert('Por favor, confirme sua senha.');
+                document.getElementById('confirmPassword').focus();
+                return false;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem. Por favor, digite novamente.');
+                document.getElementById('confirmPassword').focus();
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function calculateOrderbumpTotal() {
+            orderbumpTotal = 0;
+            const orderbump1 = document.getElementById('orderbump1');
+            const orderbump2 = document.getElementById('orderbump2');
+            
+            if (orderbump1.checked) {
+                orderbumpTotal += parseFloat(orderbump1.value);
+            }
+            if (orderbump2.checked) {
+                orderbumpTotal += parseFloat(orderbump2.value);
+            }
+        }
+        
+        // Variáveis globais para controle de pagamento
+        let paymentSessionId = null;
+        let paymentCheckInterval = null;
+        let paymentStartTime = null;
+        
+        async function generatePixPayment() {
+            const planConfig = PLANS[selectedPlan];
+            const totalAmount = planConfig.price + orderbumpTotal;
+            const email = document.getElementById('userEmail').value.trim();
+            
+            // Gerar ID único para a sessão de pagamento
+            paymentSessionId = 'pix_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            paymentStartTime = new Date();
+            
+            try {
+                updatePaymentStatus('Gerando PIX...', 'spinner', '#ffc107');
+                
+                // Criar pedido real no Pagar.me
+                const orderData = {
+                    items: [{
+                        name: `Plano ${planConfig.name} - Meu Bebê Inteligente`,
+                        quantity: 1,
+                        unit_amount: Math.round(totalAmount * 100) // em centavos
+                    }],
+                    customer: {
+                        email: email,
+                        name: email.split('@')[0]
+                    },
+                    payments: [{
+                        payment_method: 'pix',
+                        pix: {
+                            expires_in: 3600 // 1 hora
+                        }
+                    }]
+                };
+                
+                const response = await fetch('https://api.pagar.me/core/v5/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Basic ${btoa(PAGARME_API_KEY + ':')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status}`);
+                }
+                
+                const order = await response.json();
+                
+                // Salvar ID do pedido
+                paymentSessionId = order.id;
+                
+                // Gerar QR Code real
+                const pixCode = order.payments[0].pix.qr_code;
+                document.getElementById('pixCode').value = pixCode;
+                generateQRCode(pixCode);
+                
+                // Atualizar interface
+                const qrPlaceholder = document.getElementById('pixQRCode');
+                qrPlaceholder.innerHTML = `
+                    <div id="qrcode"></div>
+                    <p>Escaneie com seu app de pagamento</p>
+                    <small>PIX: R$ ${totalAmount.toFixed(2)}</small>
+                `;
+                
+                // Iniciar verificação real de pagamento
+                startRealPaymentVerification();
+                
+                // Mostrar status inicial
+                updatePaymentStatus('Aguardando pagamento...', 'clock', '#ffc107');
+                
+            } catch (error) {
+                console.error('Erro ao gerar PIX:', error);
+                updatePaymentStatus('Erro ao gerar PIX. Tente novamente.', 'times', '#dc3545');
+                alert('Erro ao processar pagamento PIX. Verifique sua conexão e tente novamente.');
+            }
+        }
+        
+        function generateQRCode(text) {
+            // Usar biblioteca QR Code (já incluída no HTML)
+            const qrContainer = document.getElementById('qrcode');
+            if (qrContainer && typeof QRCode !== 'undefined') {
+                qrContainer.innerHTML = '';
+                new QRCode(qrContainer, {
+                    text: text,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+        }
+        
+        function startRealPaymentVerification() {
+            // Verificar pagamento a cada 10 segundos
+            paymentCheckInterval = setInterval(() => {
+                checkRealPaymentStatus();
+            }, 10000);
+            
+            // Timeout de 1 hora (tempo de expiração do PIX)
+            setTimeout(() => {
+                if (paymentCheckInterval) {
+                    clearInterval(paymentCheckInterval);
+                    updatePaymentStatus('PIX expirado. Tente novamente.', 'times', '#dc3545');
+                }
+            }, 60 * 60 * 1000);
+        }
+        
+        async function checkRealPaymentStatus() {
+            if (!paymentSessionId) return;
+            
+            try {
+                const response = await fetch(`https://api.pagar.me/core/v5/orders/${paymentSessionId}`, {
+                    headers: {
+                        'Authorization': `Basic ${btoa(PAGARME_API_KEY + ':')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status}`);
+                }
+                
+                const order = await response.json();
+                
+                // Verificar se o pagamento foi confirmado
+                if (order.status === 'paid') {
+                    confirmPayment();
+                    return;
+                }
+                
+                // Atualizar timer
+                const elapsedTime = (new Date() - paymentStartTime) / 1000;
+                const remainingTime = Math.max(0, 3600 - elapsedTime); // 1 hora
+                updatePaymentTimer(remainingTime);
+                
+            } catch (error) {
+                console.error('Erro ao verificar pagamento:', error);
+                // Continuar tentando mesmo com erro
+            }
+        }
+        
+        function confirmPayment() {
+            // Parar verificação
+            if (paymentCheckInterval) {
+                clearInterval(paymentCheckInterval);
+                paymentCheckInterval = null;
+            }
+            
+            // Atualizar status
+            updatePaymentStatus('Pagamento confirmado! Criando sua conta...', 'check-circle', '#28a745');
+            
+            // Criar conta do usuário
+            setTimeout(() => {
+                createUserAccount('pix');
+            }, 2000);
+        }
+        
+        function updatePaymentStatus(message, icon, color) {
+            const statusElement = document.querySelector('.payment-status p');
+            if (statusElement) {
+                statusElement.innerHTML = `<i class="fas fa-${icon}" style="color: ${color};"></i> ${message}`;
+            }
+        }
+        
+        function updatePaymentTimer(remainingSeconds) {
+            const timerElement = document.getElementById('paymentTimer');
+            if (timerElement) {
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = Math.floor(remainingSeconds % 60);
+                timerElement.textContent = `Tempo restante: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+        
+        function cancelPayment() {
+            if (paymentCheckInterval) {
+                clearInterval(paymentCheckInterval);
+                paymentCheckInterval = null;
+            }
+            
+            closePaymentModal();
+            alert('Pagamento cancelado.');
+        }
+        
+        function copyPixCode() {
+            const pixCode = document.getElementById('pixCode');
+            pixCode.select();
+            pixCode.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            
+            // Feedback visual
+            const button = event.target.closest('button');
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            button.style.background = '#28a745';
+            
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.style.background = '';
+            }, 2000);
+        }
+        
+        async function processCardPayment() {
+            // Validar dados de cadastro novamente
+            if (!validateRegistration()) {
+                return;
+            }
+            
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const cardExpiry = document.getElementById('cardExpiry').value;
+            const cardCvv = document.getElementById('cardCvv').value;
+            const cardName = document.getElementById('cardName').value;
+            const email = document.getElementById('userEmail').value.trim();
+            
+            if (!cardNumber || !cardExpiry || !cardCvv || !cardName) {
+                alert('Por favor, preencha todos os campos do cartão.');
+                return;
+            }
+            
+            // Validar formato do cartão
+            if (!validateCard(cardNumber, cardExpiry, cardCvv)) {
+                alert('Dados do cartão inválidos. Verifique e tente novamente.');
+                return;
+            }
+            
+            const planConfig = PLANS[selectedPlan];
+            const totalAmount = planConfig.price + orderbumpTotal;
+            
+            // Gerar ID único para a sessão de pagamento
+            paymentSessionId = 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            const button = event.target;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+            button.disabled = true;
+            
+            try {
+                updatePaymentStatus('Processando cartão...', 'spinner', '#ffc107');
+                
+                // Criar pedido real no Pagar.me
+                const orderData = {
+                    items: [{
+                        name: `Plano ${planConfig.name} - Meu Bebê Inteligente`,
+                        quantity: 1,
+                        unit_amount: Math.round(totalAmount * 100) // em centavos
+                    }],
+                    customer: {
+                        email: email,
+                        name: cardName
+                    },
+                    payments: [{
+                        payment_method: 'credit_card',
+                        credit_card: {
+                            installments: 1,
+                            statement_descriptor: 'MEU BEBE INTELIGENTE',
+                            card: {
+                                number: cardNumber,
+                                holder_name: cardName,
+                                exp_month: parseInt(cardExpiry.split('/')[0]),
+                                exp_year: parseInt('20' + cardExpiry.split('/')[1]),
+                                cvv: cardCvv
+                            }
+                        }
+                    }]
+                };
+                
+                const response = await fetch('https://api.pagar.me/core/v5/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Basic ${btoa(PAGARME_API_KEY + ':')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Erro na API: ${response.status}`);
+                }
+                
+                const order = await response.json();
+                
+                // Salvar ID do pedido
+                paymentSessionId = order.id;
+                
+                // Verificar status do pagamento
+                if (order.status === 'paid') {
+                    updatePaymentStatus('Pagamento aprovado! Criando sua conta...', 'check-circle', '#28a745');
+                    setTimeout(() => {
+                        createUserAccount('card');
+                    }, 2000);
+                } else {
+                    throw new Error('Pagamento não foi aprovado');
+                }
+                
+            } catch (error) {
+                console.error('Erro ao processar cartão:', error);
+                updatePaymentStatus('Erro no pagamento. Tente novamente.', 'times', '#dc3545');
+                alert(`Erro ao processar pagamento: ${error.message}`);
+            } finally {
+                button.innerHTML = '<i class="fas fa-credit-card"></i> Pagar com Cartão';
+                button.disabled = false;
+            }
+        }
+        
+        function validateCard(cardNumber, expiry, cvv) {
+            // Validação básica de cartão
+            const cardRegex = /^[0-9]{13,19}$/;
+            const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+            const cvvRegex = /^[0-9]{3,4}$/;
+            
+            return cardRegex.test(cardNumber) && 
+                   expiryRegex.test(expiry) && 
+                   cvvRegex.test(cvv);
+        }
+        
+        async function createUserAccount(paymentMethod = 'pix') {
+            const email = document.getElementById('userEmail').value.trim();
+            const password = document.getElementById('userPassword').value;
+            const plan = selectedPlan;
+            const planConfig = PLANS[plan];
+            const orderbumpItems = [];
+            
+            // Coletar orderbump selecionados
+            if (document.getElementById('orderbump1').checked) {
+                orderbumpItems.push('Controle parental avançado');
+            }
+            if (document.getElementById('orderbump2').checked) {
+                orderbumpItems.push('Plano alimentar personalizado');
+            }
+            
+            // Calcular data de expiração
+            const startDate = new Date();
+            const endDate = new Date();
+            endDate.setMonth(endDate.getMonth() + planConfig.duration);
+            
+            try {
+                // Hash da senha
+                const passwordHash = await hashPassword(password);
+                
+                // Dados do usuário para Supabase
+                const userData = {
+                    email: email,
+                    password_hash: passwordHash,
+                    plan: plan,
+                    plan_name: planConfig.name,
+                    plan_duration: planConfig.duration,
+                    plan_price: planConfig.price,
+                    orderbump: orderbumpItems,
+                    orderbump_total: orderbumpTotal,
+                    total_paid: planConfig.price + orderbumpTotal,
+                    start_date: startDate.toISOString(),
+                    end_date: endDate.toISOString(),
+                    status: 'active',
+                    payment_method: paymentMethod,
+                    payment_status: 'confirmed',
+                    payment_session_id: paymentSessionId
+                };
+                
+                // Inicializar Supabase se não estiver inicializado
+                if (typeof supabase === 'undefined') {
+                    await initSupabase();
+                }
+                
+                // Inserir usuário no Supabase
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert([userData])
+                    .select();
+                
+                if (error) {
+                    throw new Error(`Erro ao criar conta: ${error.message}`);
+                }
+                
+                
+                // Salvar dados do usuário no localStorage também
+                localStorage.setItem('userAccount', JSON.stringify(data[0]));
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userPlan', planConfig.name);
+                localStorage.setItem('userEndDate', endDate.toISOString());
+                localStorage.setItem('paymentConfirmed', 'true');
+                
+                // Fechar modal de pagamento
+                closePaymentModal();
+                
+                // Mostrar mensagem de sucesso
+                showSuccessMessage(email, planConfig.name, endDate);
+                
+            } catch (error) {
+                console.error('Erro ao criar conta:', error);
+                alert(`Erro ao criar conta: ${error.message}\n\nTente novamente ou entre em contato com o suporte.`);
+            }
+        }
+        
+        async function hashPassword(password) {
+            
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(password);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                return hashHex;
+            } catch (error) {
+                throw new Error('Erro ao processar senha');
+            }
+        }
+        
+        async function initSupabase() {
+            
+            // Verificar se a biblioteca supabase está disponível globalmente
+            if (typeof window.supabase === 'undefined' || !window.supabase) {
+                
+                // Carregar biblioteca Supabase se não estiver carregada
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/@supabase/supabase-js@2';
+                document.head.appendChild(script);
+                
+                return new Promise((resolve, reject) => {
+                    script.onload = () => {
+                        try {
+                            // Verificar se a biblioteca foi carregada corretamente
+                            if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+                                window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                                resolve();
+                            } else {
+                                reject(new Error('Biblioteca Supabase não disponível'));
+                            }
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                    script.onerror = () => {
+                        reject(new Error('Erro ao carregar biblioteca Supabase'));
+                    };
+                });
+            } else {
+                try {
+                    if (window.supabase.createClient) {
+                        window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    } else {
+                        throw new Error('Método createClient não disponível');
+                    }
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+        
+        function showSuccessMessage(email, planName, endDate) {
+            // Eventos do Pixel da Meta para Purchase
+            const planPrices = {
+                'Mensal': 29,
+                'Trimestral': 79,
+                'Anual': 290
+            };
+            
+            const planPrice = planPrices[planName] || 29;
+            
+            // Evento de Purchase para Meta Pixel
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'Purchase', {
+                    value: planPrice,
+                    currency: 'BRL',
+                    content_name: `Plano ${planName} - Meu Bebê Inteligente`,
+                    content_category: 'Educação Infantil',
+                    content_type: 'subscription',
+                    email: email
+                });
+                
+                // Evento personalizado para conversão
+                fbq('trackCustom', 'SubscriptionPurchase', {
+                    plan_name: planName,
+                    plan_price: planPrice,
+                    currency: 'BRL',
+                    user_email: email,
+                    subscription_duration: planName === 'Mensal' ? '1 month' : planName === 'Trimestral' ? '3 months' : '12 months'
+                });
+            }
+            
+            // Enviar dados para Conversions API (Server-Side)
+            if (typeof META_PIXEL_CONFIG !== 'undefined') {
+                META_PIXEL_CONFIG.sendCustomerData(email, planName, planPrice, {
+                    userId: email, // Usando email como ID único
+                    subscriptionId: `sub_${Date.now()}_${planName.toLowerCase()}`,
+                    country: 'BR',
+                    state: 'SP', // Você pode coletar isso no formulário
+                    city: 'São Paulo' // Você pode coletar isso no formulário
+                });
+            }
+            
+            // Criar modal de sucesso
+            const successModal = document.createElement('div');
+            successModal.className = 'success-modal';
+            successModal.innerHTML = `
+                <div class="success-content">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>🎉 Bem-vinda ao Meu Bebê Inteligente!</h2>
+                    <div class="success-details">
+                        <p><strong>Email:</strong> ${email}</p>
+                        <p><strong>Plano:</strong> ${planName}</p>
+                        <p><strong>Válido até:</strong> ${endDate.toLocaleDateString('pt-BR')}</p>
+                    </div>
+                    <p class="success-message">Sua conta foi criada com sucesso! Agora você tem acesso completo à plataforma.</p>
+                    <button onclick="redirectToDashboard()" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> Acessar Dashboard
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(successModal);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function redirectToDashboard() {
+            // Remover modal de sucesso
+            const successModal = document.querySelector('.success-modal');
+            if (successModal) {
+                successModal.remove();
+            }
+            document.body.style.overflow = 'auto';
+            
+            // Redirecionar para dashboard
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Funções do Modal de Login
+        function openLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // Sistema de Login Unificado
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            
+            
+            if (!email || !password) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+            
+            // Mostrar loading
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Verificar se é admin (aceita versão correta e com erro de digitação)
+                const isAdminEmail = email.toLowerCase() === ADMIN_EMAIL.toLowerCase() || 
+                                   email.toLowerCase() === ADMIN_EMAIL_ALT.toLowerCase();
+                
+                if (isAdminEmail) {
+                    await loginAsAdmin(email, password);
+                } else {
+                    await loginAsUser(email, password);
+                }
+                
+            } catch (error) {
+                console.error('Erro no login:', error);
+                
+                // Mensagem de erro mais específica
+                let errorMessage = 'Erro ao fazer login. ';
+                if (error.message.includes('supabase') || error.message.includes('banco de dados')) {
+                    errorMessage += 'Problema de conexão com o banco de dados. Tente novamente em alguns instantes.';
+                } else if (error.message.includes('Senha incorreta')) {
+                    errorMessage += 'Senha incorreta. Verifique e tente novamente.';
+                } else if (error.message.includes('Usuário não encontrado')) {
+                    errorMessage += 'Usuário não encontrado. Verifique o email ou crie uma conta.';
+                } else if (error.message.includes('assinatura expirou')) {
+                    errorMessage += 'Sua assinatura expirou. Renove para continuar acessando.';
+                } else {
+                    errorMessage += 'Verifique suas credenciais e tente novamente.';
+                }
+                
+                alert(errorMessage);
+            } finally {
+                submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+                submitBtn.disabled = false;
+            }
+        });
+        
+        async function loginAsAdmin(email, password) {
+            // Verificar senha do admin
+            const correctPassword = CONFIG.ADMIN_PASSWORD;
+            
+            if (password !== correctPassword) {
+                throw new Error('Senha incorreta');
+            }
+            
+            // Verificar se o admin existe no banco (opcional)
+            try {
+                const { data: adminUser, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('plan', 'admin')
+                    .single();
+            } catch (error) {
+                // Erro silencioso
+            }
+            
+            // Salvar dados do admin
+            const adminData = {
+                isAdmin: 'true',
+                adminEmail: email,
+                isLoggedIn: 'true',
+                userPlan: 'Administrador',
+                paymentConfirmed: 'true',
+                adminLoginTime: new Date().toISOString()
+            };
+            
+            Object.entries(adminData).forEach(([key, value]) => {
+                localStorage.setItem(key, value);
+            });
+            
+            // Fechar modal
+            closeLoginModal();
+            
+            // Redirecionar para dashboard com privilégios admin
+            window.location.href = 'dashboard.html';
+        }
+        
+        async function loginAsUser(email, password) {
+            
+            // Inicializar Supabase
+            
+            if (typeof window.supabase === 'undefined' || !window.supabase) {
+                await initSupabase();
+            }
+            
+            // Verificar se o cliente foi criado corretamente
+            if (!window.supabase || typeof window.supabase.from !== 'function') {
+                await initSupabase();
+                
+                if (!window.supabase || typeof window.supabase.from !== 'function') {
+                    throw new Error('Erro ao inicializar conexão com o banco de dados');
+                }
+            }
+            const { data: users, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('email', email)
+                .eq('status', 'active');
+            
+            if (error) {
+                throw new Error('Erro ao verificar usuário');
+            }
+            
+            
+            if (!users || users.length === 0) {
+                throw new Error('Usuário não encontrado ou conta inativa');
+            }
+            
+            const user = users[0];
+            
+            // Verificar senha
+            const passwordHash = await hashPassword(password);
+            
+            if (user.password_hash !== passwordHash) {
+                throw new Error('Senha incorreta');
+            }
+            
+            // Verificar se a assinatura está ativa
+            const endDate = new Date(user.end_date);
+            const now = new Date();
+            
+            if (now > endDate) {
+                throw new Error('Sua assinatura expirou. Renove para continuar acessando.');
+            }
+            
+            // Salvar dados do usuário
+            const userData = {
+                userAccount: JSON.stringify(user),
+                userEmail: email,
+                isLoggedIn: 'true',
+                userPlan: user.plan_name,
+                userEndDate: user.end_date,
+                paymentConfirmed: 'true',
+                isAdmin: 'false'
+            };
+            
+            Object.entries(userData).forEach(([key, value]) => {
+                localStorage.setItem(key, value);
+            });
+            
+            // Fechar modal
+            closeLoginModal();
+            
+            // Redirecionar para dashboard
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            if (event.target === modal) {
+                closePaymentModal();
+            }
+        }
+    </script>
+</body>
+</html>

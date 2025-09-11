@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrativo - Meu Bebê Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+        
+        .admin-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .admin-logo {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .admin-title {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        
+        .security-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background: #f8f9fa;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .back-link {
+            margin-top: 2rem;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #fcc;
+            font-size: 0.9rem;
+        }
+        
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #cfc;
+            font-size: 0.9rem;
+        }
+        
+        .admin-features {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e1e5e9;
+        }
+        
+        .admin-features h4 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .feature-list li i {
+            color: #667eea;
+            margin-right: 0.5rem;
+            width: 16px;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .security-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .security-info i {
+            color: #667eea;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-logo">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <h1 class="admin-title">Área Administrativa</h1>
+        <p class="admin-subtitle">Meu Bebê Inteligente</p>
+        
+        <div class="security-badge">
+            <i class="fas fa-lock"></i> Acesso Restrito
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label for="adminEmail">Email Administrativo:</label>
+                <input type="email" id="adminEmail" placeholder="admin@exemplo.com" required autocomplete="username">
+            </div>
+            
+            <div class="form-group">
+                <label for="adminPassword">Senha:</label>
+                <input type="password" id="adminPassword" placeholder="Digite sua senha" required autocomplete="current-password">
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                <div class="loading-spinner" id="loadingSpinner"></div>
+                <span id="loginText">
+                    <i class="fas fa-sign-in-alt"></i> Entrar como Admin
+                </span>
+            </button>
+        </form>
+        
+        <a href="../index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Voltar ao Site
+        </a>
+        
+        <div class="admin-features">
+            <h4>Recursos Administrativos:</h4>
+            <ul class="feature-list">
+                <li><i class="fas fa-users"></i> Gerenciar usuários e assinaturas</li>
+                <li><i class="fas fa-chart-bar"></i> Relatórios de vendas e receita</li>
+                <li><i class="fas fa-cog"></i> Configurações do sistema</li>
+                <li><i class="fas fa-database"></i> Backup e manutenção</li>
+                <li><i class="fas fa-shield-alt"></i> Controle de acesso</li>
+            </ul>
+        </div>
+        
+        <div class="security-info">
+            <i class="fas fa-info-circle"></i>
+            Esta área é exclusiva para administradores autorizados. Todas as atividades são monitoradas e registradas.
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://htmofgizynztknpekfbu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0bW9mZ2l6eW56dGtucGVrZmJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzYwMTYsImV4cCI6MjA3MzExMjAxNn0.a_3_-ncgdXkY2At0ougpZWsXuCrYe-T60RhezGPiE-w';
+        
+        // Credenciais do admin (exclusivas)
+        const ADMIN_CREDENTIALS = {
+            email: 'ashercongintencia@gmail.com',
+            password: 'DIVJroiDIVJ#18072002'
+        };
+        
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // Validar credenciais
+            if (email !== ADMIN_CREDENTIALS.email || password !== ADMIN_CREDENTIALS.password) {
+                showMessage('❌ Credenciais inválidas. Verifique seu email e senha.', 'error');
+                return;
+            }
+            
+            // Mostrar loading
+            loginBtn.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+            loginText.innerHTML = 'Verificando acesso...';
+            
+            try {
+                // Simular verificação (em produção, usar Supabase)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Salvar dados do admin
+                localStorage.setItem('isAdmin', 'true');
+                localStorage.setItem('adminEmail', email);
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userPlan', 'Administrador');
+                localStorage.setItem('paymentConfirmed', 'true');
+                localStorage.setItem('adminLoginTime', new Date().toISOString());
+                
+                showMessage('✅ Login realizado com sucesso! Redirecionando...', 'success');
+                
+                // Redirecionar para dashboard admin
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Erro no login:', error);
+                showMessage('❌ Erro ao fazer login. Tente novamente.', 'error');
+            } finally {
+                loginBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+                loginText.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar como Admin';
+            }
+        });
+        
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageClass = type === 'error' ? 'error-message' : 'success-message';
+            
+            messageContainer.innerHTML = `<div class="${messageClass}">${message}</div>`;
+            
+            // Limpar mensagem após 5 segundos
+            setTimeout(() => {
+                messageContainer.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Verificar se já está logado como admin
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAdmin = localStorage.getItem('isAdmin');
+            if (isAdmin === 'true') {
+                showMessage('✅ Você já está logado como administrador.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            }
+        });
+        
+        // Preencher automaticamente o email (apenas para desenvolvimento)
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('adminEmail').value = ADMIN_CREDENTIALS.email;
+        });
+    </script>
+</body>
+</html>

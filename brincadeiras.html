@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brincadeiras Educativas - Meu Bebê Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .activity-card {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .activity-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .activity-icon {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .activity-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .activity-age {
+            background: rgba(255, 255, 255, 0.2);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-sm);
+            display: inline-block;
+        }
+        
+        .activity-content {
+            padding: var(--spacing-xl);
+        }
+        
+        .activity-description {
+            color: var(--color-gray-medium);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.6;
+        }
+        
+        .materials-list {
+            background: var(--color-gray-light);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .materials-list h4 {
+            color: var(--color-blue);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-lg);
+        }
+        
+        .materials-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .materials-list li {
+            padding: var(--spacing-xs) 0;
+            color: var(--color-gray-dark);
+        }
+        
+        .materials-list li:before {
+            content: "✓";
+            color: var(--color-green);
+            font-weight: bold;
+            margin-right: var(--spacing-sm);
+        }
+        
+        .steps-list {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .steps-list h4 {
+            color: var(--color-blue);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-lg);
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-gray-light);
+            border-radius: var(--border-radius-md);
+        }
+        
+        .step-number {
+            background: var(--color-blue);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            color: var(--color-gray-dark);
+            line-height: 1.5;
+        }
+        
+        .learning-objectives {
+            background: linear-gradient(135deg, var(--color-green) 0%, var(--color-yellow) 100%);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .learning-objectives h4 {
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-lg);
+        }
+        
+        .learning-objectives ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .learning-objectives li {
+            padding: var(--spacing-xs) 0;
+        }
+        
+        .learning-objectives li:before {
+            content: "🎯";
+            margin-right: var(--spacing-sm);
+        }
+        
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: var(--color-gray-light);
+            color: var(--color-gray-dark);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .filter-btn.active {
+            background: var(--color-blue);
+            color: white;
+        }
+        
+        .filter-btn:hover {
+            background: var(--color-blue);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Conteúdo Principal -->
+    <div class="content-with-sidebar">
+        <!-- Hero Section -->
+        <section class="hero" style="padding-top: var(--spacing-3xl);">
+        <div class="container">
+            <div class="hero-content" style="text-align: center;">
+                <h1 class="hero-title" style="font-size: var(--font-size-4xl);">
+                    <i class="fas fa-heart" style="color: var(--color-pink); margin-right: var(--spacing-md);"></i>
+                    Brincadeiras Educativas em Família
+                </h1>
+                <p class="hero-subtitle">
+                    Atividades offline que fortalecem o vínculo entre mãe e filho, com jogos educativos e criativos. 
+                    Aprenda brincando e crie memórias especiais!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="solution">
+        <div class="container">
+            <div class="category-filter">
+                <button class="filter-btn active" data-category="all">Todas</button>
+                <button class="filter-btn" data-category="cores">Cores</button>
+                <button class="filter-btn" data-category="numeros">Números</button>
+                <button class="filter-btn" data-category="letras">Letras</button>
+                <button class="filter-btn" data-category="motora">Coordenação Motora</button>
+                <button class="filter-btn" data-category="cristao">Valores Cristãos</button>
+            </div>
+            
+            <div class="activity-grid" id="activityGrid">
+                <!-- Brincadeira 1: Encontre a Cor -->
+                <div class="activity-card" data-category="cores">
+                    <div class="activity-header">
+                        <div class="activity-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3 class="activity-title">Encontre a Cor</h3>
+                        <span class="activity-age">2-4 anos</span>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Uma brincadeira divertida para ensinar cores através de objetos do dia a dia. 
+                            Perfeita para desenvolver vocabulário visual e reconhecimento de cores.
+                        </p>
+                        
+                        <div class="materials-list">
+                            <h4>📦 Materiais Necessários:</h4>
+                            <ul>
+                                <li>Objetos coloridos da casa</li>
+                                <li>Cartões com nomes das cores</li>
+                                <li>Cesta ou caixa</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="steps-list">
+                            <h4>📋 Como Brincar:</h4>
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Espalhe objetos coloridos pela sala</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Peça para a criança encontrar objetos de uma cor específica</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-text">Coloque os objetos encontrados na cesta</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div class="step-text">Conte quantos objetos de cada cor foram encontrados</div>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-objectives">
+                            <h4>🎯 O que seu filho vai aprender:</h4>
+                            <ul>
+                                <li>Identificar e nomear cores</li>
+                                <li>Desenvolver vocabulário visual</li>
+                                <li>Praticar contagem básica</li>
+                                <li>Melhorar coordenação motora</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brincadeira 2: Contando com Dedos -->
+                <div class="activity-card" data-category="numeros">
+                    <div class="activity-header">
+                        <div class="activity-icon">
+                            <i class="fas fa-hand-paper"></i>
+                        </div>
+                        <h3 class="activity-title">Contando com Dedos</h3>
+                        <span class="activity-age">3-5 anos</span>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Uma atividade simples e eficaz para ensinar números de 1 a 10 usando os dedos das mãos. 
+                            Ideal para desenvolver noção de quantidade.
+                        </p>
+                        
+                        <div class="materials-list">
+                            <h4>📦 Materiais Necessários:</h4>
+                            <ul>
+                                <li>Suas mãos e as da criança</li>
+                                <li>Objetos pequenos (botões, feijões)</li>
+                                <li>Cartões com números</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="steps-list">
+                            <h4>📋 Como Brincar:</h4>
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Mostre um número no cartão</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Peça para a criança levantar a mesma quantidade de dedos</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-text">Conte os dedos juntos em voz alta</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div class="step-text">Use objetos para representar a quantidade</div>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-objectives">
+                            <h4>🎯 O que seu filho vai aprender:</h4>
+                            <ul>
+                                <li>Reconhecer números de 1 a 10</li>
+                                <li>Associar números a quantidades</li>
+                                <li>Desenvolver coordenação motora fina</li>
+                                <li>Praticar contagem</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brincadeira 3: Caça às Letras -->
+                <div class="activity-card" data-category="letras">
+                    <div class="activity-header">
+                        <div class="activity-icon">
+                            <i class="fas fa-font"></i>
+                        </div>
+                        <h3 class="activity-title">Caça às Letras</h3>
+                        <span class="activity-age">4-6 anos</span>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Uma brincadeira emocionante para ensinar o alfabeto através de uma caça ao tesouro. 
+                            Perfeita para desenvolver reconhecimento de letras.
+                        </p>
+                        
+                        <div class="materials-list">
+                            <h4>📦 Materiais Necessários:</h4>
+                            <ul>
+                                <li>Cartões com letras do alfabeto</li>
+                                <li>Objetos que começam com cada letra</li>
+                                <li>Lista de palavras</li>
+                                <li>Prêmio pequeno</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="steps-list">
+                            <h4>📋 Como Brincar:</h4>
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Esconda cartões com letras pela casa</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Dê uma letra para a criança encontrar</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-text">Quando encontrar, peça para nomear a letra</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div class="step-text">Pense em uma palavra que comece com essa letra</div>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-objectives">
+                            <h4>🎯 O que seu filho vai aprender:</h4>
+                            <ul>
+                                <li>Reconhecer letras do alfabeto</li>
+                                <li>Associar letras a palavras</li>
+                                <li>Desenvolver consciência fonológica</li>
+                                <li>Praticar vocabulário</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brincadeira 4: Circuito Motor -->
+                <div class="activity-card" data-category="motora">
+                    <div class="activity-header">
+                        <div class="activity-icon">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <h3 class="activity-title">Circuito Motor</h3>
+                        <span class="activity-age">3-6 anos</span>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Um circuito divertido para desenvolver coordenação motora grossa e fina. 
+                            Perfeito para gastar energia e se divertir!
+                        </p>
+                        
+                        <div class="materials-list">
+                            <h4>📦 Materiais Necessários:</h4>
+                            <ul>
+                                <li>Almofadas ou travesseiros</li>
+                                <li>Fita adesiva colorida</li>
+                                <li>Bolinhas pequenas</li>
+                                <li>Corda ou barbante</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="steps-list">
+                            <h4>📋 Como Brincar:</h4>
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Crie um caminho com fita no chão</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Coloque obstáculos (almofadas) no caminho</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-text">Peça para a criança andar no caminho</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div class="step-text">Adicione desafios: pular, agachar, equilibrar</div>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-objectives">
+                            <h4>🎯 O que seu filho vai aprender:</h4>
+                            <ul>
+                                <li>Desenvolver coordenação motora</li>
+                                <li>Melhorar equilíbrio</li>
+                                <li>Praticar seguimento de instruções</li>
+                                <li>Desenvolver força muscular</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brincadeira 5: Histórias Bíblicas -->
+                <div class="activity-card" data-category="cristao">
+                    <div class="activity-header">
+                        <div class="activity-icon">
+                            <i class="fas fa-bible"></i>
+                        </div>
+                        <h3 class="activity-title">Teatro das Histórias Bíblicas</h3>
+                        <span class="activity-age">3-6 anos</span>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Uma atividade criativa para ensinar histórias bíblicas através de dramatização. 
+                            Perfeita para desenvolver valores cristãos de forma lúdica.
+                        </p>
+                        
+                        <div class="materials-list">
+                            <h4>📦 Materiais Necessários:</h4>
+                            <ul>
+                                <li>Roupas simples para fantasia</li>
+                                <li>Objetos da casa como adereços</li>
+                                <li>Bíblia infantil</li>
+                                <li>Música cristã (opcional)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="steps-list">
+                            <h4>📋 Como Brincar:</h4>
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Escolha uma história bíblica simples</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Leia a história para a criança</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-text">Dramatize a história juntos</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div class="step-text">Converse sobre o que a história ensina</div>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-objectives">
+                            <h4>🎯 O que seu filho vai aprender:</h4>
+                            <ul>
+                                <li>Conhecer histórias bíblicas</li>
+                                <li>Desenvolver valores cristãos</li>
+                                <li>Praticar criatividade e imaginação</li>
+                                <li>Fortalecer vínculo familiar</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brincadeira 6: Memória das Cores -->
+                <div class="activity-card" data-category="cores">
+                    <div class="activity-header">
+                        <div class="activity-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="activity-title">Memória das Cores</h3>
+                        <span class="activity-age">3-5 anos</span>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Um jogo de memória divertido para ensinar cores e desenvolver concentração. 
+                            Perfeito para estimular o raciocínio lógico.
+                        </p>
+                        
+                        <div class="materials-list">
+                            <h4>📦 Materiais Necessários:</h4>
+                            <ul>
+                                <li>Cartões coloridos (feitos em casa)</li>
+                                <li>Papel colorido</li>
+                                <li>Canetinhas</li>
+                                <li>Cola</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="steps-list">
+                            <h4>📋 Como Brincar:</h4>
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Faça pares de cartões com as mesmas cores</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Vire os cartões para baixo</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-text">Vire dois cartões por vez</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div class="step-text">Se forem iguais, fica com eles. Se não, vira de novo</div>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-objectives">
+                            <h4>🎯 O que seu filho vai aprender:</h4>
+                            <ul>
+                                <li>Desenvolver memória visual</li>
+                                <li>Reconhecer cores</li>
+                                <li>Praticar concentração</li>
+                                <li>Desenvolver paciência</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="nav-brand">
+                        <i class="fas fa-heart"></i>
+                        <span>Meu Bebê Inteligente</span>
+                    </div>
+                    <p>O lugar seguro e educativo para seu filho crescer aprendendo de verdade.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <a href="musicas.html">Músicas Educativas</a>
+                        <a href="videos.html">Vídeos Seguros</a>
+                        <a href="desenhos.html">Desenhos Cristãos</a>
+                        <a href="brincadeiras.html">Brincadeiras</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Suporte</h4>
+                        <a href="#">Central de Ajuda</a>
+                        <a href="#">Contato</a>
+                        <a href="#">Política de Privacidade</a>
+                        <a href="#">Termos de Uso</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Meu Bebê Inteligente. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Filtro de categorias
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remover active de todos os botões
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                // Adicionar active ao botão clicado
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                filterActivities(category);
+            });
+        });
+
+        function filterActivities(category) {
+            const activityCards = document.querySelectorAll('.activity-card');
+            
+            activityCards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeInUp 0.5s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+    
+    </div> <!-- Fechar content-with-sidebar -->
+    
+    <script src="script.js"></script>
+    <script src="access-control.js"></script>
+    <script src="sidebar.js"></script>
+</body>
+</html>

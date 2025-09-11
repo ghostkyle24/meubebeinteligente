@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inglês Infantil - Meu Bebê Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .video-card {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .video-thumbnail {
+            position: relative;
+            background: var(--gradient-primary);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--font-size-3xl);
+        }
+        
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .video-card:hover .play-overlay {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .video-info {
+            padding: var(--spacing-xl);
+        }
+        
+        .video-info h3 {
+            color: var(--color-gray-dark);
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .video-info p {
+            color: var(--color-gray-medium);
+            margin: 0 0 var(--spacing-lg) 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .section-header h2 {
+            color: var(--color-gray-dark);
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .section-header p {
+            color: var(--color-gray-medium);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .page-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--spacing-2xl) 0;
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .page-header h1 {
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .page-header p {
+            margin: 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+            
+            .video-info {
+                padding: var(--spacing-lg);
+            }
+            
+            .video-info h3 {
+                font-size: 1.1rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .page-header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header da Página -->
+    <div class="page-header">
+        <div class="container">
+            <h1>
+                <i class="fas fa-globe"></i>
+                Inglês Infantil
+            </h1>
+            <p>Aprenda inglês de forma divertida e educativa!</p>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+        <div class="section-header">
+            <h2><i class="fas fa-graduation-cap"></i> Aulas de Inglês</h2>
+            <p>30 aulas completas para aprender inglês brincando</p>
+        </div>
+
+        <div class="video-grid">
+                    <!-- Aula 1 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/AJeitT6lSVM/maxresdefault.jpg" alt="Formas geométricas e Cores em inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Formas geométricas e Cores em inglês</h3>
+                            <p>Figuras geométricas e Cores em inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('AJeitT6lSVM')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 2 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/G1KJChZId0Y/maxresdefault.jpg" alt="Os animais em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Os animais em Inglês</h3>
+                            <p>Como falar o nome dos bichos em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('G1KJChZId0Y')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 3 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/epHTq7bpUMw/maxresdefault.jpg" alt="Inglês infantil - Livro Inglês Fácil">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Inglês infantil</h3>
+                            <p>Livro Inglês Fácil Amigo Mumu</p>
+                            <button class="btn btn-primary" onclick="openVideo('epHTq7bpUMw')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 4 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/cUSI4RXFOmo/maxresdefault.jpg" alt="Profissões em inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Profissões em inglês</h3>
+                            <p>Nome das profissões em inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('cUSI4RXFOmo')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 5 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/LJDfhznIghM/maxresdefault.jpg" alt="Escola em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Escola em Inglês</h3>
+                            <p>Material escolar em inglês | Materiais escolares em inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('LJDfhznIghM')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 6 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/Zf3nNd-lqI4/maxresdefault.jpg" alt="Comidas em inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Comidas em inglês</h3>
+                            <p>Alimentos em inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('Zf3nNd-lqI4')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 7 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/Q9No6lZUCIw/maxresdefault.jpg" alt="Bebidas em inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Bebidas em inglês</h3>
+                            <p>Como Falar o Nome de Bebidas em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('Q9No6lZUCIw')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 8 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/oDKGmGgOquc/maxresdefault.jpg" alt="Brinquedos em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Brinquedos em Inglês</h3>
+                            <p>Nome dos Brinquedos em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('oDKGmGgOquc')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 9 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/DGvhHCn72E0/maxresdefault.jpg" alt="Saudações em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Saudações em Inglês</h3>
+                            <p>Cumprimentos em Inglês Greetings</p>
+                            <button class="btn btn-primary" onclick="openVideo('DGvhHCn72E0')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 10 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/UYnA7W0vHeQ/maxresdefault.jpg" alt="Contar de 1 a 100 em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Contar de 1 a 100 em Inglês</h3>
+                            <p>Aprenda os Números em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('UYnA7W0vHeQ')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 11 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/wYbdjZqIKC4/maxresdefault.jpg" alt="Família em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Família em Inglês</h3>
+                            <p>Membros da Família em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('wYbdjZqIKC4')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 12 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/lMv8q3kcCOg/maxresdefault.jpg" alt="Pessoas em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Pessoas em Inglês</h3>
+                            <p>Substantivos Comuns em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('lMv8q3kcCOg')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 13 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/2T76Wm_O7Mw/maxresdefault.jpg" alt="Partes do Corpo Humano em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Partes do Corpo Humano em Inglês</h3>
+                            <p>Partes da Cabeça em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('2T76Wm_O7Mw')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 14 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/05_yVYG9HEc/maxresdefault.jpg" alt="Partes do Corpo Humano em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Partes do Corpo Humano em Inglês</h3>
+                            <p>Partes da Cabeça em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('05_yVYG9HEc')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 15 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/BSHtok1nhpc/maxresdefault.jpg" alt="Partes do Corpo Humano em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Partes do Corpo Humano em Inglês</h3>
+                            <p>Partes do Corpo em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('BSHtok1nhpc')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 16 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/M_EYwJvTlvM/maxresdefault.jpg" alt="Meses do Ano em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Meses do Ano em Inglês</h3>
+                            <p>Meses em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('M_EYwJvTlvM')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 17 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/16MBSgzlmBE/maxresdefault.jpg" alt="Sentimentos e Emoções em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Sentimentos e Emoções em Inglês</h3>
+                            <p>Sentimentos em inglês | Inglês Para Iniciantes</p>
+                            <button class="btn btn-primary" onclick="openVideo('16MBSgzlmBE')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 18 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/hu6WIRJYgsU/maxresdefault.jpg" alt="Meios de Transporte em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Meios de Transporte em Inglês</h3>
+                            <p>Inglês para Iniciantes</p>
+                            <button class="btn btn-primary" onclick="openVideo('hu6WIRJYgsU')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 19 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/qX_nmTg5FH0/maxresdefault.jpg" alt="Insetos em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Insetos em Inglês</h3>
+                            <p>Nomes de Insetos em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('qX_nmTg5FH0')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 20 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/f-AuQ_Afg8w/maxresdefault.jpg" alt="As Cores em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>As Cores em Inglês</h3>
+                            <p>Aprender as Cores em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('f-AuQ_Afg8w')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 21 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/BNYgX2ehiJI/maxresdefault.jpg" alt="Estações do Ano em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Estações do Ano em Inglês</h3>
+                            <p>Inglês para Crianças e Iniciantes</p>
+                            <button class="btn btn-primary" onclick="openVideo('BNYgX2ehiJI')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 22 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/zAsA7rJny6g/maxresdefault.jpg" alt="Inglês Para Iniciantes - HALLOWEEN">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Inglês Para Iniciantes</h3>
+                            <p>Inglês Infantil | HALLOWEEN</p>
+                            <button class="btn btn-primary" onclick="openVideo('zAsA7rJny6g')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 23 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/p4h0zJ4NlzU/maxresdefault.jpg" alt="PRONOMES EM INGLÊS">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>PRONOMES EM INGLÊS</h3>
+                            <p>PRONOMES PESSOAIS | SUBJECT PRONOUNS</p>
+                            <button class="btn btn-primary" onclick="openVideo('p4h0zJ4NlzU')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 24 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/seLjrZbA3Yg/maxresdefault.jpg" alt="Inglês para Iniciantes - 36 MINUTOS">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Inglês para Iniciantes</h3>
+                            <p>Inglês para Crianças | Inglês Infantil - 36 MINUTOS Amigo Mumu</p>
+                            <button class="btn btn-primary" onclick="openVideo('seLjrZbA3Yg')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 25 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/Jj8j2hdFMgk/maxresdefault.jpg" alt="Animais em Inglês - Som dos Animais">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Animais em Inglês</h3>
+                            <p>Som dos Animais | Animais da Fazenda</p>
+                            <button class="btn btn-primary" onclick="openVideo('Jj8j2hdFMgk')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 26 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/ahsIn44e3PU/maxresdefault.jpg" alt="Animais em inglês - Animais Selvagens">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Animais em inglês</h3>
+                            <p>Animais Selvagens | Nome dos Animais em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('ahsIn44e3PU')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 27 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/qc2-lUoUJM0/maxresdefault.jpg" alt="Animais em Inglês - Inglês Infantil">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Animais em Inglês</h3>
+                            <p>Inglês Infantil | Aprender Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('qc2-lUoUJM0')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 28 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/4I0mnW2wI8k/maxresdefault.jpg" alt="Alfabeto em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Alfabeto em Inglês</h3>
+                            <p>Como Pronunciar as Letras do Alfabeto em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('4I0mnW2wI8k')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 29 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/8Pl00tmnTeA/maxresdefault.jpg" alt="Instrumentos Musicais em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Instrumentos Musicais em Inglês</h3>
+                            <p>Inglês Infantil</p>
+                            <button class="btn btn-primary" onclick="openVideo('8Pl00tmnTeA')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aula 30 -->
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="https://img.youtube.com/vi/Gu0K0T9v3LA/maxresdefault.jpg" alt="Sistema Solar em Inglês">
+                            <div class="play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3>Inglês Infantil</h3>
+                            <p>Sistema Solar em Inglês | Planetas em Inglês</p>
+                            <button class="btn btn-primary" onclick="openVideo('Gu0K0T9v3LA')">
+                                <i class="fas fa-play"></i> Assistir
+                            </button>
+                        </div>
+                    </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="access-control.js"></script>
+    <script src="sidebar.js"></script>
+    <script>
+        // Função para abrir vídeo do YouTube
+        function openVideo(videoId) {
+            const url = `https://www.youtube.com/watch?v=${videoId}`;
+            window.open(url, '_blank');
+        }
+
+        // Adicionar efeito hover nos cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoCards = document.querySelectorAll('.video-card');
+            
+            videoCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

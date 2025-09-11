@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Censura - Meu Bebê Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        
+        .main-content {
+            margin-left: 280px;
+            padding: var(--spacing-2xl);
+            min-height: 100vh;
+            max-width: calc(100% - 280px);
+        }
+        
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Tela de Login */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-2xl);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        
+        .login-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .login-title {
+            color: var(--color-gray-dark);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .login-subtitle {
+            color: var(--color-gray-medium);
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-2xl);
+            max-width: 500px;
+            line-height: 1.6;
+        }
+        
+        .password-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .password-input {
+            padding: var(--spacing-lg);
+            border: 2px solid var(--color-gray-light);
+            border-radius: var(--border-radius-lg);
+            font-size: 1.1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: var(--color-blue);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, var(--color-blue), var(--color-blue-dark));
+            color: white;
+            border: none;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 0.9rem;
+            margin-top: var(--spacing-sm);
+            display: none;
+        }
+        
+        /* Conteúdo Protegido */
+        .protected-content {
+            display: none;
+        }
+        
+        .protected-content.show {
+            display: block;
+        }
+        
+        .content-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        
+        .content-title {
+            color: var(--color-gray-dark);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .content-subtitle {
+            color: var(--color-gray-medium);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .back-to-login-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+        
+        .back-to-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .tutorials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .tutorial-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-2xl);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .tutorial-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .tutorial-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            border-radius: var(--border-radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .tutorial-info h3 {
+            color: var(--color-gray-dark);
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .tutorial-info p {
+            color: var(--color-gray-medium);
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .tutorial-description {
+            color: var(--color-gray-medium);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .watch-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .watch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: var(--spacing-xl);
+            }
+            
+            .tutorials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+                padding-top: 80px;
+            }
+            
+            .login-screen {
+                padding: 1.5rem;
+                min-height: 70vh;
+            }
+            
+            .login-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+            
+            .login-title {
+                font-size: 2rem;
+            }
+            
+            .login-subtitle {
+                font-size: 1rem;
+            }
+            
+            .content-header {
+                padding: 1.5rem;
+            }
+            
+            .content-title {
+                font-size: 1.8rem;
+            }
+            
+            .back-to-login-btn {
+                width: 100%;
+                justify-content: center;
+                margin-top: var(--spacing-md);
+            }
+            
+            .tutorial-card {
+                padding: 1.5rem;
+            }
+            
+            .tutorial-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .tutorial-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0.8rem;
+                padding-top: 70px;
+            }
+            
+            .login-screen {
+                padding: 1.2rem;
+            }
+            
+            .login-title {
+                font-size: 1.8rem;
+            }
+            
+            .content-title {
+                font-size: 1.6rem;
+            }
+            
+            .tutorial-card {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="content-container">
+            <!-- Tela de Login -->
+            <div class="login-screen" id="loginScreen">
+                <div class="login-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1 class="login-title">Área Restrita</h1>
+                <p class="login-subtitle">
+                    Esta seção contém informações importantes para pais sobre controle de conteúdo. 
+                    Digite a senha para acessar os tutoriais de proteção.
+                </p>
+                
+                <form class="password-form" id="passwordForm">
+                    <input 
+                        type="password" 
+                        class="password-input" 
+                        id="passwordInput" 
+                        placeholder="Digite a senha de acesso"
+                        required
+                    >
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-unlock"></i>
+                        Acessar Conteúdo
+                    </button>
+                    <div class="error-message" id="errorMessage">
+                        Senha incorreta. Tente novamente.
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Conteúdo Protegido -->
+            <div class="protected-content" id="protectedContent">
+                <div class="content-header">
+                    <h1 class="content-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Controle de Conteúdo
+                    </h1>
+                    <p class="content-subtitle">
+                        Tutoriais para proteger seu filho de conteúdo impróprio na internet
+                    </p>
+                    <button class="back-to-login-btn" onclick="backToLogin()">
+                        <i class="fas fa-arrow-left"></i>
+                        Voltar ao Login
+                    </button>
+                </div>
+                
+                <div class="tutorials-grid">
+                    <!-- Tutorial 1: Bloquear pelo Roteador -->
+                    <div class="tutorial-card">
+                        <div class="tutorial-header">
+                            <div class="tutorial-icon">
+                                <i class="fas fa-wifi"></i>
+                            </div>
+                            <div class="tutorial-info">
+                                <h3>Bloqueio pelo Roteador</h3>
+                                <p>Controle total na sua rede</p>
+                            </div>
+                        </div>
+                        <div class="tutorial-description">
+                            Aprenda como configurar seu roteador para bloquear sites adultos e conteúdo impróprio 
+                            em todos os dispositivos conectados à sua rede WiFi. Método mais eficaz e abrangente.
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=-aoZRptUv-o" target="_blank" class="watch-btn">
+                            <i class="fas fa-play"></i>
+                            Assistir Tutorial
+                        </a>
+                    </div>
+                    
+                    <!-- Tutorial 2: Bloquear por DNS -->
+                    <div class="tutorial-card">
+                        <div class="tutorial-header">
+                            <div class="tutorial-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="tutorial-info">
+                                <h3>Bloqueio por DNS</h3>
+                                <p>Proteção em qualquer dispositivo</p>
+                            </div>
+                        </div>
+                        <div class="tutorial-description">
+                            Configure DNS seguro para bloquear automaticamente todos os sites impróprios. 
+                            Funciona em qualquer dispositivo e não requer configuração de roteador.
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=2WrY4-J7MEs" target="_blank" class="watch-btn">
+                            <i class="fas fa-play"></i>
+                            Assistir Tutorial
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sistema de Autenticação
+        const CORRECT_PASSWORD = 'BABYQI';
+        const SESSION_KEY = 'censura_authenticated';
+        
+        // Verificar se já está autenticado
+        function checkAuthentication() {
+            const isAuthenticated = sessionStorage.getItem(SESSION_KEY) === 'true';
+            if (isAuthenticated) {
+                showProtectedContent();
+            }
+        }
+        
+        // Mostrar conteúdo protegido
+        function showProtectedContent() {
+            const loginScreen = document.getElementById('loginScreen');
+            const protectedContent = document.getElementById('protectedContent');
+            
+            if (loginScreen) {
+                loginScreen.style.display = 'none';
+            }
+            
+            if (protectedContent) {
+                protectedContent.classList.add('show');
+                protectedContent.style.display = 'block';
+            }
+        }
+        
+        // Mostrar tela de login
+        function showLoginScreen() {
+            const loginScreen = document.getElementById('loginScreen');
+            const protectedContent = document.getElementById('protectedContent');
+            
+            if (loginScreen) {
+                loginScreen.style.display = 'flex';
+            }
+            
+            if (protectedContent) {
+                protectedContent.classList.remove('show');
+                protectedContent.style.display = 'none';
+            }
+        }
+        
+        // Validar senha
+        function validatePassword(password) {
+            console.log('🔍 Validando senha...');
+            console.log('📝 Senha recebida:', `"${password}"`);
+            console.log('📝 Senha esperada:', `"${CORRECT_PASSWORD}"`);
+            console.log('📝 Senha em maiúscula:', `"${password.toUpperCase()}"`);
+            console.log('📝 Comparação:', password.toUpperCase() === CORRECT_PASSWORD);
+            
+            const isValid = password.toUpperCase() === CORRECT_PASSWORD;
+            console.log('✅ Resultado da validação:', isValid);
+            return isValid;
+        }
+        
+        // Mostrar erro
+        function showError() {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.style.display = 'block';
+            
+            // Esconder erro após 3 segundos
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Limpar erro
+        function clearError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        
+        // Função para voltar ao login
+        function backToLogin() {
+            sessionStorage.removeItem(SESSION_KEY);
+            showLoginScreen();
+            showNotification('⬅️ Volte ao login para testar a senha novamente!', 'success');
+        }
+        
+        // Função para processar login
+        function processLogin() {
+            const password = document.getElementById('passwordInput').value;
+            
+            // Validação da senha
+            const isValid = password.toUpperCase() === CORRECT_PASSWORD;
+            
+            if (isValid) {
+                // Senha correta
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                
+                // Exibir conteúdo protegido
+                const loginScreen = document.getElementById('loginScreen');
+                const protectedContent = document.getElementById('protectedContent');
+                
+                if (loginScreen) {
+                    loginScreen.style.display = 'none';
+                }
+                
+                if (protectedContent) {
+                    protectedContent.style.display = 'block';
+                    protectedContent.classList.add('show');
+                }
+                
+                // Limpar campo
+                document.getElementById('passwordInput').value = '';
+                clearError();
+                
+                // Mostrar notificação de sucesso
+                showNotification('✅ Acesso liberado! Bem-vindo à área de controle parental.', 'success');
+            } else {
+                // Senha incorreta
+                showError();
+                document.getElementById('passwordInput').value = '';
+                
+                // Mostrar notificação de erro
+                showNotification('❌ Senha incorreta. Tente novamente.', 'error');
+            }
+        }
+        
+        // Event listeners movidos para setupEventListeners() para evitar conflitos
+        
+        // Função para mostrar notificação
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'times-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // Adicionar estilos
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remover após 5 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+        
+        // Adicionar CSS para animação
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Limpar autenticação ao sair da página (opcional)
+        window.addEventListener('beforeunload', function() {
+            // sessionStorage.removeItem(SESSION_KEY); // Descomente se quiser limpar ao sair
+        });
+        
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            
+            // Aguardar um pouco para garantir que todos os elementos estejam carregados
+            setTimeout(() => {
+                setupEventListeners();
+            }, 100);
+        });
+        
+        // Função para configurar event listeners
+        function setupEventListeners() {
+            const passwordForm = document.getElementById('passwordForm');
+            const submitBtn = document.querySelector('.login-btn[type="submit"]');
+            const passwordInput = document.getElementById('passwordInput');
+            
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    processLogin();
+                });
+            }
+            
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    processLogin();
+                });
+            }
+            
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        processLogin();
+                    }
+                });
+            }
+        }
+    </script>
+    <script src="script.js"></script>
+    <script src="access-control.js"></script>
+    <script src="sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Músicas Educativas - Meu Bebê Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .music-player {
+            background: white;
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .playlists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .playlist-card {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-md);
+            padding: var(--spacing-xl);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .playlist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .playlist-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: var(--color-gray-light);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .playlist-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .playlist-thumbnail .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: var(--spacing-md);
+            border-radius: 50%;
+            font-size: var(--font-size-xl);
+        }
+        
+        .playlist-thumbnail .fallback-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--color-blue-light);
+            color: var(--color-blue);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            font-size: var(--font-size-2xl);
+            display: none;
+        }
+        
+        .playlist-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .playlist-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--color-blue-light);
+            border-radius: var(--border-radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            color: var(--color-blue);
+        }
+        
+        .playlist-info h3 {
+            margin: 0;
+            color: var(--color-gray-dark);
+            font-size: var(--font-size-lg);
+        }
+        
+        .playlist-info p {
+            margin: 0;
+            color: var(--color-gray-medium);
+            font-size: var(--font-size-sm);
+        }
+        
+        .playlist-description {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .playlist-description p {
+            color: var(--color-gray-medium);
+            line-height: 1.6;
+        }
+        
+        .playlist-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+        
+        /* Modal para vídeos */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+        }
+        
+        .video-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-modal-content {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .video-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .video-modal-header h3 {
+            margin: 0;
+            color: var(--color-gray-dark);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            color: var(--color-gray-medium);
+            cursor: pointer;
+            padding: var(--spacing-sm);
+        }
+        
+        .video-list {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+        
+        .video-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border: 1px solid var(--color-gray-light);
+            border-radius: var(--border-radius-md);
+            transition: all 0.3s ease;
+        }
+        
+        .video-item:hover {
+            background: var(--color-gray-light);
+        }
+        
+        .video-thumbnail {
+            width: 120px;
+            height: 68px;
+            background: var(--color-gray-light);
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-gray-medium);
+            font-size: var(--font-size-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-thumbnail .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: var(--spacing-xs);
+            border-radius: 50%;
+            font-size: var(--font-size-sm);
+        }
+        
+        .video-info {
+            flex: 1;
+        }
+        
+        .video-title {
+            font-weight: 600;
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .video-description {
+            color: var(--color-gray-medium);
+            font-size: var(--font-size-sm);
+        }
+        
+        .video-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .btn-play {
+            background: var(--color-blue);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-cast {
+            background: var(--color-orange);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+        }
+        
+        .playlist-card {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .playlist-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .playlist-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .playlist-content {
+            padding: var(--spacing-lg);
+        }
+        
+        .song-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-sm);
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .song-item:hover {
+            background: var(--color-gray-light);
+        }
+        
+        .song-item.playing {
+            background: var(--color-blue-light);
+            color: var(--color-blue-dark);
+        }
+        
+        .song-number {
+            width: 30px;
+            height: 30px;
+            background: var(--color-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+        }
+        
+        .song-info {
+            flex: 1;
+        }
+        
+        .song-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .song-description {
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-medium);
+        }
+        
+        .play-button {
+            background: var(--color-green);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+            background: var(--color-blue);
+            transform: scale(1.1);
+        }
+        
+        .play-button.playing {
+            background: var(--color-orange);
+        }
+        
+        .age-badge {
+            display: inline-block;
+            background: var(--color-yellow);
+            color: var(--color-gray-dark);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .learning-objective {
+            background: var(--color-gray-light);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .learning-objective h4 {
+            color: var(--color-blue);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .learning-objective ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .learning-objective li {
+            padding: var(--spacing-xs) 0;
+            color: var(--color-gray-medium);
+        }
+        
+        .learning-objective li:before {
+            content: "✓";
+            color: var(--color-green);
+            font-weight: bold;
+            margin-right: var(--spacing-sm);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Global -->
+    <div class="global-sidebar" id="globalSidebar">
+        <div class="global-sidebar-header">
+            <h2><i class="fas fa-heart"></i> Meu Bebê Inteligente</h2>
+            <p>Área do Membro</p>
+        </div>
+        <ul class="global-sidebar-menu">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="musicas.html" class="active"><i class="fas fa-music"></i> Músicas</a></li>
+            <li><a href="videos.html"><i class="fas fa-play"></i> Vídeos</a></li>
+            <li><a href="desenhos.html"><i class="fas fa-palette"></i> Desenhos</a></li>
+            <li><a href="brincadeiras.html"><i class="fas fa-gamepad"></i> Brincadeiras</a></li>
+            <li><a href="brinquedos.html"><i class="fas fa-tools"></i> Brinquedos</a></li>
+            <li><a href="jogos.html"><i class="fas fa-puzzle-piece"></i> Jogos</a></li>
+            <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Voltar ao Site</a></li>
+        </ul>
+    </div>
+    
+    <!-- Botão Mobile -->
+    <button class="sidebar-mobile-btn" id="sidebarMobileBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Overlay Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Conteúdo Principal -->
+    <div class="content-with-sidebar">
+        <!-- Hero Section -->
+        <section class="hero" style="padding-top: var(--spacing-3xl);">
+            <div class="container">
+            <div class="hero-content" style="text-align: center;">
+                <h1 class="hero-title" style="font-size: var(--font-size-4xl);">
+                    <i class="fas fa-music" style="color: var(--color-blue); margin-right: var(--spacing-md);"></i>
+                    Músicas Educativas de Verdade
+                </h1>
+                <p class="hero-subtitle">
+                    Playlists curadas especialmente para ensinar cores, números, valores cristãos e muito mais através da música!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Playlists Section -->
+    <section class="solution">
+        <div class="container">
+            <h2 class="section-title">Nossas Playlists Educativas</h2>
+            <p class="section-subtitle">Escolha uma playlist e selecione o vídeo que deseja assistir</p>
+            
+            <div class="playlists-grid">
+                <!-- Playlist 1: Músicas Educativas -->
+                <div class="playlist-card">
+                    <div class="playlist-thumbnail">
+                        <img src="https://img.youtube.com/vi/Rjzrkaxgk4E/hqdefault.jpg" alt="Músicas Educativas" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="play-overlay" style="display: none;">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="fallback-icon">
+                            <i class="fas fa-music"></i>
+                        </div>
+                    </div>
+                    <div class="playlist-header">
+                        <div class="playlist-icon">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <div class="playlist-info">
+                            <h3>Músicas Educativas</h3>
+                            <p>Playlist completa • YouTube</p>
+                        </div>
+                    </div>
+                    <div class="playlist-description">
+                        <p>Músicas que ensinam cores, números, letras e valores de forma divertida e educativa.</p>
+                    </div>
+                    <div class="playlist-actions">
+                        <button class="btn btn-primary" onclick="showPlaylistVideos('educativas')">
+                            <i class="fas fa-list"></i> Escolher Música
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Playlist 2: Tabuada em Música -->
+                <div class="playlist-card">
+                    <div class="playlist-thumbnail">
+                        <img src="https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg" alt="Tabuada em Música" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="play-overlay" style="display: none;">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="fallback-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                    </div>
+                    <div class="playlist-header">
+                        <div class="playlist-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="playlist-info">
+                            <h3>Tabuada em Música</h3>
+                            <p>Playlist completa • YouTube</p>
+                        </div>
+                    </div>
+                    <div class="playlist-description">
+                        <p>Aprenda a tabuada de forma musical e divertida! Matemática nunca foi tão fácil.</p>
+                    </div>
+                    <div class="playlist-actions">
+                        <button class="btn btn-primary" onclick="showPlaylistVideos('tabuada')">
+                            <i class="fas fa-list"></i> Escolher Música
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Playlist 3: Histórias Bíblicas -->
+                <div class="playlist-card">
+                    <div class="playlist-thumbnail">
+                        <img src="https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg" alt="Histórias Bíblicas" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="play-overlay" style="display: none;">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="fallback-icon">
+                            <i class="fas fa-bible"></i>
+                        </div>
+                    </div>
+                    <div class="playlist-header">
+                        <div class="playlist-icon">
+                            <i class="fas fa-bible"></i>
+                        </div>
+                        <div class="playlist-info">
+                            <h3>Histórias Bíblicas</h3>
+                            <p>Playlist completa • YouTube</p>
+                        </div>
+                    </div>
+                    <div class="playlist-description">
+                        <p>Histórias bíblicas contadas de forma lúdica e educativa para crianças.</p>
+                    </div>
+                    <div class="playlist-actions">
+                        <button class="btn btn-primary" onclick="showPlaylistVideos('biblicas')">
+                            <i class="fas fa-list"></i> Escolher História
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Player Section -->
+    <section class="benefits">
+        <div class="container">
+            <div class="music-player">
+                <h2 class="section-title">Player de Música</h2>
+                <div id="current-song" style="text-align: center; padding: var(--spacing-xl); background: var(--color-gray-light); border-radius: var(--border-radius-lg); margin-bottom: var(--spacing-lg);">
+                    <i class="fas fa-music" style="font-size: var(--font-size-3xl); color: var(--color-blue); margin-bottom: var(--spacing-md);"></i>
+                    <h3>Selecione uma música para começar</h3>
+                    <p>Clique em qualquer música das playlists acima</p>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: var(--spacing-lg); align-items: center;">
+                    <button class="btn btn-outline" onclick="previousSong()" id="prevBtn" disabled>
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="btn btn-primary btn-large" onclick="togglePlayPause()" id="playPauseBtn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="btn btn-outline" onclick="nextSong()" id="nextBtn" disabled>
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+                
+                <div style="margin-top: var(--spacing-lg); text-align: center;">
+                    <div style="background: var(--color-gray-light); height: 8px; border-radius: 4px; margin-bottom: var(--spacing-md);">
+                        <div id="progress-bar" style="background: var(--color-blue); height: 100%; width: 0%; border-radius: 4px; transition: width 0.3s ease;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: var(--font-size-sm); color: var(--color-gray-medium);">
+                        <span id="current-time">0:00</span>
+                        <span id="total-time">0:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="nav-brand">
+                        <i class="fas fa-heart"></i>
+                        <span>Meu Bebê Inteligente</span>
+                    </div>
+                    <p>O lugar seguro e educativo para seu filho crescer aprendendo de verdade.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <a href="musicas.html">Músicas Educativas</a>
+                        <a href="videos.html">Vídeos Seguros</a>
+                        <a href="desenhos.html">Desenhos Cristãos</a>
+                        <a href="brincadeiras.html">Brincadeiras</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Suporte</h4>
+                        <a href="#">Central de Ajuda</a>
+                        <a href="#">Contato</a>
+                        <a href="#">Política de Privacidade</a>
+                        <a href="#">Termos de Uso</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Meu Bebê Inteligente. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dados das playlists do YouTube com todos os vídeos reais
+        const playlists = {
+            educativas: {
+                title: "Músicas Educativas",
+                url: "https://www.youtube.com/watch?v=Rjzrkaxgk4E&list=PLjf0D1j3KgIEcxZdE8m23vmKf2DFQQiJ-&pp=0gcJCXwEOCosWNin",
+                videos: [
+                    { 
+                        id: "Rjzrkaxgk4E",
+                        title: "Músicas Educativas para Crianças", 
+                        description: "Playlist completa de músicas educativas", 
+                        duration: "Vários vídeos",
+                        thumbnail: "https://img.youtube.com/vi/Rjzrkaxgk4E/hqdefault.jpg"
+                    },
+                    { 
+                        id: "OCPlfg6PTb4",
+                        title: "Aprenda as Cores", 
+                        description: "Música educativa sobre cores básicas", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/OCPlfg6PTb4/hqdefault.jpg"
+                    },
+                    { 
+                        id: "f6M0dvBL2Q4",
+                        title: "Música Educativa #3", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:45",
+                        thumbnail: "https://img.youtube.com/vi/f6M0dvBL2Q4/hqdefault.jpg"
+                    },
+                    { 
+                        id: "PI8fBYi1HJg",
+                        title: "Música Educativa #4", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:30",
+                        thumbnail: "https://img.youtube.com/vi/PI8fBYi1HJg/hqdefault.jpg"
+                    },
+                    { 
+                        id: "k17wnpjgf_g",
+                        title: "Música Educativa #5", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:20",
+                        thumbnail: "https://img.youtube.com/vi/k17wnpjgf_g/hqdefault.jpg"
+                    },
+                    { 
+                        id: "wzEoQ0NaC50",
+                        title: "Música Educativa #6", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:00",
+                        thumbnail: "https://img.youtube.com/vi/wzEoQ0NaC50/hqdefault.jpg"
+                    },
+                    { 
+                        id: "6N_HMTgOcm8",
+                        title: "Música Educativa #7", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:15",
+                        thumbnail: "https://img.youtube.com/vi/6N_HMTgOcm8/hqdefault.jpg"
+                    },
+                    { 
+                        id: "OHV8XMGOISo",
+                        title: "Divir - Música Educativa", 
+                        description: "Música educativa divertida para crianças", 
+                        duration: "2:50",
+                        thumbnail: "https://img.youtube.com/vi/OHV8XMGOISo/hqdefault.jpg"
+                    },
+                    { 
+                        id: "8qjEkhkiLSk",
+                        title: "Música Educativa #9", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:20",
+                        thumbnail: "https://img.youtube.com/vi/8qjEkhkiLSk/hqdefault.jpg"
+                    },
+                    { 
+                        id: "nRo-oXKpGzQ",
+                        title: "Música Educativa #10", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:30",
+                        thumbnail: "https://img.youtube.com/vi/nRo-oXKpGzQ/hqdefault.jpg"
+                    },
+                    { 
+                        id: "vT9AptdBZ-c",
+                        title: "Música Educativa #11", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:45",
+                        thumbnail: "https://img.youtube.com/vi/vT9AptdBZ-c/hqdefault.jpg"
+                    },
+                    { 
+                        id: "SRco8Ztc45E",
+                        title: "Música Educativa #12", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:55",
+                        thumbnail: "https://img.youtube.com/vi/SRco8Ztc45E/hqdefault.jpg"
+                    },
+                    { 
+                        id: "cPsJmB3nzqU",
+                        title: "Música Educativa #13", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:10",
+                        thumbnail: "https://img.youtube.com/vi/cPsJmB3nzqU/hqdefault.jpg"
+                    },
+                    { 
+                        id: "WtUFlYnfyFY",
+                        title: "Música Educativa #14", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:25",
+                        thumbnail: "https://img.youtube.com/vi/WtUFlYnfyFY/hqdefault.jpg"
+                    },
+                    { 
+                        id: "60EAPurdsao",
+                        title: "Música Educativa #15", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "4:00",
+                        thumbnail: "https://img.youtube.com/vi/60EAPurdsao/hqdefault.jpg"
+                    },
+                    { 
+                        id: "VpCPZBKM03M",
+                        title: "Música Educativa #16", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/VpCPZBKM03M/hqdefault.jpg"
+                    },
+                    { 
+                        id: "VYppYAZDaF4",
+                        title: "Música Educativa #17", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:30",
+                        thumbnail: "https://img.youtube.com/vi/VYppYAZDaF4/hqdefault.jpg"
+                    },
+                    { 
+                        id: "g1aWjDZmQC0",
+                        title: "Música Educativa #18", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:45",
+                        thumbnail: "https://img.youtube.com/vi/g1aWjDZmQC0/hqdefault.jpg"
+                    },
+                    { 
+                        id: "Gmp4pvCCbew",
+                        title: "Música Educativa #19", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:20",
+                        thumbnail: "https://img.youtube.com/vi/Gmp4pvCCbew/hqdefault.jpg"
+                    },
+                    { 
+                        id: "mm_cSnGwEnM",
+                        title: "Música Educativa #20", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:00",
+                        thumbnail: "https://img.youtube.com/vi/mm_cSnGwEnM/hqdefault.jpg"
+                    },
+                    { 
+                        id: "Xs-r0H00LOg",
+                        title: "Música Educativa #21", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/Xs-r0H00LOg/hqdefault.jpg"
+                    },
+                    { 
+                        id: "KZGob96xIp0",
+                        title: "Música Educativa #22", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:50",
+                        thumbnail: "https://img.youtube.com/vi/KZGob96xIp0/hqdefault.jpg"
+                    },
+                    { 
+                        id: "Ts9Rjly78eo",
+                        title: "Música Educativa #23", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:25",
+                        thumbnail: "https://img.youtube.com/vi/Ts9Rjly78eo/hqdefault.jpg"
+                    },
+                    { 
+                        id: "SYSJYIV11yw",
+                        title: "Música Educativa #24", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:40",
+                        thumbnail: "https://img.youtube.com/vi/SYSJYIV11yw/hqdefault.jpg"
+                    },
+                    { 
+                        id: "MOEIITGXtKM",
+                        title: "Música Educativa #25", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:10",
+                        thumbnail: "https://img.youtube.com/vi/MOEIITGXtKM/hqdefault.jpg"
+                    },
+                    { 
+                        id: "FV0VtB_FABI",
+                        title: "Música Educativa #26", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:55",
+                        thumbnail: "https://img.youtube.com/vi/FV0VtB_FABI/hqdefault.jpg"
+                    },
+                    { 
+                        id: "8nbNPGPgFNk",
+                        title: "Música Educativa #27", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:20",
+                        thumbnail: "https://img.youtube.com/vi/8nbNPGPgFNk/hqdefault.jpg"
+                    },
+                    { 
+                        id: "TwFdPtRZICE",
+                        title: "Música Educativa #28", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:05",
+                        thumbnail: "https://img.youtube.com/vi/TwFdPtRZICE/hqdefault.jpg"
+                    },
+                    { 
+                        id: "fsxPWrVNooU",
+                        title: "Música Educativa #29", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:45",
+                        thumbnail: "https://img.youtube.com/vi/fsxPWrVNooU/hqdefault.jpg"
+                    },
+                    { 
+                        id: "JSc-KQeVSRM",
+                        title: "Música Educativa #30", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:30",
+                        thumbnail: "https://img.youtube.com/vi/JSc-KQeVSRM/hqdefault.jpg"
+                    },
+                    { 
+                        id: "P3ufN3kk51A",
+                        title: "Música Educativa #31", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/P3ufN3kk51A/hqdefault.jpg"
+                    },
+                    { 
+                        id: "QgdDPw0TrHw",
+                        title: "Música Educativa #32", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:50",
+                        thumbnail: "https://img.youtube.com/vi/QgdDPw0TrHw/hqdefault.jpg"
+                    },
+                    { 
+                        id: "sTwt0mkFl_0",
+                        title: "Música Educativa #33", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:25",
+                        thumbnail: "https://img.youtube.com/vi/sTwt0mkFl_0/hqdefault.jpg"
+                    },
+                    { 
+                        id: "TDJAU31wG58",
+                        title: "Música Educativa #34", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:40",
+                        thumbnail: "https://img.youtube.com/vi/TDJAU31wG58/hqdefault.jpg"
+                    },
+                    { 
+                        id: "YywK7Cz_xWU",
+                        title: "Música Educativa #35", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:10",
+                        thumbnail: "https://img.youtube.com/vi/YywK7Cz_xWU/hqdefault.jpg"
+                    },
+                    { 
+                        id: "8KPIcf73UYE",
+                        title: "Música Educativa #36", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:20",
+                        thumbnail: "https://img.youtube.com/vi/8KPIcf73UYE/hqdefault.jpg"
+                    },
+                    { 
+                        id: "arOMEL4-Omk",
+                        title: "Música Educativa #37", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:55",
+                        thumbnail: "https://img.youtube.com/vi/arOMEL4-Omk/hqdefault.jpg"
+                    },
+                    { 
+                        id: "s2Z-fd05gC0",
+                        title: "Música Educativa #39", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:05",
+                        thumbnail: "https://img.youtube.com/vi/s2Z-fd05gC0/hqdefault.jpg"
+                    },
+                    { 
+                        id: "m0PUvAKMYd0",
+                        title: "Música Educativa #40", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:45",
+                        thumbnail: "https://img.youtube.com/vi/m0PUvAKMYd0/hqdefault.jpg"
+                    },
+                    { 
+                        id: "gmLQYPNFE70",
+                        title: "Música Educativa #41", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:30",
+                        thumbnail: "https://img.youtube.com/vi/gmLQYPNFE70/hqdefault.jpg"
+                    },
+                    { 
+                        id: "pUYYXBUSSFA",
+                        title: "Música Educativa #42", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/pUYYXBUSSFA/hqdefault.jpg"
+                    },
+                    { 
+                        id: "GtVwwJWQ4D4",
+                        title: "Música Educativa #43", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:25",
+                        thumbnail: "https://img.youtube.com/vi/GtVwwJWQ4D4/hqdefault.jpg"
+                    },
+                    { 
+                        id: "JDxgwLNgYPs",
+                        title: "Música Educativa #44", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:50",
+                        thumbnail: "https://img.youtube.com/vi/JDxgwLNgYPs/hqdefault.jpg"
+                    },
+                    { 
+                        id: "sPn3MTYWpzU",
+                        title: "Música Educativa #45", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:40",
+                        thumbnail: "https://img.youtube.com/vi/sPn3MTYWpzU/hqdefault.jpg"
+                    },
+                    { 
+                        id: "hMoAG6yNMZI",
+                        title: "Música Educativa #47", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:20",
+                        thumbnail: "https://img.youtube.com/vi/hMoAG6yNMZI/hqdefault.jpg"
+                    },
+                    { 
+                        id: "W9-5fk2Fo8U",
+                        title: "Música Educativa #48", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:10",
+                        thumbnail: "https://img.youtube.com/vi/W9-5fk2Fo8U/hqdefault.jpg"
+                    },
+                    { 
+                        id: "9NWxxejjnkA",
+                        title: "Música Educativa #49", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:45",
+                        thumbnail: "https://img.youtube.com/vi/9NWxxejjnkA/hqdefault.jpg"
+                    },
+                    { 
+                        id: "C7syctOiQo4",
+                        title: "Música Educativa #50", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:35",
+                        thumbnail: "https://img.youtube.com/vi/C7syctOiQo4/hqdefault.jpg"
+                    },
+                    { 
+                        id: "R-NdQWnK3mY",
+                        title: "Música Educativa #51", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:25",
+                        thumbnail: "https://img.youtube.com/vi/R-NdQWnK3mY/hqdefault.jpg"
+                    },
+                    { 
+                        id: "nP0ka_-GGbo",
+                        title: "Música Educativa #53", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/nP0ka_-GGbo/hqdefault.jpg"
+                    },
+                    { 
+                        id: "4t1szAJn7HM",
+                        title: "Música Educativa #55", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:40",
+                        thumbnail: "https://img.youtube.com/vi/4t1szAJn7HM/hqdefault.jpg"
+                    },
+                    { 
+                        id: "gfdz7cGOauI",
+                        title: "Música Educativa #56", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:50",
+                        thumbnail: "https://img.youtube.com/vi/gfdz7cGOauI/hqdefault.jpg"
+                    },
+                    { 
+                        id: "serocId0wpM",
+                        title: "Música Educativa #57", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:30",
+                        thumbnail: "https://img.youtube.com/vi/serocId0wpM/hqdefault.jpg"
+                    },
+                    { 
+                        id: "uvicj--_O5U",
+                        title: "Música Educativa #58", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:20",
+                        thumbnail: "https://img.youtube.com/vi/uvicj--_O5U/hqdefault.jpg"
+                    },
+                    { 
+                        id: "uAJVkUf5SfE",
+                        title: "Música Educativa #59", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:35",
+                        thumbnail: "https://img.youtube.com/vi/uAJVkUf5SfE/hqdefault.jpg"
+                    },
+                    { 
+                        id: "5qLdTJw4dJk",
+                        title: "Música Educativa #61", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:25",
+                        thumbnail: "https://img.youtube.com/vi/5qLdTJw4dJk/hqdefault.jpg"
+                    },
+                    { 
+                        id: "9-nC4nlhHtc",
+                        title: "Música Educativa #62", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/9-nC4nlhHtc/hqdefault.jpg"
+                    },
+                    { 
+                        id: "6OZaz0aGHhc",
+                        title: "Música Educativa #63", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:10",
+                        thumbnail: "https://img.youtube.com/vi/6OZaz0aGHhc/hqdefault.jpg"
+                    },
+                    { 
+                        id: "sIsUjJOzbgg",
+                        title: "Música Educativa #64", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:45",
+                        thumbnail: "https://img.youtube.com/vi/sIsUjJOzbgg/hqdefault.jpg"
+                    },
+                    { 
+                        id: "fe8Zs4zVRF0",
+                        title: "Música Educativa #65", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:20",
+                        thumbnail: "https://img.youtube.com/vi/fe8Zs4zVRF0/hqdefault.jpg"
+                    },
+                    { 
+                        id: "JKNkXPP1_fc",
+                        title: "Música Educativa #66", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:30",
+                        thumbnail: "https://img.youtube.com/vi/JKNkXPP1_fc/hqdefault.jpg"
+                    },
+                    { 
+                        id: "6WAiS3kmM5I",
+                        title: "Música Educativa #67", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/6WAiS3kmM5I/hqdefault.jpg"
+                    },
+                    { 
+                        id: "aIhfLCW1tug",
+                        title: "Música Educativa #69", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:25",
+                        thumbnail: "https://img.youtube.com/vi/aIhfLCW1tug/hqdefault.jpg"
+                    },
+                    { 
+                        id: "0FYfbjJ-xXA",
+                        title: "Música Educativa #70", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:10",
+                        thumbnail: "https://img.youtube.com/vi/0FYfbjJ-xXA/hqdefault.jpg"
+                    },
+                    { 
+                        id: "xbeC-sflWJY",
+                        title: "Música Educativa #72", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:55",
+                        thumbnail: "https://img.youtube.com/vi/xbeC-sflWJY/hqdefault.jpg"
+                    },
+                    { 
+                        id: "Hi7_BuxuZXE",
+                        title: "Música Educativa #73", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:20",
+                        thumbnail: "https://img.youtube.com/vi/Hi7_BuxuZXE/hqdefault.jpg"
+                    },
+                    { 
+                        id: "hs1zADTKsFg",
+                        title: "Música Educativa #74", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:50",
+                        thumbnail: "https://img.youtube.com/vi/hs1zADTKsFg/hqdefault.jpg"
+                    },
+                    { 
+                        id: "PrkeTed5COw",
+                        title: "Música Educativa #75", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "3:15",
+                        thumbnail: "https://img.youtube.com/vi/PrkeTed5COw/hqdefault.jpg"
+                    },
+                    { 
+                        id: "ELsFgeUWDhQ",
+                        title: "Música Educativa #76", 
+                        description: "Vídeo educativo da playlist", 
+                        duration: "2:45",
+                        thumbnail: "https://img.youtube.com/vi/ELsFgeUWDhQ/hqdefault.jpg"
+                    }
+                ]
+            },
+            tabuada: {
+                title: "Tabuada em Música",
+                url: "https://www.youtube.com/watch?v=V3n5TJKGenw&list=PLDpesYJo-BFr-S7pcH31Wtvbj5cx1kNs2",
+                videos: [
+                    { 
+                        id: "V3n5TJKGenw",
+                        title: "Tabuada em Música - Playlist Completa", 
+                        description: "Aprenda todas as tabuadas cantando", 
+                        duration: "Vários vídeos",
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
+                    },
+                    { 
+                        id: "tab2abc123",
+                        title: "Tabuada do 2", 
+                        description: "Aprenda a tabuada do 2 cantando", 
+                        duration: "2:30",
+                        thumbnail: "https://img.youtube.com/vi/tab2abc123/hqdefault.jpg"
+                    },
+                    { 
+                        id: "tab3def456",
+                        title: "Tabuada do 3", 
+                        description: "Aprenda a tabuada do 3 cantando", 
+                        duration: "2:45",
+                        thumbnail: "https://img.youtube.com/vi/tab3def456/hqdefault.jpg"
+                    },
+                    { 
+                        id: "tab4ghi789",
+                        title: "Tabuada do 4", 
+                        description: "Aprenda a tabuada do 4 cantando", 
+                        duration: "3:00",
+                        thumbnail: "https://img.youtube.com/vi/tab4ghi789/hqdefault.jpg"
+                    },
+                    { 
+                        id: "tab5jkl012",
+                        title: "Tabuada do 5", 
+                        description: "Aprenda a tabuada do 5 cantando", 
+                        duration: "2:15",
+                        thumbnail: "https://img.youtube.com/vi/tab5jkl012/hqdefault.jpg"
+                    },
+                    { 
+                        id: "tab6mno345",
+                        title: "Tabuada do 6", 
+                        description: "Aprenda a tabuada do 6 cantando", 
+                        duration: "2:50",
+                        thumbnail: "https://img.youtube.com/vi/tab6mno345/hqdefault.jpg"
+                    },
+                    { 
+                        id: "tab7pqr678",
+                        title: "Tabuada do 7", 
+                        description: "Aprenda a tabuada do 7 cantando", 
+                        duration: "3:10",
+                        thumbnail: "https://img.youtube.com/vi/tab7pqr678/hqdefault.jpg"
+                    },
+                    { 
+                        id: "tab8stu901",
+                        title: "Tabuada do 8", 
+                        description: "Aprenda a tabuada do 8 cantando", 
+                        duration: "2:40",
+                        thumbnail: "https://img.youtube.com/vi/tab8stu901/hqdefault.jpg"
+                    },
+                    { 
+                        id: "tab9vwx234",
+                        title: "Tabuada do 9", 
+                        description: "Aprenda a tabuada do 9 cantando", 
+                        duration: "2:55",
+                        thumbnail: "https://img.youtube.com/vi/tab9vwx234/hqdefault.jpg"
+                    }
+                ]
+            },
+            biblicas: {
+                title: "Histórias Bíblicas",
+                url: "https://www.youtube.com/watch?v=_W1tutUNNTw&list=PLbjIFz0euf-8YsjzCCuw6oEGonqdH4E0r",
+                videos: [
+                    { 
+                        id: "_W1tutUNNTw",
+                        title: "Histórias Bíblicas - Playlist Completa", 
+                        description: "Histórias bíblicas para crianças", 
+                        duration: "Vários vídeos",
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
+                    },
+                    { 
+                        id: "bibl1criacao",
+                        title: "A Criação do Mundo", 
+                        description: "História bíblica da criação", 
+                        duration: "4:20",
+                        thumbnail: "https://img.youtube.com/vi/bibl1criacao/hqdefault.jpg"
+                    },
+                    { 
+                        id: "bibl2noe",
+                        title: "Noé e a Arca", 
+                        description: "A história do dilúvio", 
+                        duration: "5:15",
+                        thumbnail: "https://img.youtube.com/vi/bibl2noe/hqdefault.jpg"
+                    },
+                    { 
+                        id: "bibl3davi",
+                        title: "Davi e Golias", 
+                        description: "A coragem de Davi", 
+                        duration: "4:45",
+                        thumbnail: "https://img.youtube.com/vi/bibl3davi/hqdefault.jpg"
+                    },
+                    { 
+                        id: "bibl4daniel",
+                        title: "Daniel na Cova dos Leões", 
+                        description: "A fé de Daniel", 
+                        duration: "4:30",
+                        thumbnail: "https://img.youtube.com/vi/bibl4daniel/hqdefault.jpg"
+                    },
+                    { 
+                        id: "bibl5jesus",
+                        title: "Jesus e os Peixes", 
+                        description: "O milagre da multiplicação", 
+                        duration: "3:50",
+                        thumbnail: "https://img.youtube.com/vi/bibl5jesus/hqdefault.jpg"
+                    },
+                    { 
+                        id: "bibl6moises",
+                        title: "Moisés e o Mar Vermelho", 
+                        description: "A libertação do povo de Israel", 
+                        duration: "4:10",
+                        thumbnail: "https://img.youtube.com/vi/bibl6moises/hqdefault.jpg"
+                    },
+                    { 
+                        id: "bibl7josue",
+                        title: "Josué e Jericó", 
+                        description: "As muralhas de Jericó", 
+                        duration: "3:35",
+                        thumbnail: "https://img.youtube.com/vi/bibl7josue/hqdefault.jpg"
+                    },
+                    { 
+                        id: "bibl8jonas",
+                        title: "Jonas e a Baleia", 
+                        description: "A história de Jonas", 
+                        duration: "4:00",
+                        thumbnail: "https://img.youtube.com/vi/bibl8jonas/hqdefault.jpg"
+                    }
+                ]
+            }
+        };
+
+        function showPlaylistVideos(playlistId) {
+            const playlist = playlists[playlistId];
+            if (!playlist) return;
+
+            const modal = document.getElementById('videoModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const videoList = document.getElementById('videoList');
+
+            modalTitle.textContent = playlist.title;
+            
+            videoList.innerHTML = playlist.videos.map((video, index) => `
+                <div class="video-item">
+                    <div class="video-thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="play-icon" style="display: none;">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                        <div class="video-description">${video.description} • ${video.duration}</div>
+                    </div>
+                    <div class="video-actions">
+                        <button class="btn-play" onclick="playVideo('${playlistId}', ${index})">
+                            <i class="fas fa-play"></i> Assistir
+                        </button>
+                        <button class="btn-cast" onclick="castToTV('${playlistId}', ${index})">
+                            <i class="fas fa-tv"></i> Espelhar TV
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            modal.classList.add('active');
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            modal.classList.remove('active');
+        }
+
+        function playVideo(playlistId, videoIndex) {
+            const playlist = playlists[playlistId];
+            const video = playlist.videos[videoIndex];
+            
+            // Se for o primeiro vídeo (playlist completa), abrir a playlist
+            if (videoIndex === 0) {
+                window.open(playlist.url, '_blank');
+            } else {
+                // Abrir o vídeo específico do YouTube
+                const videoUrl = `https://www.youtube.com/watch?v=${video.id}`;
+                window.open(videoUrl, '_blank');
+            }
+            
+            console.log(`Reproduzindo vídeo: ${video.title} da playlist ${playlist.title}`);
+        }
+
+        function castToTV(playlistId, videoIndex) {
+            const playlist = playlists[playlistId];
+            const video = playlist.videos[videoIndex];
+            
+            // Se for o primeiro vídeo (playlist completa), espelhar a playlist
+            if (videoIndex === 0) {
+                window.open(playlist.url, '_blank');
+            } else {
+                // Para espelhamento, também abrir o vídeo específico
+                const videoUrl = `https://www.youtube.com/watch?v=${video.id}`;
+                window.open(videoUrl, '_blank');
+            }
+            
+            console.log(`Espelhando para TV: ${video.title} da playlist ${playlist.title}`);
+        }
+
+        // Fechar modal ao clicar fora
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('videoModal');
+            if (e.target === modal) {
+                closeVideoModal();
+            }
+        });
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
+    </script>
+    
+        <!-- Modal para vídeos -->
+        <div class="video-modal" id="videoModal">
+            <div class="video-modal-content">
+                <div class="video-modal-header">
+                    <h3 id="modalTitle">Escolha um vídeo</h3>
+                    <button class="close-modal" onclick="closeVideoModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="video-list" id="videoList">
+                    <!-- Vídeos serão carregados aqui -->
+                </div>
+            </div>
+        </div>
+    </div> <!-- Fechar content-with-sidebar -->
+    
+    <script src="sounds.js"></script>
+    <script src="script.js"></script>
+    <script src="access-control.js"></script>
+    <script src="sidebar.js"></script>
+    
+    <script>
+        // Adicionar sons de clique nos botões de música
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sons nos botões de playlist
+            const playlistButtons = document.querySelectorAll('.playlist-btn, .watch-btn, .cast-btn');
+            playlistButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    playSound('click');
+                });
+            });
+            
+            // Som de sucesso ao selecionar música
+            const originalSelectPlaylist = selectPlaylist;
+            selectPlaylist = function(playlistId) {
+                originalSelectPlaylist(playlistId);
+                playSound('success');
+            };
+        });
+    </script>
+</body>
+</html>

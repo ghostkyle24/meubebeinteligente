@@ -1,0 +1,3321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vídeos Educativos - Meu Bebê Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .video-grid .video-card.hidden {
+            display: none !important;
+        }
+        
+        .video-card {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            display: block; /* Garantir que seja block por padrão */
+        }
+        
+        .video-card.hidden {
+            display: none !important;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .video-thumbnail {
+            position: relative;
+            background: var(--gradient-primary);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--font-size-3xl);
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .play-overlay:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .video-content {
+            padding: var(--spacing-lg);
+        }
+        
+        .video-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-gray-dark);
+        }
+        
+        .video-description {
+            color: var(--color-gray-medium);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.5;
+        }
+        
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .video-duration {
+            background: var(--color-gray-dark);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+        
+        .video-age {
+            background: var(--color-yellow);
+            color: var(--color-gray-dark);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+        
+        .learning-objectives {
+            background: var(--color-gray-light);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .learning-objectives h4 {
+            color: var(--color-blue);
+            margin-bottom: var(--spacing-sm);
+            font-size: var(--font-size-sm);
+        }
+        
+        .learning-objectives ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .learning-objectives li {
+            padding: var(--spacing-xs) 0;
+            color: var(--color-gray-medium);
+            font-size: var(--font-size-sm);
+        }
+        
+        .learning-objectives li:before {
+            content: "✓";
+            color: var(--color-green);
+            font-weight: bold;
+            margin-right: var(--spacing-sm);
+        }
+        
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: var(--color-gray-light);
+            color: var(--color-gray-dark);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .filter-btn.active {
+            background: var(--color-blue);
+            color: white;
+        }
+        
+        .filter-btn:hover {
+            background: var(--color-blue);
+            color: white;
+        }
+        
+        .video-counter {
+            margin-top: var(--spacing-md);
+            text-align: center;
+            padding: var(--spacing-sm);
+            background: var(--color-gray-light);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-dark);
+        }
+        
+        .counter-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .no-results-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: var(--spacing-2xl);
+            background: var(--color-gray-light);
+            border-radius: var(--border-radius-lg);
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .no-results-content {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .no-results-content i {
+            font-size: 3rem;
+            color: var(--color-gray-medium);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .no-results-content h3 {
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .no-results-content p {
+            color: var(--color-gray-medium);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-2xl);
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            color: var(--color-gray-medium);
+        }
+        
+        .video-player {
+            background: var(--color-gray-light);
+            height: 300px;
+            border-radius: var(--border-radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--color-gray-medium);
+        }
+        
+        .safety-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--color-green);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Conteúdo Principal -->
+    <div class="content-with-sidebar">
+        <!-- Hero Section -->
+        <section class="hero" style="padding-top: var(--spacing-3xl);">
+        <div class="container">
+            <div class="hero-content" style="text-align: center;">
+                <h1 class="hero-title" style="font-size: var(--font-size-4xl);">
+                    <i class="fas fa-play-circle" style="color: var(--color-pink); margin-right: var(--spacing-md);"></i>
+                    Vídeos Educativos Seguros
+                </h1>
+                <p class="hero-subtitle">
+                    Conteúdo educativo selecionado e livre de anúncios, sem distrações ou conteúdos impróprios. 
+                    Cada vídeo foi curado por especialistas em educação infantil.
+                </p>
+                <div class="safety-badge" style="margin: var(--spacing-lg) auto; display: inline-flex;">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>100% Seguro e Sem Anúncios</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="solution">
+        <div class="container">
+            <div class="category-filter">
+                <button class="filter-btn active" data-category="all">Todos</button>
+                <button class="filter-btn" data-category="alfabetizacao">Alfabetização</button>
+                <button class="filter-btn" data-category="conhecimentos">Conhecimentos Gerais</button>
+                <button class="filter-btn" data-category="devocional">Devocional Kids</button>
+                <button class="filter-btn" data-category="cores">Cores e Formas</button>
+                <button class="filter-btn" data-category="numeros">Números</button>
+                <button class="filter-btn" data-category="alfabeto">Alfabeto</button>
+                <button class="filter-btn" data-category="cristao">Valores Cristãos</button>
+                <button class="filter-btn" data-category="natureza">Natureza</button>
+                <button class="filter-btn" data-category="brincadeiras">Brincadeiras</button>
+                <button class="filter-btn" data-category="sem-dopamina">Sem Dopamina Barata</button>
+                
+            </div>
+            
+            <div class="video-grid" id="videoGrid">
+                <!-- Vídeos de Alfabetização -->
+                <!-- Vídeo 1: TA TE TI TO TU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/3kkaTfsnwKU/hqdefault.jpg" alt="Alfabetização TA TE TI TO TU" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('3kkaTfsnwKU', 'Alfabetização TA TE TI TO TU e as Vogais - Com os Animais')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Alfabetização TA TE TI TO TU e as Vogais - Com os Animais</h3>
+                        <p class="video-description">Aprenda as sílabas TA TE TI TO TU de forma divertida com animais e vogais. Vídeo educativo perfeito para alfabetização infantil.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer sílabas TA TE TI TO TU</li>
+                                <li>Associar sílabas a palavras</li>
+                                <li>Desenvolver consciência fonológica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 2: PA PE PI PO PU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/0PG7Q2w-1Dc/hqdefault.jpg" alt="Alfabetização PA PE PI PO PU" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('0PG7Q2w-1Dc', 'Vídeo Educativo Infantil - Alfabetização PA PE PI PO PU')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Vídeo Educativo Infantil - Alfabetização PA PE PI PO PU</h3>
+                        <p class="video-description">Aprenda as sílabas PA PE PI PO PU de forma lúdica e educativa. Perfeito para crianças em processo de alfabetização.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer sílabas PA PE PI PO PU</li>
+                                <li>Formar palavras com essas sílabas</li>
+                                <li>Melhorar pronúncia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 3: VA VE VI VO VU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/Ysgt821WeLw/hqdefault.jpg" alt="As Sílabas - VA VE VI VO VU" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('Ysgt821WeLw', 'As Sílabas - VA VE VI VO VU')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">As Sílabas - VA VE VI VO VU</h3>
+                        <p class="video-description">Aprenda as sílabas VA VE VI VO VU de forma divertida e interativa. Vídeo educativo para alfabetização infantil.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer sílabas VA VE VI VO VU</li>
+                                <li>Desenvolver leitura silábica</li>
+                                <li>Expandir vocabulário</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 4: MA ME MI MO MU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/vXAOt8NKdH4/hqdefault.jpg" alt="Alfabetização Divertida - MA ME MI MO MU" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('vXAOt8NKdH4', 'Alfabetização Divertida - MA ME MI MO MU - Vídeo Educativo Infantil')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Alfabetização Divertida - MA ME MI MO MU - Vídeo Educativo Infantil</h3>
+                        <p class="video-description">Aprenda as sílabas MA ME MI MO MU de forma divertida e educativa. Vídeo perfeito para alfabetização infantil.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer sílabas MA ME MI MO MU</li>
+                                <li>Formar palavras familiares</li>
+                                <li>Desenvolver fluência na leitura</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 5: As Vogais - AEIOU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/VJ31nf_TOGc/hqdefault.jpg" alt="As Vogais - AEIOU - Alfabetização Divertida" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('VJ31nf_TOGc', 'As Vogais - AEIOU - Alfabetização Divertida')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">As Vogais - AEIOU - Alfabetização Divertida</h3>
+                        <p class="video-description">Aprenda as vogais A E I O U de forma divertida e interativa. Base fundamental para a alfabetização infantil.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">2-5 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer as vogais A E I O U</li>
+                                <li>Diferenciar sons das vogais</li>
+                                <li>Preparar para leitura</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 6: Alfabetização Infantil com os Animais -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/Z_tF0mmcarE/hqdefault.jpg" alt="Alfabetização Infantil com os Animais" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('Z_tF0mmcarE', 'Alfabetização Infantil com os Animais - Vídeo Infantil')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Alfabetização Infantil com os Animais - Vídeo Infantil</h3>
+                        <p class="video-description">Aprenda o alfabeto de forma divertida com animais. Vídeo educativo que combina alfabetização e conhecimento sobre animais.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer letras do alfabeto</li>
+                                <li>Conhecer animais</li>
+                                <li>Associar letras a palavras</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 7: DA DE DI DO DU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/Fvu9DA2jSFE/hqdefault.jpg" alt="Alfabetização DA DE DI DO DU" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('Fvu9DA2jSFE', 'Vídeo Educativo Infantil - Alfabetização DA DE DI DO DU')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Vídeo Educativo Infantil - Alfabetização DA DE DI DO DU</h3>
+                        <p class="video-description">Aprenda as sílabas DA DE DI DO DU de forma educativa e divertida. Perfeito para o processo de alfabetização.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer sílabas DA DE DI DO DU</li>
+                                <li>Formar palavras com essas sílabas</li>
+                                <li>Desenvolver leitura silábica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 8: BA BE BI BO BU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/WcZWOuZn-Kc/hqdefault.jpg" alt="Alfabetização BA BE BI BO BU" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('WcZWOuZn-Kc', 'Vídeo Educativo Infantil - Alfabetização BA BE BI BO BU')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Vídeo Educativo Infantil - Alfabetização BA BE BI BO BU</h3>
+                        <p class="video-description">Aprenda as sílabas BA BE BI BO BU de forma lúdica e educativa. Vídeo perfeito para alfabetização infantil.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer sílabas BA BE BI BO BU</li>
+                                <li>Expandir vocabulário</li>
+                                <li>Melhorar pronúncia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 9: FA FE FI FO FU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/O5B095wC9iA/hqdefault.jpg" alt="Alfabetização FA FE FI FO FU" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('O5B095wC9iA', 'Vídeo Educativo Infantil - Alfabetização Fa Fe Fi Fo Fu')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Vídeo Educativo Infantil - Alfabetização Fa Fe Fi Fo Fu</h3>
+                        <p class="video-description">Aprenda as sílabas FA FE FI FO FU de forma divertida e educativa. Perfeito para o processo de alfabetização.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer sílabas FA FE FI FO FU</li>
+                                <li>Formar palavras familiares</li>
+                                <li>Desenvolver consciência fonológica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 10: LA LE LI LO LU -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/_Cr0JL53jz4/hqdefault.jpg" alt="Alfabetização Divertida - LA LE LI LO LU" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('_Cr0JL53jz4', 'Alfabetização Divertida - LA LE LI LO LU - Vídeo Infantil')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Alfabetização Divertida - LA LE LI LO LU - Vídeo Infantil</h3>
+                        <p class="video-description">Aprenda as sílabas LA LE LI LO LU de forma divertida e educativa. Vídeo perfeito para alfabetização infantil.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer sílabas LA LE LI LO LU</li>
+                                <li>Expandir vocabulário</li>
+                                <li>Desenvolver fluência na leitura</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 11: Parlendas Animadas -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/lYDBBimX0Es/hqdefault.jpg" alt="Parlendas Animadas" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('lYDBBimX0Es', 'Parlendas Animadas - Vídeo Educativo Infantil')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Parlendas Animadas - Vídeo Educativo Infantil</h3>
+                        <p class="video-description">Aprenda parlendas tradicionais de forma animada e divertida. Desenvolve ritmo, memória e linguagem oral.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver ritmo e musicalidade</li>
+                                <li>Melhorar memória e concentração</li>
+                                <li>Expandir vocabulário oral</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 12: Vogais - AEIOU - Timbre Fechado -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/NX3yV0lwlsE/hqdefault.jpg" alt="Vogais - AEIOU - Timbre Fechado" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('NX3yV0lwlsE', 'Vídeo Educativo Infantil Vogais - AEIOU - Timbre Fechado')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Vídeo Educativo Infantil Vogais - AEIOU - Timbre Fechado</h3>
+                        <p class="video-description">Aprenda as vogais A E I O U com foco no timbre fechado. Vídeo educativo para alfabetização infantil.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer vogais com timbre fechado</li>
+                                <li>Diferenciar sons das vogais</li>
+                                <li>Preparar para leitura</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 13: Mamíferos -->
+                <div class="video-card" data-category="alfabetizacao">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/WMAtoGsUjdY/hqdefault.jpg" alt="Mamíferos - Vídeo Educativo" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openAlfabetizacaoVideo('WMAtoGsUjdY', 'Mamíferos - Vídeo Educativo - Curiosidades, Recordes...')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Mamíferos - Vídeo Educativo - Curiosidades, Recordes...</h3>
+                        <p class="video-description">Aprenda sobre mamíferos de forma educativa e divertida. Conheça curiosidades e recordes do mundo animal.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer características dos mamíferos</li>
+                                <li>Expandir conhecimento sobre animais</li>
+                                <li>Desenvolver curiosidade científica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeos de Conhecimentos Gerais - De onde vem? -->
+                <!-- Vídeo 1: De Onde Vem a Onda? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/O8eQeKn-atw/hqdefault.jpg" alt="De Onde Vem a Onda? #Episódio 1" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('O8eQeKn-atw', 'De Onde Vem a Onda? #Episódio 1')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem a Onda? #Episódio 1</h3>
+                        <p class="video-description">Descubra de onde vêm as ondas do mar de forma divertida e educativa. Aprenda sobre a natureza e os fenômenos naturais.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender fenômenos naturais</li>
+                                <li>Desenvolver curiosidade científica</li>
+                                <li>Conhecer o mundo ao redor</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 2: De Onde Vem a TV? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/Wm6bPczw5Ls/hqdefault.jpg" alt="De Onde Vem a TV? #Episódio 2" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('Wm6bPczw5Ls', 'De Onde Vem a TV? #Episódio 2')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem a TV? #Episódio 2</h3>
+                        <p class="video-description">Aprenda como a televisão funciona e de onde vêm as imagens que vemos na tela. Desperte a curiosidade sobre tecnologia.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender tecnologia básica</li>
+                                <li>Desenvolver pensamento lógico</li>
+                                <li>Conhecer invenções humanas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 3: De Onde Vem a TV? #Episódio 3 -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/8ti6FtlvMoc/hqdefault.jpg" alt="De Onde Vem a TV? #Episódio 3" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('8ti6FtlvMoc', 'De Onde Vem a TV? #Episódio 3')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem a TV? #Episódio 3</h3>
+                        <p class="video-description">Continue aprendendo sobre a televisão e suas tecnologias. Desenvolva conhecimento sobre comunicação e mídia.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Ampliar conhecimento sobre TV</li>
+                                <li>Entender comunicação</li>
+                                <li>Desenvolver pensamento crítico</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 4: De Onde Vem o Açúcar? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/IZ8hoNdKJBg/hqdefault.jpg" alt="De Onde Vem o Açúcar? #Episódio 4" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('IZ8hoNdKJBg', 'De Onde Vem o Açúcar? #Episódio 4')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Açúcar? #Episódio 4</h3>
+                        <p class="video-description">Descubra como o açúcar é produzido e de onde vem. Aprenda sobre agricultura e processamento de alimentos.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer produção de alimentos</li>
+                                <li>Entender agricultura</li>
+                                <li>Desenvolver consciência alimentar</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 5: De Onde Vem o Arco-Íris? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/tW819inM4hg/hqdefault.jpg" alt="De Onde Vem o Arco-Íris? #Episódio 5" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('tW819inM4hg', 'De Onde Vem o Arco-Íris? #Episódio 5')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Arco-Íris? #Episódio 5</h3>
+                        <p class="video-description">Aprenda sobre a formação do arco-íris e os fenômenos da luz. Desperte a curiosidade sobre física e óptica.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender fenômenos da luz</li>
+                                <li>Conhecer cores e espectro</li>
+                                <li>Desenvolver pensamento científico</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 6: De Onde Vem o Avião? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/qhZAx7q_45Q/hqdefault.jpg" alt="De Onde Vem o Avião? #Episódio 6" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('qhZAx7q_45Q', 'De Onde Vem o Avião? #Episódio 6')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Avião? #Episódio 6</h3>
+                        <p class="video-description">Descubra como os aviões são fabricados e como voam. Aprenda sobre engenharia e transporte aéreo.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer engenharia aeronáutica</li>
+                                <li>Entender princípios de voo</li>
+                                <li>Desenvolver interesse por tecnologia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 7: De Onde Vem o Choro? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/07SbNI5jzno/hqdefault.jpg" alt="De Onde Vem o Choro? #Episódio 7" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('07SbNI5jzno', 'De Onde Vem o Choro? #Episódio 7')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Choro? #Episódio 7</h3>
+                        <p class="video-description">Aprenda sobre as emoções e por que choramos. Desenvolva inteligência emocional e autoconhecimento.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender emoções humanas</li>
+                                <li>Desenvolver inteligência emocional</li>
+                                <li>Conhecer o corpo humano</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 8: De Onde Vem o Dia e a Noite? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/Nux_3PVdo9U/hqdefault.jpg" alt="De Onde Vem o Dia e a Noite? #Episódio 8" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('Nux_3PVdo9U', 'De Onde Vem o Dia e a Noite? #Episódio 8')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Dia e a Noite? #Episódio 8</h3>
+                        <p class="video-description">Descubra por que temos dia e noite. Aprenda sobre astronomia e o movimento da Terra.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender astronomia básica</li>
+                                <li>Conhecer o sistema solar</li>
+                                <li>Desenvolver pensamento científico</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 9: De Onde Vem o Espirro? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/abfLDAq-nvs/hqdefault.jpg" alt="De Onde Vem o Espirro? #Episódio 9" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('abfLDAq-nvs', 'De Onde Vem o Espirro? #Episódio 9')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Espirro? #Episódio 9</h3>
+                        <p class="video-description">Aprenda sobre o sistema respiratório e por que espirramos. Conheça o funcionamento do corpo humano.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer o corpo humano</li>
+                                <li>Entender sistema respiratório</li>
+                                <li>Desenvolver consciência corporal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 10: De Onde Vem o Fósforo? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/S01TrpEO148/hqdefault.jpg" alt="De Onde Vem o Fósforo? #Episódio 10" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('S01TrpEO148', 'De Onde Vem o Fósforo? #Episódio 10')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Fósforo? #Episódio 10</h3>
+                        <p class="video-description">Descubra como os fósforos são feitos e como funcionam. Aprenda sobre química e segurança.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender química básica</li>
+                                <li>Conhecer processos industriais</li>
+                                <li>Desenvolver consciência de segurança</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 11: De Onde Vem o Leite? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/iGAwTwdB5NA/hqdefault.jpg" alt="De Onde Vem o Leite? #Episódio 11" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('iGAwTwdB5NA', 'De Onde Vem o Leite? #Episódio 11')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Leite? #Episódio 11</h3>
+                        <p class="video-description">Aprenda sobre a produção do leite e a vida na fazenda. Conheça os animais e a agricultura.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer produção animal</li>
+                                <li>Entender agricultura</li>
+                                <li>Desenvolver consciência alimentar</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 12: De Onde Vem o Livro? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/wPfTwJVKRP4/hqdefault.jpg" alt="De Onde Vem o Livro? #Episódio 12" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('wPfTwJVKRP4', 'De Onde Vem o Livro? #Episódio 12')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Livro? #Episódio 12</h3>
+                        <p class="video-description">Descubra como os livros são feitos, do papel até a impressão. Aprenda sobre literatura e cultura.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer processo editorial</li>
+                                <li>Valorizar a leitura</li>
+                                <li>Entender produção cultural</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 13: De Onde Vem o Ovo? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/xaNLpqz8Mjg/hqdefault.jpg" alt="De Onde Vem o Ovo? #Episódio 13" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('xaNLpqz8Mjg', 'De Onde Vem o Ovo? #Episódio 13')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Ovo? #Episódio 13</h3>
+                        <p class="video-description">Aprenda sobre as galinhas e como elas botam ovos. Conheça a vida dos animais da fazenda.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer reprodução animal</li>
+                                <li>Entender vida na fazenda</li>
+                                <li>Desenvolver consciência alimentar</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 14: De Onde Vem o Pão? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/Njk8z5dhByQ/hqdefault.jpg" alt="De Onde Vem o Pão? #Episódio 14" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('Njk8z5dhByQ', 'De Onde Vem o Pão? #Episódio 14')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Pão? #Episódio 14</h3>
+                        <p class="video-description">Descubra como o pão é feito, do trigo até a padaria. Aprenda sobre agricultura e culinária.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer produção de alimentos</li>
+                                <li>Entender agricultura</li>
+                                <li>Valorizar o trabalho humano</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 15: De Onde Vem o Papel? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/rjUaQW0VG0k/hqdefault.jpg" alt="De Onde Vem o Papel? #Episódio 15" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('rjUaQW0VG0k', 'De Onde Vem o Papel? #Episódio 15')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Papel? #Episódio 15</h3>
+                        <p class="video-description">Aprenda como o papel é produzido a partir das árvores. Desenvolva consciência ambiental.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender produção industrial</li>
+                                <li>Desenvolver consciência ambiental</li>
+                                <li>Conhecer sustentabilidade</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 16: De Onde Vem o Plástico? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/uV0R0f1sy4Q/hqdefault.jpg" alt="De Onde Vem o Plástico? #Episódio 16" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('uV0R0f1sy4Q', 'De Onde Vem o Plástico? #Episódio 16')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Plástico? #Episódio 16</h3>
+                        <p class="video-description">Descubra como o plástico é feito e seu impacto no meio ambiente. Aprenda sobre sustentabilidade.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer química industrial</li>
+                                <li>Desenvolver consciência ambiental</li>
+                                <li>Entender sustentabilidade</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 17: De Onde Vem o Sal? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/ok3p5bO5-c0/hqdefault.jpg" alt="De Onde Vem o Sal? #Episódio 17" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('ok3p5bO5-c0', 'De Onde Vem o Sal? #Episódio 17')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Sal? #Episódio 17</h3>
+                        <p class="video-description">Aprenda sobre a extração do sal do mar e das minas. Conheça a geologia e a química.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer geologia básica</li>
+                                <li>Entender química dos minerais</li>
+                                <li>Desenvolver pensamento científico</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 18: De Onde Vem o Sapato? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/Kkpje9rXzQ8/hqdefault.jpg" alt="De Onde Vem o Sapato? #Episódio 18" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('Kkpje9rXzQ8', 'De Onde Vem o Sapato? #Episódio 18')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Sapato? #Episódio 18</h3>
+                        <p class="video-description">Descubra como os sapatos são fabricados, do design até a produção. Aprenda sobre moda e indústria.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer processo industrial</li>
+                                <li>Entender design e moda</li>
+                                <li>Valorizar o trabalho artesanal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 19: De Onde Vem o Vidro? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/gj9R3nmB67Q/hqdefault.jpg" alt="De Onde Vem o Vidro? #Episódio 19" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('gj9R3nmB67Q', 'De Onde Vem o Vidro? #Episódio 19')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Vidro? #Episódio 19</h3>
+                        <p class="video-description">Aprenda como o vidro é feito a partir da areia. Conheça a química e a física dos materiais.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender química dos materiais</li>
+                                <li>Conhecer processos industriais</li>
+                                <li>Desenvolver pensamento científico</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 20: De Onde Vem o Raio e o Trovão? -->
+                <div class="video-card" data-category="conhecimentos">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/EjlNfH5z08w/hqdefault.jpg" alt="De Onde Vem o Raio e o Trovão? #Episódio 20" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openConhecimentosVideo('EjlNfH5z08w', 'De Onde Vem o Raio e o Trovão? #Episódio 20')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">De Onde Vem o Raio e o Trovão? #Episódio 20</h3>
+                        <p class="video-description">Descubra os segredos das tempestades e como se formam os raios e trovões. Aprenda sobre meteorologia.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Educativo</span>
+                            <span class="video-age">4-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Entender meteorologia</li>
+                                <li>Conhecer fenômenos atmosféricos</li>
+                                <li>Desenvolver pensamento científico</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeos de Devocional Kids -->
+                <!-- Vídeo 1: A importância de honrar pai e mãe -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/qSTTMGMjV30/hqdefault.jpg" alt="A importância de honrar pai e mãe - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('qSTTMGMjV30', 'A importância de honrar pai e mãe - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A importância de honrar pai e mãe - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre o valor de honrar e respeitar os pais. Desenvolva valores cristãos e amor familiar.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Valorizar a família</li>
+                                <li>Desenvolver respeito aos pais</li>
+                                <li>Praticar valores cristãos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 2: Buscando a Deus em todo momento -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/LMI7HMR_yow/hqdefault.jpg" alt="Buscando a Deus em todo momento - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('LMI7HMR_yow', 'Buscando a Deus em todo momento - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Buscando a Deus em todo momento - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a buscar a Deus em todas as situações da vida. Desenvolva uma relação próxima com Jesus.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver vida espiritual</li>
+                                <li>Praticar oração diária</li>
+                                <li>Conhecer a presença de Deus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 3: A construção firme da fé -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/IKCFj2HXzOk/hqdefault.jpg" alt="A construção firme da fé - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('IKCFj2HXzOk', 'A construção firme da fé - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A construção firme da fé - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a construir uma fé sólida e forte em Jesus. Desenvolva confiança em Deus.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Fortalecer a fé em Jesus</li>
+                                <li>Desenvolver confiança em Deus</li>
+                                <li>Construir base espiritual sólida</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 4: A alegria na casa de Deus -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/IDShPj9PUX4/hqdefault.jpg" alt="A alegria na casa de Deus - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('IDShPj9PUX4', 'A alegria na casa de Deus - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A alegria na casa de Deus - Devocional Kids</h3>
+                        <p class="video-description">Descubra a alegria de estar na presença de Deus. Aprenda sobre adoração e comunhão.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Valorizar a igreja</li>
+                                <li>Desenvolver alegria na adoração</li>
+                                <li>Praticar comunhão cristã</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 5: Seja forte e corajoso -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/hlUaJQXehPk/hqdefault.jpg" alt="Seja forte e corajoso - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('hlUaJQXehPk', 'Seja forte e corajoso - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Seja forte e corajoso - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a ser corajoso com a força que vem de Deus. Desenvolva coragem e determinação.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver coragem</li>
+                                <li>Confiar na força de Deus</li>
+                                <li>Superar medos e desafios</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 6: O amor que brilha -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/bjyRvGIbeeo/hqdefault.jpg" alt="O amor que brilha - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('bjyRvGIbeeo', 'O amor que brilha - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">O amor que brilha - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre o amor de Deus que brilha em nossas vidas. Desenvolva amor ao próximo.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer o amor de Deus</li>
+                                <li>Praticar amor ao próximo</li>
+                                <li>Brilhar com o amor de Jesus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 7: Adorando a Deus com corações alegres -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/ELTSCqVWOko/hqdefault.jpg" alt="Adorando a Deus com corações alegres - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('ELTSCqVWOko', 'Adorando a Deus com corações alegres - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Adorando a Deus com corações alegres - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a adorar a Deus com alegria e gratidão. Desenvolva um coração de adoração.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Praticar adoração alegre</li>
+                                <li>Desenvolver gratidão</li>
+                                <li>Expressar amor a Deus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 8: Em missão pelo mundo com Jesus -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/ZT68iBP1lHk/hqdefault.jpg" alt="Em missão pelo mundo com Jesus - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('ZT68iBP1lHk', 'Em missão pelo mundo com Jesus - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Em missão pelo mundo com Jesus - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a missão de Jesus e como podemos segui-lo. Desenvolva propósito de vida.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer a missão de Jesus</li>
+                                <li>Desenvolver propósito cristão</li>
+                                <li>Praticar evangelismo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 9: O Senhor é o meu Pastor -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/LfLdEs34C0g/hqdefault.jpg" alt="O Senhor é o meu Pastor - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('LfLdEs34C0g', 'O Senhor é o meu Pastor - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">O Senhor é o meu Pastor - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre o Salmo 23 e como Deus cuida de nós como um pastor cuida de suas ovelhas.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer o Salmo 23</li>
+                                <li>Entender o cuidado de Deus</li>
+                                <li>Desenvolver confiança no Senhor</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 10: Coragem em Deus -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/S53ko0QcI3I/hqdefault.jpg" alt="Coragem em Deus - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('S53ko0QcI3I', 'Coragem em Deus - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Coragem em Deus - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a encontrar coragem em Deus para enfrentar os desafios da vida. Desenvolva força espiritual.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver coragem espiritual</li>
+                                <li>Confiar na força de Deus</li>
+                                <li>Superar medos e ansiedades</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 11: A alegria de servir -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/TumIy-_6dlo/hqdefault.jpg" alt="A alegria de servir - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('TumIy-_6dlo', 'A alegria de servir - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A alegria de servir - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a alegria de servir a Deus e ao próximo. Desenvolva um coração de servo.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver coração de servo</li>
+                                <li>Praticar serviço ao próximo</li>
+                                <li>Encontrar alegria no servir</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 12: Aprendendo a amar como Jesus ama -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/R0r4eEy392s/hqdefault.jpg" alt="Aprendendo a amar como Jesus ama - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('R0r4eEy392s', 'Aprendendo a amar como Jesus ama - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Aprendendo a amar como Jesus ama - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a amar como Jesus nos ensinou. Desenvolva amor incondicional e compaixão.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Aprender o amor de Jesus</li>
+                                <li>Praticar amor incondicional</li>
+                                <li>Desenvolver compaixão</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 13: A alegria da humildade -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/vVgZmDdl5QU/hqdefault.jpg" alt="A alegria da humildade - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('vVgZmDdl5QU', 'A alegria da humildade - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A alegria da humildade - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a importância da humildade e como ela nos aproxima de Deus. Desenvolva modéstia.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver humildade</li>
+                                <li>Praticar modéstia</li>
+                                <li>Valorizar a simplicidade</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 14: Maravilhosa criação de Deus -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/vVgZmDdl5QU/hqdefault.jpg" alt="Maravilhosa criação de Deus - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('vVgZmDdl5QU', 'Maravilhosa criação de Deus - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Maravilhosa criação de Deus - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a maravilhosa criação de Deus e como cuidar dela. Desenvolva consciência ambiental.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer a criação de Deus</li>
+                                <li>Desenvolver consciência ambiental</li>
+                                <li>Cuidar da natureza</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 15: Seguindo os passos de Cristo -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/yfXYaPkq9rA/hqdefault.jpg" alt="Seguindo os passos de Cristo - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('yfXYaPkq9rA', 'Seguindo os passos de Cristo - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Seguindo os passos de Cristo - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a seguir os passos de Jesus em sua vida diária. Desenvolva um caminhar cristão.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Seguir o exemplo de Jesus</li>
+                                <li>Praticar valores cristãos</li>
+                                <li>Desenvolver caráter cristão</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 16: Descobrindo a imagem e semelhança de Deus -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/GvmT1HxKht8/hqdefault.jpg" alt="Descobrindo a imagem e semelhança de Deus - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('GvmT1HxKht8', 'Descobrindo a imagem e semelhança de Deus - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Descobrindo a imagem e semelhança de Deus - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre como fomos criados à imagem e semelhança de Deus. Desenvolva autoestima cristã.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer sua identidade em Deus</li>
+                                <li>Desenvolver autoestima cristã</li>
+                                <li>Valorizar a criação divina</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 17: Obedecer é melhor do que sacrifícios -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/qW-7eW35iwU/hqdefault.jpg" alt="Obedecer é melhor do que sacrifícios - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('qW-7eW35iwU', 'Obedecer é melhor do que sacrifícios - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Obedecer é melhor do que sacrifícios - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a importância da obediência a Deus. Desenvolva um coração obediente.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver obediência a Deus</li>
+                                <li>Praticar obediência aos pais</li>
+                                <li>Entender o valor da obediência</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 18: Ofertando com alegria -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/8s5pOFFfcqw/hqdefault.jpg" alt="Ofertando com alegria - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('8s5pOFFfcqw', 'Ofertando com alegria - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Ofertando com alegria - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a alegria de ofertar a Deus. Desenvolva generosidade e gratidão.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver generosidade</li>
+                                <li>Praticar ofertas com alegria</li>
+                                <li>Valorizar a gratidão</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 19: Protegendo nossos pensamentos em Jesus -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/6ua_Pyv0LNA/hqdefault.jpg" alt="Protegendo nossos pensamentos em Jesus - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('6ua_Pyv0LNA', 'Protegendo nossos pensamentos em Jesus - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Protegendo nossos pensamentos em Jesus - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a proteger seus pensamentos com a ajuda de Jesus. Desenvolva pureza mental.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Proteger pensamentos</li>
+                                <li>Desenvolver pureza mental</li>
+                                <li>Confiar na proteção de Jesus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 20: Em busca de sabedoria Divina -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/PJEIOCK2rn4/hqdefault.jpg" alt="Em busca de sabedoria Divina - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('PJEIOCK2rn4', 'Em busca de sabedoria Divina - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Em busca de sabedoria Divina - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a buscar a sabedoria que vem de Deus. Desenvolva discernimento espiritual.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Buscar sabedoria divina</li>
+                                <li>Desenvolver discernimento</li>
+                                <li>Praticar oração por sabedoria</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 21: A alegria do Senhor é a minha força -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/JmjIQfe6DsA/hqdefault.jpg" alt="A alegria do Senhor é a minha força - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('JmjIQfe6DsA', 'A alegria do Senhor é a minha força - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A alegria do Senhor é a minha força - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a alegria que vem de Deus e como ela nos fortalece. Desenvolva alegria espiritual.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver alegria espiritual</li>
+                                <li>Encontrar força em Deus</li>
+                                <li>Praticar gratidão</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 22: Firme na promessa de Jesus -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/0VsFn_gYzeQ/hqdefault.jpg" alt="Firme na promessa de Jesus - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('0VsFn_gYzeQ', 'Firme na promessa de Jesus - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Firme na promessa de Jesus - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre as promessas de Jesus e como confiar nelas. Desenvolva fé e esperança.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer as promessas de Jesus</li>
+                                <li>Desenvolver fé e esperança</li>
+                                <li>Confiar nas promessas divinas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 23: Perdoando como Jesus ensina -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/oC_x18JCoPQ/hqdefault.jpg" alt="Perdoando como Jesus ensina - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('oC_x18JCoPQ', 'Perdoando como Jesus ensina - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Perdoando como Jesus ensina - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre o perdão como Jesus nos ensinou. Desenvolva um coração perdoador.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Aprender sobre perdão</li>
+                                <li>Desenvolver coração perdoador</li>
+                                <li>Praticar misericórdia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 24: O amor de Deus por nós -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/km2IN6lemCQ/hqdefault.jpg" alt="O amor de Deus por nós - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('km2IN6lemCQ', 'O amor de Deus por nós - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">O amor de Deus por nós - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre o grande amor que Deus tem por cada um de nós. Desenvolva segurança no amor divino.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer o amor de Deus</li>
+                                <li>Desenvolver segurança no amor</li>
+                                <li>Valorizar o amor divino</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 25: O milagre do Natal -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/QOt9TC5maHk/hqdefault.jpg" alt="O milagre do Natal - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('QOt9TC5maHk', 'O milagre do Natal - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">O milagre do Natal - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre o verdadeiro significado do Natal e o nascimento de Jesus. Desenvolva espírito natalino.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer o verdadeiro Natal</li>
+                                <li>Valorizar o nascimento de Jesus</li>
+                                <li>Desenvolver espírito natalino</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 26: A alegria da gratidão -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/LvWT8LWTfu4/hqdefault.jpg" alt="A alegria da gratidão - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('LvWT8LWTfu4', 'A alegria da gratidão - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A alegria da gratidão - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a importância da gratidão e como ela nos traz alegria. Desenvolva um coração grato.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver gratidão</li>
+                                <li>Praticar agradecimento</li>
+                                <li>Encontrar alegria na gratidão</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 27: Pequenas mãos, grandes corações -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/9bGpVWkOhqI/hqdefault.jpg" alt="Pequenas mãos, grandes corações - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('9bGpVWkOhqI', 'Pequenas mãos, grandes corações - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Pequenas mãos, grandes corações - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre como crianças podem fazer grandes coisas com amor. Desenvolva compaixão e generosidade.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver compaixão</li>
+                                <li>Praticar generosidade</li>
+                                <li>Valorizar pequenos gestos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 28: A paciência de Jó -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/jAUWKaFmOxM/hqdefault.jpg" alt="A paciência de Jó - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('jAUWKaFmOxM', 'A paciência de Jó - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A paciência de Jó - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a história de Jó e a importância da paciência. Desenvolva perseverança e fé.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer a história de Jó</li>
+                                <li>Desenvolver paciência</li>
+                                <li>Praticar perseverança</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 29: Esperando com alegria -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/tpZIkCyarW4/hqdefault.jpg" alt="Esperando com alegria - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('tpZIkCyarW4', 'Esperando com alegria - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Esperando com alegria - Devocional Kids</h3>
+                        <p class="video-description">Aprenda a esperar com alegria e esperança. Desenvolva paciência e confiança em Deus.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver paciência</li>
+                                <li>Praticar esperança</li>
+                                <li>Confiar no tempo de Deus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 30: Voando como águia -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/2n1RRcMkzWY/hqdefault.jpg" alt="Voando como águia - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('2n1RRcMkzWY', 'Voando como águia - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Voando como águia - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre como Deus nos renova e nos dá força para voar alto. Desenvolva confiança e renovação.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer renovação em Deus</li>
+                                <li>Desenvolver confiança</li>
+                                <li>Voar alto com Jesus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 31: Feliz 2024 - A esperança que brilha -->
+                <div class="video-card" data-category="devocional">
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/vPyZLCYOFB4/hqdefault.jpg" alt="Feliz 2024 - A esperança que brilha - Devocional Kids" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="play-overlay" onclick="openDevocionalVideo('vPyZLCYOFB4', 'Feliz 2024 - A esperança que brilha - Devocional Kids')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Feliz 2024 - A esperança que brilha - Devocional Kids</h3>
+                        <p class="video-description">Aprenda sobre a esperança que brilha em um novo ano. Desenvolva otimismo e fé no futuro.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">Devocional</span>
+                            <span class="video-age">3-8 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver esperança</li>
+                                <li>Praticar otimismo</li>
+                                <li>Confiar no futuro com Deus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 1: Cores -->
+                <div class="video-card" data-category="cores">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);">
+                        <i class="fas fa-palette"></i>
+                        <div class="play-overlay" onclick="openVideoModal(1)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Aprenda as Cores com Diversão</h3>
+                        <p class="video-description">Um vídeo interativo que ensina as cores básicas através de objetos do dia a dia, com música e animações coloridas.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">3:45</span>
+                            <span class="video-age">2-4 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Identificar cores primárias e secundárias</li>
+                                <li>Associar cores a objetos familiares</li>
+                                <li>Desenvolver vocabulário visual</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 2: Números -->
+                <div class="video-card" data-category="numeros">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #FFD93D 0%, #6BCF7F 100%);">
+                        <i class="fas fa-calculator"></i>
+                        <div class="play-overlay" onclick="openVideoModal(2)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Contando de 1 a 10</h3>
+                        <p class="video-description">Aprenda a contar de forma divertida com objetos coloridos e música cativante. Perfeito para introduzir os números.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">4:20</span>
+                            <span class="video-age">3-5 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer números de 1 a 10</li>
+                                <li>Contar objetos visuais</li>
+                                <li>Desenvolver noção de quantidade</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 3: Alfabeto -->
+                <div class="video-card" data-category="alfabeto">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #A8E6CF 0%, #FFD3A5 100%);">
+                        <i class="fas fa-font"></i>
+                        <div class="play-overlay" onclick="openVideoModal(3)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">ABC - O Alfabeto Divertido</h3>
+                        <p class="video-description">Cante junto e aprenda o alfabeto com palavras que começam com cada letra. Animação suave e música envolvente.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">5:15</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer letras do alfabeto</li>
+                                <li>Associar letras a palavras</li>
+                                <li>Desenvolver consciência fonológica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 4: Valores Cristãos -->
+                <div class="video-card" data-category="cristao">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #FFB6C1 0%, #87CEEB 100%);">
+                        <i class="fas fa-heart"></i>
+                        <div class="play-overlay" onclick="openVideoModal(4)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Jesus Me Ama - História Bíblica</h3>
+                        <p class="video-description">Uma história linda sobre o amor de Jesus, contada de forma simples e com ilustrações delicadas para crianças.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">6:30</span>
+                            <span class="video-age">2-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Conhecer o amor de Deus</li>
+                                <li>Desenvolver valores cristãos</li>
+                                <li>Fortalecer fé e espiritualidade</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 5: Natureza -->
+                <div class="video-card" data-category="natureza">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #98FB98 0%, #F0E68C 100%);">
+                        <i class="fas fa-leaf"></i>
+                        <div class="play-overlay" onclick="openVideoModal(5)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Animais da Fazenda</h3>
+                        <p class="video-description">Conheça os animais da fazenda e seus sons. Um vídeo educativo sobre a vida no campo e a natureza.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">4:50</span>
+                            <span class="video-age">2-5 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Identificar animais da fazenda</li>
+                                <li>Reconhecer sons dos animais</li>
+                                <li>Conhecer a vida rural</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 6: Brincadeiras -->
+                <div class="video-card" data-category="brincadeiras">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);">
+                        <i class="fas fa-gamepad"></i>
+                        <div class="play-overlay" onclick="openVideoModal(6)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Brincadeiras Educativas</h3>
+                        <p class="video-description">Atividades divertidas que você pode fazer em casa com seu filho. Brincadeiras que ensinam e divertem ao mesmo tempo.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">7:20</span>
+                            <span class="video-age">3-6 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver coordenação motora</li>
+                                <li>Fortalecer vínculo familiar</li>
+                                <li>Aprender através da brincadeira</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 7: Formas -->
+                <div class="video-card" data-category="cores">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-shapes"></i>
+                        <div class="play-overlay" onclick="openVideoModal(7)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Formas Geométricas</h3>
+                        <p class="video-description">Aprenda sobre círculos, quadrados, triângulos e retângulos através de objetos do cotidiano e música animada.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">3:15</span>
+                            <span class="video-age">2-4 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Identificar formas geométricas</li>
+                                <li>Associar formas a objetos reais</li>
+                                <li>Desenvolver percepção espacial</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 8: Vogais -->
+                <div class="video-card" data-category="alfabeto">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-spell-check"></i>
+                        <div class="play-overlay" onclick="openVideoModal(8)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">A, E, I, O, U - As Vogais</h3>
+                        <p class="video-description">Um vídeo especial focado nas vogais, com exemplos práticos e exercícios de pronúncia para crianças.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">4:05</span>
+                            <span class="video-age">3-5 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Reconhecer as vogais</li>
+                                <li>Melhorar pronúncia</li>
+                                <li>Preparar para leitura</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo 9: Valores -->
+                <div class="video-card" data-category="cristao">
+                    <div class="video-thumbnail" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-hands-helping"></i>
+                        <div class="play-overlay" onclick="openVideoModal(9)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-content">
+                        <h3 class="video-title">Compartilhar é Bom</h3>
+                        <p class="video-description">Uma história sobre generosidade e bondade, ensinando valores cristãos de forma lúdica e envolvente.</p>
+                        <div class="video-meta">
+                            <span class="video-duration">5:45</span>
+                            <span class="video-age">2-5 anos</span>
+                        </div>
+                        <div class="learning-objectives">
+                            <h4>🎯 Objetivos de Aprendizado:</h4>
+                            <ul>
+                                <li>Desenvolver generosidade</li>
+                                <li>Praticar bondade</li>
+                                <li>Fortalecer valores cristãos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Título do Vídeo</h2>
+                <button class="close-modal" onclick="closeVideoModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="video-player" id="videoPlayer">
+                <div style="text-align: center;">
+                    <i class="fas fa-play-circle" style="font-size: var(--font-size-4xl); color: var(--color-blue); margin-bottom: var(--spacing-md);"></i>
+                    <h3>Player de Vídeo</h3>
+                    <p>Em um site real, aqui seria integrado com o YouTube API ou um player próprio</p>
+                    <button class="btn btn-primary" style="margin-top: var(--spacing-md);">
+                        <i class="fas fa-play"></i> Reproduzir Vídeo
+                    </button>
+                </div>
+            </div>
+            <div id="modalDescription">
+                <p>Descrição do vídeo aparecerá aqui...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="nav-brand">
+                        <i class="fas fa-heart"></i>
+                        <span>Meu Bebê Inteligente</span>
+                    </div>
+                    <p>O lugar seguro e educativo para seu filho crescer aprendendo de verdade.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <a href="musicas.html">Músicas Educativas</a>
+                        <a href="videos.html">Vídeos Seguros</a>
+                        <a href="desenhos.html">Desenhos Cristãos</a>
+                        <a href="brincadeiras.html">Brincadeiras</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Suporte</h4>
+                        <a href="#">Central de Ajuda</a>
+                        <a href="#">Contato</a>
+                        <a href="#">Política de Privacidade</a>
+                        <a href="#">Termos de Uso</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Meu Bebê Inteligente. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        // Dados dos vídeos de alfabetização
+        const alfabetizacaoVideos = [
+            {
+                id: '3kkaTfsnwKU',
+                title: "Alfabetização TA TE TI TO TU e as Vogais - Com os Animais",
+                description: "Aprenda as sílabas TA TE TI TO TU de forma divertida com animais e vogais. Vídeo educativo perfeito para alfabetização infantil.",
+                category: "alfabetizacao"
+            },
+            {
+                id: '0PG7Q2w-1Dc',
+                title: "Vídeo Educativo Infantil - Alfabetização PA PE PI PO PU",
+                description: "Aprenda as sílabas PA PE PI PO PU de forma lúdica e educativa. Perfeito para crianças em processo de alfabetização.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'Ysgt821WeLw',
+                title: "As Sílabas - VA VE VI VO VU",
+                description: "Aprenda as sílabas VA VE VI VO VU de forma divertida e interativa. Vídeo educativo para alfabetização infantil.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'vXAOt8NKdH4',
+                title: "Alfabetização Divertida - MA ME MI MO MU - Vídeo Educativo Infantil",
+                description: "Aprenda as sílabas MA ME MI MO MU de forma divertida e educativa. Vídeo perfeito para alfabetização infantil.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'VJ31nf_TOGc',
+                title: "As Vogais - AEIOU - Alfabetização Divertida",
+                description: "Aprenda as vogais A E I O U de forma divertida e interativa. Base fundamental para a alfabetização infantil.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'Z_tF0mmcarE',
+                title: "Alfabetização Infantil com os Animais - Vídeo Infantil",
+                description: "Aprenda o alfabeto de forma divertida com animais. Vídeo educativo que combina alfabetização e conhecimento sobre animais.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'Fvu9DA2jSFE',
+                title: "Vídeo Educativo Infantil - Alfabetização DA DE DI DO DU",
+                description: "Aprenda as sílabas DA DE DI DO DU de forma educativa e divertida. Perfeito para o processo de alfabetização.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'WcZWOuZn-Kc',
+                title: "Vídeo Educativo Infantil - Alfabetização BA BE BI BO BU",
+                description: "Aprenda as sílabas BA BE BI BO BU de forma lúdica e educativa. Vídeo perfeito para alfabetização infantil.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'O5B095wC9iA',
+                title: "Vídeo Educativo Infantil - Alfabetização Fa Fe Fi Fo Fu",
+                description: "Aprenda as sílabas FA FE FI FO FU de forma divertida e educativa. Perfeito para o processo de alfabetização.",
+                category: "alfabetizacao"
+            },
+            {
+                id: '_Cr0JL53jz4',
+                title: "Alfabetização Divertida - LA LE LI LO LU - Vídeo Infantil",
+                description: "Aprenda as sílabas LA LE LI LO LU de forma divertida e educativa. Vídeo perfeito para alfabetização infantil.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'lYDBBimX0Es',
+                title: "Parlendas Animadas - Vídeo Educativo Infantil",
+                description: "Aprenda parlendas tradicionais de forma animada e divertida. Desenvolve ritmo, memória e linguagem oral.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'NX3yV0lwlsE',
+                title: "Vídeo Educativo Infantil Vogais - AEIOU - Timbre Fechado",
+                description: "Aprenda as vogais A E I O U com foco no timbre fechado. Vídeo educativo para alfabetização infantil.",
+                category: "alfabetizacao"
+            },
+            {
+                id: 'WMAtoGsUjdY',
+                title: "Mamíferos - Vídeo Educativo - Curiosidades, Recordes...",
+                description: "Aprenda sobre mamíferos de forma educativa e divertida. Conheça curiosidades e recordes do mundo animal.",
+                category: "alfabetizacao"
+            }
+        ];
+
+        // Dados dos vídeos de conhecimentos gerais
+        const conhecimentosVideos = [
+            {
+                id: 'O8eQeKn-atw',
+                title: "De Onde Vem a Onda? #Episódio 1",
+                description: "Descubra de onde vêm as ondas do mar de forma divertida e educativa. Aprenda sobre a natureza e os fenômenos naturais.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'Wm6bPczw5Ls',
+                title: "De Onde Vem a TV? #Episódio 2",
+                description: "Aprenda como a televisão funciona e de onde vêm as imagens que vemos na tela. Desperte a curiosidade sobre tecnologia.",
+                category: "conhecimentos"
+            },
+            {
+                id: '8ti6FtlvMoc',
+                title: "De Onde Vem a TV? #Episódio 3",
+                description: "Continue aprendendo sobre a televisão e suas tecnologias. Desenvolva conhecimento sobre comunicação e mídia.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'IZ8hoNdKJBg',
+                title: "De Onde Vem o Açúcar? #Episódio 4",
+                description: "Descubra como o açúcar é produzido e de onde vem. Aprenda sobre agricultura e processamento de alimentos.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'tW819inM4hg',
+                title: "De Onde Vem o Arco-Íris? #Episódio 5",
+                description: "Aprenda sobre a formação do arco-íris e os fenômenos da luz. Desperte a curiosidade sobre física e óptica.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'qhZAx7q_45Q',
+                title: "De Onde Vem o Avião? #Episódio 6",
+                description: "Descubra como os aviões são fabricados e como voam. Aprenda sobre engenharia e transporte aéreo.",
+                category: "conhecimentos"
+            },
+            {
+                id: '07SbNI5jzno',
+                title: "De Onde Vem o Choro? #Episódio 7",
+                description: "Aprenda sobre as emoções e por que choramos. Desenvolva inteligência emocional e autoconhecimento.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'Nux_3PVdo9U',
+                title: "De Onde Vem o Dia e a Noite? #Episódio 8",
+                description: "Descubra por que temos dia e noite. Aprenda sobre astronomia e o movimento da Terra.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'abfLDAq-nvs',
+                title: "De Onde Vem o Espirro? #Episódio 9",
+                description: "Aprenda sobre o sistema respiratório e por que espirramos. Conheça o funcionamento do corpo humano.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'S01TrpEO148',
+                title: "De Onde Vem o Fósforo? #Episódio 10",
+                description: "Descubra como os fósforos são feitos e como funcionam. Aprenda sobre química e segurança.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'iGAwTwdB5NA',
+                title: "De Onde Vem o Leite? #Episódio 11",
+                description: "Aprenda sobre a produção do leite e a vida na fazenda. Conheça os animais e a agricultura.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'wPfTwJVKRP4',
+                title: "De Onde Vem o Livro? #Episódio 12",
+                description: "Descubra como os livros são feitos, do papel até a impressão. Aprenda sobre literatura e cultura.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'xaNLpqz8Mjg',
+                title: "De Onde Vem o Ovo? #Episódio 13",
+                description: "Aprenda sobre as galinhas e como elas botam ovos. Conheça a vida dos animais da fazenda.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'Njk8z5dhByQ',
+                title: "De Onde Vem o Pão? #Episódio 14",
+                description: "Descubra como o pão é feito, do trigo até a padaria. Aprenda sobre agricultura e culinária.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'rjUaQW0VG0k',
+                title: "De Onde Vem o Papel? #Episódio 15",
+                description: "Aprenda como o papel é produzido a partir das árvores. Desenvolva consciência ambiental.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'uV0R0f1sy4Q',
+                title: "De Onde Vem o Plástico? #Episódio 16",
+                description: "Descubra como o plástico é feito e seu impacto no meio ambiente. Aprenda sobre sustentabilidade.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'ok3p5bO5-c0',
+                title: "De Onde Vem o Sal? #Episódio 17",
+                description: "Aprenda sobre a extração do sal do mar e das minas. Conheça a geologia e a química.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'Kkpje9rXzQ8',
+                title: "De Onde Vem o Sapato? #Episódio 18",
+                description: "Descubra como os sapatos são fabricados, do design até a produção. Aprenda sobre moda e indústria.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'gj9R3nmB67Q',
+                title: "De Onde Vem o Vidro? #Episódio 19",
+                description: "Aprenda como o vidro é feito a partir da areia. Conheça a química e a física dos materiais.",
+                category: "conhecimentos"
+            },
+            {
+                id: 'EjlNfH5z08w',
+                title: "De Onde Vem o Raio e o Trovão? #Episódio 20",
+                description: "Descubra os segredos das tempestades e como se formam os raios e trovões. Aprenda sobre meteorologia.",
+                category: "conhecimentos"
+            }
+        ];
+
+        // Dados dos vídeos de devocional kids
+        const devocionalVideos = [
+            {
+                id: 'qSTTMGMjV30',
+                title: "A importância de honrar pai e mãe - Devocional Kids",
+                description: "Aprenda sobre o valor de honrar e respeitar os pais. Desenvolva valores cristãos e amor familiar.",
+                category: "devocional"
+            },
+            {
+                id: 'LMI7HMR_yow',
+                title: "Buscando a Deus em todo momento - Devocional Kids",
+                description: "Aprenda a buscar a Deus em todas as situações da vida. Desenvolva uma relação próxima com Jesus.",
+                category: "devocional"
+            },
+            {
+                id: 'IKCFj2HXzOk',
+                title: "A construção firme da fé - Devocional Kids",
+                description: "Aprenda a construir uma fé sólida e forte em Jesus. Desenvolva confiança em Deus.",
+                category: "devocional"
+            },
+            {
+                id: 'IDShPj9PUX4',
+                title: "A alegria na casa de Deus - Devocional Kids",
+                description: "Descubra a alegria de estar na presença de Deus. Aprenda sobre adoração e comunhão.",
+                category: "devocional"
+            },
+            {
+                id: 'hlUaJQXehPk',
+                title: "Seja forte e corajoso - Devocional Kids",
+                description: "Aprenda a ser corajoso com a força que vem de Deus. Desenvolva coragem e determinação.",
+                category: "devocional"
+            },
+            {
+                id: 'bjyRvGIbeeo',
+                title: "O amor que brilha - Devocional Kids",
+                description: "Aprenda sobre o amor de Deus que brilha em nossas vidas. Desenvolva amor ao próximo.",
+                category: "devocional"
+            },
+            {
+                id: 'ELTSCqVWOko',
+                title: "Adorando a Deus com corações alegres - Devocional Kids",
+                description: "Aprenda a adorar a Deus com alegria e gratidão. Desenvolva um coração de adoração.",
+                category: "devocional"
+            },
+            {
+                id: 'ZT68iBP1lHk',
+                title: "Em missão pelo mundo com Jesus - Devocional Kids",
+                description: "Aprenda sobre a missão de Jesus e como podemos segui-lo. Desenvolva propósito de vida.",
+                category: "devocional"
+            },
+            {
+                id: 'LfLdEs34C0g',
+                title: "O Senhor é o meu Pastor - Devocional Kids",
+                description: "Aprenda sobre o Salmo 23 e como Deus cuida de nós como um pastor cuida de suas ovelhas.",
+                category: "devocional"
+            },
+            {
+                id: 'S53ko0QcI3I',
+                title: "Coragem em Deus - Devocional Kids",
+                description: "Aprenda a encontrar coragem em Deus para enfrentar os desafios da vida. Desenvolva força espiritual.",
+                category: "devocional"
+            },
+            {
+                id: 'TumIy-_6dlo',
+                title: "A alegria de servir - Devocional Kids",
+                description: "Aprenda sobre a alegria de servir a Deus e ao próximo. Desenvolva um coração de servo.",
+                category: "devocional"
+            },
+            {
+                id: 'R0r4eEy392s',
+                title: "Aprendendo a amar como Jesus ama - Devocional Kids",
+                description: "Aprenda a amar como Jesus nos ensinou. Desenvolva amor incondicional e compaixão.",
+                category: "devocional"
+            },
+            {
+                id: 'vVgZmDdl5QU',
+                title: "A alegria da humildade - Devocional Kids",
+                description: "Aprenda sobre a importância da humildade e como ela nos aproxima de Deus. Desenvolva modéstia.",
+                category: "devocional"
+            },
+            {
+                id: 'vVgZmDdl5QU',
+                title: "Maravilhosa criação de Deus - Devocional Kids",
+                description: "Aprenda sobre a maravilhosa criação de Deus e como cuidar dela. Desenvolva consciência ambiental.",
+                category: "devocional"
+            },
+            {
+                id: 'yfXYaPkq9rA',
+                title: "Seguindo os passos de Cristo - Devocional Kids",
+                description: "Aprenda a seguir os passos de Jesus em sua vida diária. Desenvolva um caminhar cristão.",
+                category: "devocional"
+            },
+            {
+                id: 'GvmT1HxKht8',
+                title: "Descobrindo a imagem e semelhança de Deus - Devocional Kids",
+                description: "Aprenda sobre como fomos criados à imagem e semelhança de Deus. Desenvolva autoestima cristã.",
+                category: "devocional"
+            },
+            {
+                id: 'qW-7eW35iwU',
+                title: "Obedecer é melhor do que sacrifícios - Devocional Kids",
+                description: "Aprenda sobre a importância da obediência a Deus. Desenvolva um coração obediente.",
+                category: "devocional"
+            },
+            {
+                id: '8s5pOFFfcqw',
+                title: "Ofertando com alegria - Devocional Kids",
+                description: "Aprenda sobre a alegria de ofertar a Deus. Desenvolva generosidade e gratidão.",
+                category: "devocional"
+            },
+            {
+                id: '6ua_Pyv0LNA',
+                title: "Protegendo nossos pensamentos em Jesus - Devocional Kids",
+                description: "Aprenda a proteger seus pensamentos com a ajuda de Jesus. Desenvolva pureza mental.",
+                category: "devocional"
+            },
+            {
+                id: 'PJEIOCK2rn4',
+                title: "Em busca de sabedoria Divina - Devocional Kids",
+                description: "Aprenda a buscar a sabedoria que vem de Deus. Desenvolva discernimento espiritual.",
+                category: "devocional"
+            },
+            {
+                id: 'JmjIQfe6DsA',
+                title: "A alegria do Senhor é a minha força - Devocional Kids",
+                description: "Aprenda sobre a alegria que vem de Deus e como ela nos fortalece. Desenvolva alegria espiritual.",
+                category: "devocional"
+            },
+            {
+                id: '0VsFn_gYzeQ',
+                title: "Firme na promessa de Jesus - Devocional Kids",
+                description: "Aprenda sobre as promessas de Jesus e como confiar nelas. Desenvolva fé e esperança.",
+                category: "devocional"
+            },
+            {
+                id: 'oC_x18JCoPQ',
+                title: "Perdoando como Jesus ensina - Devocional Kids",
+                description: "Aprenda sobre o perdão como Jesus nos ensinou. Desenvolva um coração perdoador.",
+                category: "devocional"
+            },
+            {
+                id: 'km2IN6lemCQ',
+                title: "O amor de Deus por nós - Devocional Kids",
+                description: "Aprenda sobre o grande amor que Deus tem por cada um de nós. Desenvolva segurança no amor divino.",
+                category: "devocional"
+            },
+            {
+                id: 'QOt9TC5maHk',
+                title: "O milagre do Natal - Devocional Kids",
+                description: "Aprenda sobre o verdadeiro significado do Natal e o nascimento de Jesus. Desenvolva espírito natalino.",
+                category: "devocional"
+            },
+            {
+                id: 'LvWT8LWTfu4',
+                title: "A alegria da gratidão - Devocional Kids",
+                description: "Aprenda sobre a importância da gratidão e como ela nos traz alegria. Desenvolva um coração grato.",
+                category: "devocional"
+            },
+            {
+                id: '9bGpVWkOhqI',
+                title: "Pequenas mãos, grandes corações - Devocional Kids",
+                description: "Aprenda sobre como crianças podem fazer grandes coisas com amor. Desenvolva compaixão e generosidade.",
+                category: "devocional"
+            },
+            {
+                id: 'jAUWKaFmOxM',
+                title: "A paciência de Jó - Devocional Kids",
+                description: "Aprenda sobre a história de Jó e a importância da paciência. Desenvolva perseverança e fé.",
+                category: "devocional"
+            },
+            {
+                id: 'tpZIkCyarW4',
+                title: "Esperando com alegria - Devocional Kids",
+                description: "Aprenda a esperar com alegria e esperança. Desenvolva paciência e confiança em Deus.",
+                category: "devocional"
+            },
+            {
+                id: '2n1RRcMkzWY',
+                title: "Voando como águia - Devocional Kids",
+                description: "Aprenda sobre como Deus nos renova e nos dá força para voar alto. Desenvolva confiança e renovação.",
+                category: "devocional"
+            },
+            {
+                id: 'vPyZLCYOFB4',
+                title: "Feliz 2024 - A esperança que brilha - Devocional Kids",
+                description: "Aprenda sobre a esperança que brilha em um novo ano. Desenvolva otimismo e fé no futuro.",
+                category: "devocional"
+            }
+        ];
+
+        // Dados dos vídeos
+        const videos = [
+            {
+                id: 1,
+                title: "Aprenda as Cores com Diversão",
+                description: "Um vídeo interativo que ensina as cores básicas através de objetos do dia a dia, com música e animações coloridas. Perfeito para crianças de 2 a 4 anos que estão começando a aprender sobre o mundo das cores.",
+                category: "cores"
+            },
+            {
+                id: 2,
+                title: "Contando de 1 a 10",
+                description: "Aprenda a contar de forma divertida com objetos coloridos e música cativante. Este vídeo é perfeito para introduzir os números e desenvolver a noção de quantidade em crianças pequenas.",
+                category: "numeros"
+            },
+            {
+                id: 3,
+                title: "ABC - O Alfabeto Divertido",
+                description: "Cante junto e aprenda o alfabeto com palavras que começam com cada letra. Animação suave e música envolvente que torna o aprendizado do alfabeto uma experiência divertida.",
+                category: "alfabeto"
+            },
+            {
+                id: 4,
+                title: "Jesus Me Ama - História Bíblica",
+                description: "Uma história linda sobre o amor de Jesus, contada de forma simples e com ilustrações delicadas para crianças. Este vídeo ensina valores cristãos fundamentais de maneira acessível.",
+                category: "cristao"
+            },
+            {
+                id: 5,
+                title: "Animais da Fazenda",
+                description: "Conheça os animais da fazenda e seus sons. Um vídeo educativo sobre a vida no campo e a natureza, perfeito para expandir o conhecimento do mundo animal.",
+                category: "natureza"
+            },
+            {
+                id: 6,
+                title: "Brincadeiras Educativas",
+                description: "Atividades divertidas que você pode fazer em casa com seu filho. Brincadeiras que ensinam e divertem ao mesmo tempo, fortalecendo o vínculo familiar.",
+                category: "brincadeiras"
+            },
+            {
+                id: 7,
+                title: "Formas Geométricas",
+                description: "Aprenda sobre círculos, quadrados, triângulos e retângulos através de objetos do cotidiano e música animada. Desenvolve a percepção espacial das crianças.",
+                category: "cores"
+            },
+            {
+                id: 8,
+                title: "A, E, I, O, U - As Vogais",
+                description: "Um vídeo especial focado nas vogais, com exemplos práticos e exercícios de pronúncia para crianças. Prepara para o aprendizado da leitura.",
+                category: "alfabeto"
+            },
+            {
+                id: 9,
+                title: "Compartilhar é Bom",
+                description: "Uma história sobre generosidade e bondade, ensinando valores cristãos de forma lúdica e envolvente. Desenvolve o caráter e os valores morais.",
+                category: "cristao"
+            }
+        ];
+
+        // Dados dos vídeos "Sem Dopamina Barata" - O Pequeno Urso
+        const semDopaminaVideos = [
+            {
+                id: 'c58uZMqS2iw',
+                title: "O pequeno urso - A nevasca",
+                description: "Episódio educativo do O Pequeno Urso sobre enfrentar desafios e trabalhar em equipe durante uma nevasca.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'uFioC3wmfgM',
+                title: "O Pequeno Urso - A Gripe",
+                description: "Aprenda sobre cuidados com a saúde e como ajudar os outros quando estão doentes.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '6GMU8YaW0nw',
+                title: "O pequeno urso - Pena azul",
+                description: "Uma aventura sobre descobertas e curiosidade na natureza.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'ZtHfVZqUi3s',
+                title: "O Pequeno Urso - Sopa de pata",
+                description: "Episódio sobre culinária e compartilhamento de refeições em família.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'JyoqKCDbYOY',
+                title: "O Pequeno Urso - Aprendendo a plantar",
+                description: "Aprenda sobre jardinagem e o ciclo de vida das plantas.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '-HSMmtbj-mM',
+                title: "O Pequeno Urso Dublado - A Noite dos Doendes",
+                description: "Uma aventura mágica sobre amizade e imaginação.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'WcyQEti0i4o',
+                title: "O Pequeno Urso - Monstro do Relâmpago",
+                description: "Episódio sobre superar medos e entender fenômenos naturais.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'NvDkxyhFPsk',
+                title: "O pequeno urso - Amigos para dias chuvosos",
+                description: "Aprenda sobre amizade e como se divertir mesmo em dias chuvosos.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'jJImMx7qLME',
+                title: "O pequeno urso - O ursinho duende",
+                description: "Uma história sobre criatividade e brincadeiras imaginativas.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'b23oWClFmSY',
+                title: "O Pequeno Urso Dublado - A Bagunça Da Mitzi",
+                description: "Episódio sobre organização e responsabilidade.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '5nLWaqCSO-0',
+                title: "O pequeno urso - Os bolinhos",
+                description: "Aprenda sobre culinária e compartilhamento de alimentos.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'PQPolEAMsks',
+                title: "O pequeno urso - Dia dos namorados",
+                description: "Episódio sobre amor, amizade e expressão de sentimentos.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'n8cJW7UgEQM',
+                title: "pequeno urso em portugues Urso polar",
+                description: "Aventura sobre animais do Ártico e preservação da natureza.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'k2kc3ZrL4FI',
+                title: "O Pequeno Urso Dublado - Indo Pra Lua",
+                description: "Uma aventura espacial sobre sonhos e exploração.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'fjy2Ca7pef0',
+                title: "O Pequeno Urso: Episódio 41 - Banho em Família",
+                description: "Episódio sobre higiene e momentos em família.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'VBf6bgENN3I',
+                title: "O Pequeno Urso - Abertura",
+                description: "Abertura musical da série O Pequeno Urso.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '1t4O9PFieJY',
+                title: "O pequeno urso - O grande pequeno urso",
+                description: "Episódio sobre crescimento e autoconfiança.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'l67JgTEEsDA',
+                title: "O Pequeno Urso - A festa na casa do Coruja",
+                description: "Aprenda sobre celebrações e convivência social.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'iJc-SI8MUQE',
+                title: "O Pequeno Urso - Dia das mães",
+                description: "Episódio especial sobre o amor materno e gratidão.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '3x65udQ2OZI',
+                title: "O pequeno urso - Construindo uma casa para Emily",
+                description: "Aprenda sobre construção, engenharia e trabalho em equipe.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'c4N-3DMkHw0',
+                title: "Brincando na Neve O Pequeno Urso",
+                description: "Episódio sobre brincadeiras de inverno e atividades ao ar livre.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '-R7FJ1mQeAI',
+                title: "O Pequeno Urso: Episódio 29 - Sem Mel",
+                description: "Aprenda sobre paciência e resolução de problemas.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'K1g6hSH9DBQ',
+                title: "O pequeno urso - O retorno de Emily",
+                description: "Episódio sobre reencontros e amizade duradoura.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '1MZ4PoGU0uU',
+                title: "O pequeno urso - Brincando na neve",
+                description: "Aventuras de inverno e brincadeiras na neve.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'svR3sWVycyA',
+                title: "O pequeno urso - Navegando pelo rio",
+                description: "Episódio sobre exploração e aventuras aquáticas.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'JNWXCrLIEDc',
+                title: "O pequeno urso - Brincando de Esconde Esconde",
+                description: "Aprenda sobre brincadeiras tradicionais e diversão.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '8cuwRoyYVXI',
+                title: "O pequeno urso - Navegando pelo rio",
+                description: "Aventura aquática sobre exploração e natureza.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'bMeQqMOL3pI',
+                title: "O Pequeno Urso - Espantalho",
+                description: "Episódio sobre agricultura e proteção de plantações.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'Ig3efFx2jsM',
+                title: "O pequeno urso - Uma pintura para Emily",
+                description: "Aprenda sobre arte, criatividade e expressão artística.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'HZELjTXBUe8',
+                title: "O pequeno urso - Sherlock",
+                description: "Episódio sobre investigação, lógica e resolução de mistérios.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'XHHn8ymOfes',
+                title: "O pequeno urso - Siga o líder",
+                description: "Aprenda sobre liderança e trabalho em equipe.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'gOpqAvjhDvo',
+                title: "O pequeno urso - O amigo secreto",
+                description: "Episódio sobre surpresas, generosidade e amizade.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'QgwS3Q63jjI',
+                title: "O pequeno urso - O detetive",
+                description: "Aventura investigativa sobre observação e dedução.",
+                category: "sem-dopamina"
+            },
+            {
+                id: '8SOyxnmx2mQ',
+                title: "O pequeno urso - Eu estou vendo",
+                description: "Episódio sobre observação e percepção visual.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'DP8F_4ok63U',
+                title: "O Pequeno Urso: Episódio - 33 A Princesa Pata",
+                description: "Aprenda sobre contos de fadas e imaginação.",
+                category: "sem-dopamina"
+            },
+            {
+                id: 'DP8F_4ok63U',
+                title: "O Pequeno Urso A Gripe",
+                description: "Episódio sobre cuidados com a saúde e recuperação.",
+                category: "sem-dopamina"
+            }
+        ];
+
+        function filterVideos(category) {
+            const videoCards = document.querySelectorAll('.video-card');
+            let visibleCount = 0;
+            
+            // Primeiro, ocultar todos os cards
+            videoCards.forEach(card => {
+                card.classList.add('hidden');
+            });
+            
+            // Depois, mostrar apenas os da categoria selecionada
+            videoCards.forEach((card, index) => {
+                const cardCategory = card.getAttribute('data-category');
+                
+                if (category === 'all' || cardCategory === category) {
+                    card.classList.remove('hidden');
+                    
+                    // Animação de entrada
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.4s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 50);
+                    
+                    visibleCount++;
+                }
+            });
+            
+            // Mostrar mensagem se não houver vídeos
+            const videoGrid = document.getElementById('videoGrid');
+            let noResultsMsg = document.getElementById('noResultsMsg');
+            
+            if (visibleCount === 0) {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.id = 'noResultsMsg';
+                    noResultsMsg.className = 'no-results-message';
+                    noResultsMsg.innerHTML = `
+                        <div class="no-results-content">
+                            <i class="fas fa-search"></i>
+                            <h3>Nenhum vídeo encontrado</h3>
+                            <p>Não há vídeos disponíveis nesta categoria no momento.</p>
+                            <button class="btn btn-primary" onclick="filterVideos('all')">
+                                <i class="fas fa-arrow-left"></i> Ver Todos os Vídeos
+                            </button>
+                        </div>
+                    `;
+                    videoGrid.appendChild(noResultsMsg);
+                }
+                noResultsMsg.style.display = 'block';
+            } else {
+                if (noResultsMsg) {
+                    noResultsMsg.style.display = 'none';
+                }
+            }
+            
+            // Atualizar contador de vídeos
+            updateVideoCounter(visibleCount, category);
+        }
+        
+        function updateVideoCounter(count, category) {
+            let counter = document.getElementById('videoCounter');
+            if (!counter) {
+                counter = document.createElement('div');
+                counter.id = 'videoCounter';
+                counter.className = 'video-counter';
+                document.querySelector('.category-filter').appendChild(counter);
+            }
+            
+            const categoryName = category === 'all' ? 'todos os vídeos' : 
+                                category === 'alfabetizacao' ? 'alfabetização' :
+                                category === 'conhecimentos' ? 'conhecimentos gerais' :
+                                category === 'devocional' ? 'devocional kids' :
+                                category === 'sem-dopamina' ? 'sem dopamina barata' :
+                                category === 'cores' ? 'cores e formas' :
+                                category === 'numeros' ? 'números' :
+                                category === 'alfabeto' ? 'alfabeto' :
+                                category === 'cristao' ? 'valores cristãos' :
+                                category === 'natureza' ? 'natureza' :
+                                category === 'brincadeiras' ? 'brincadeiras' : category;
+            
+            counter.innerHTML = `
+                <span class="counter-text">
+                    <i class="fas fa-video"></i> 
+                    ${count} vídeo${count !== 1 ? 's' : ''} de ${categoryName}
+                </span>
+            `;
+        }
+
+        function openVideoModal(videoId) {
+            const video = videos.find(v => v.id === videoId);
+            if (video) {
+                document.getElementById('modalTitle').textContent = video.title;
+                document.getElementById('modalDescription').innerHTML = `<p>${video.description}</p>`;
+                document.getElementById('videoModal').classList.add('active');
+                
+                // Simular carregamento do vídeo
+                console.log(`🎥 Abrindo vídeo: ${video.title}`);
+            }
+        }
+
+        // Função para abrir vídeos de alfabetização
+        function openAlfabetizacaoVideo(videoId, title) {
+            // Abrir o vídeo diretamente no YouTube em nova aba
+            const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+            window.open(youtubeUrl, '_blank');
+            
+            // Registrar atividade para relatórios
+            if (typeof recordActivity === 'function') {
+                recordActivity('videos', 5); // 5 minutos de tempo estimado
+            }
+            
+            console.log(`🎥 Abrindo vídeo de alfabetização: ${title}`);
+        }
+
+        // Função para abrir vídeos de conhecimentos gerais
+        function openConhecimentosVideo(videoId, title) {
+            // Abrir o vídeo diretamente no YouTube em nova aba
+            const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+            window.open(youtubeUrl, '_blank');
+            
+            // Registrar atividade para relatórios
+            if (typeof recordActivity === 'function') {
+                recordActivity('videos', 6); // 6 minutos de tempo estimado
+            }
+            
+            console.log(`🎥 Abrindo vídeo de conhecimentos gerais: ${title}`);
+        }
+
+        // Função para abrir vídeos de devocional kids
+        function openDevocionalVideo(videoId, title) {
+            // Abrir o vídeo diretamente no YouTube em nova aba
+            const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+            window.open(youtubeUrl, '_blank');
+            
+            // Registrar atividade para relatórios
+            if (typeof recordActivity === 'function') {
+                recordActivity('videos', 7); // 7 minutos de tempo estimado
+            }
+            
+            console.log(`🎥 Abrindo vídeo de devocional kids: ${title}`);
+        }
+
+        function openSemDopaminaVideo(videoId, title) {
+            // Abrir o vídeo diretamente no YouTube em nova aba
+            const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+            window.open(youtubeUrl, '_blank');
+            
+            // Registrar atividade para relatórios
+            if (typeof recordActivity === 'function') {
+                recordActivity('videos', 8); // 8 minutos de tempo estimado
+            }
+            
+            console.log(`🎥 Abrindo vídeo sem dopamina barata: ${title}`);
+        }
+
+        function closeVideoModal() {
+            document.getElementById('videoModal').classList.remove('active');
+        }
+
+        // Fechar modal clicando fora
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideoModal();
+            }
+        });
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
+
+        // Simular estatísticas de visualização
+        function updateVideoStats() {
+            const videoCards = document.querySelectorAll('.video-card');
+            videoCards.forEach(card => {
+                const views = Math.floor(Math.random() * 10000) + 1000;
+                const likes = Math.floor(views * 0.8);
+                
+                // Adicionar estatísticas (opcional)
+                const meta = card.querySelector('.video-meta');
+                if (meta && !meta.querySelector('.video-stats')) {
+                    const stats = document.createElement('div');
+                    stats.className = 'video-stats';
+                    stats.style.cssText = 'font-size: var(--font-size-xs); color: var(--color-gray-medium); margin-top: var(--spacing-sm);';
+                    stats.innerHTML = `👀 ${views.toLocaleString()} visualizações • ❤️ ${likes.toLocaleString()} curtidas`;
+                    meta.appendChild(stats);
+                }
+            });
+        }
+
+        // Inicializar estatísticas
+        updateVideoStats();
+    </script>
+    
+    </div> <!-- Fechar content-with-sidebar -->
+    
+    <script src="sounds.js"></script>
+    <script src="script.js"></script>
+    <script src="access-control.js"></script>
+    <script src="sidebar.js"></script>
+    
+    <script>
+        // Adicionar sons de clique nos botões de vídeo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sons nos botões de filtro
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    playSound('click');
+                });
+            });
+            
+            // Sons nos botões de play dos vídeos
+            const playButtons = document.querySelectorAll('.play-overlay');
+            playButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    playSound('click');
+                });
+            });
+            
+            // Som de sucesso ao abrir vídeo de alfabetização
+            const originalOpenAlfabetizacaoVideo = openAlfabetizacaoVideo;
+            openAlfabetizacaoVideo = function(videoId, title) {
+                originalOpenAlfabetizacaoVideo(videoId, title);
+                playSound('success');
+            };
+            
+            // Som de sucesso ao abrir vídeo de conhecimentos gerais
+            const originalOpenConhecimentosVideo = openConhecimentosVideo;
+            openConhecimentosVideo = function(videoId, title) {
+                originalOpenConhecimentosVideo(videoId, title);
+                playSound('success');
+            };
+            
+            // Som de sucesso ao abrir vídeo de devocional kids
+            const originalOpenDevocionalVideo = openDevocionalVideo;
+            openDevocionalVideo = function(videoId, title) {
+                originalOpenDevocionalVideo(videoId, title);
+                playSound('success');
+            };
+            
+            // Som de sucesso ao abrir vídeo sem dopamina barata
+            const originalOpenSemDopaminaVideo = openSemDopaminaVideo;
+            openSemDopaminaVideo = function(videoId, title) {
+                originalOpenSemDopaminaVideo(videoId, title);
+                playSound('success');
+            };
+            
+            // Inicializar sistema de filtros
+            setTimeout(() => {
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                
+                // Verificar se os botões existem
+                if (filterButtons.length === 0) {
+                    return;
+                }
+                
+                // Adicionar event listeners
+                filterButtons.forEach((btn) => {
+                    btn.onclick = function(e) {
+                        e.preventDefault();
+                        
+                        // Remover active de todos os botões
+                        filterButtons.forEach(b => b.classList.remove('active'));
+                        // Adicionar active ao botão clicado
+                        this.classList.add('active');
+                        
+                        const category = this.getAttribute('data-category');
+                        
+                        // Chamar função de filtro
+                        filterVideos(category);
+                    };
+                });
+            }, 200);
+            
+            // Inicializar filtro baseado na URL ou "Todos" por padrão
+            setTimeout(() => {
+                // Verificar se há parâmetro de filtro na URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const filterParam = urlParams.get('filter');
+                
+                let targetFilter;
+                
+                if (filterParam) {
+                    // Se há parâmetro de filtro, usar ele
+                    targetFilter = document.querySelector(`.filter-btn[data-category="${filterParam}"]`);
+                    
+                    // Se é devocional, adicionar indicador visual
+                    if (filterParam === 'devocional') {
+                        const heroTitle = document.querySelector('.hero h1');
+                        if (heroTitle) {
+                            heroTitle.innerHTML = '🙏 <span style="color: var(--color-blue);">Devocional Kids</span> - Vídeos Educativos';
+                        }
+                        
+                        // Adicionar botão "Voltar aos Vídeos"
+                        const heroSection = document.querySelector('.hero');
+                        if (heroSection && !document.getElementById('backToVideosBtn')) {
+                            const backButton = document.createElement('div');
+                            backButton.id = 'backToVideosBtn';
+                            backButton.style.cssText = 'text-align: center; margin-top: 20px;';
+                            backButton.innerHTML = `
+                                <a href="videos.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Voltar aos Vídeos
+                                </a>
+                            `;
+                            heroSection.appendChild(backButton);
+                        }
+                    }
+                    
+                    // Se é sem dopamina, adicionar indicador visual
+                    if (filterParam === 'sem-dopamina') {
+                        const heroTitle = document.querySelector('.hero h1');
+                        if (heroTitle) {
+                            heroTitle.innerHTML = '🐻 <span style="color: var(--color-blue);">Sem Dopamina Barata</span> - O Pequeno Urso';
+                        }
+                        
+                        // Adicionar botão "Voltar aos Vídeos"
+                        const heroSection = document.querySelector('.hero');
+                        if (heroSection && !document.getElementById('backToVideosBtn')) {
+                            const backButton = document.createElement('div');
+                            backButton.id = 'backToVideosBtn';
+                            backButton.style.cssText = 'text-align: center; margin-top: 20px;';
+                            backButton.innerHTML = `
+                                <a href="videos.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Voltar aos Vídeos
+                                </a>
+                            `;
+                            heroSection.appendChild(backButton);
+                        }
+                    }
+                }
+                
+                // Se não encontrou o filtro específico ou não há parâmetro, usar "Todos"
+                if (!targetFilter) {
+                    targetFilter = document.querySelector('.filter-btn[data-category="all"]');
+                }
+                
+                if (targetFilter) {
+                    targetFilter.click();
+                }
+            }, 300);
+        });
+    </script>
+</body>
+</html>

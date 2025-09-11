@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrativo - Meu Bebê Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .admin-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .admin-info h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .admin-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .welcome-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .stat-icon.users { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .stat-icon.revenue { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .stat-icon.active { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .stat-icon.expired { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        
+        .stat-info h3 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .stat-info p {
+            margin: 0;
+            color: #666;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .admin-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .admin-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .section-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+        }
+        
+        .section-icon.users { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .section-icon.sales { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .section-icon.system { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .section-icon.reports { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        
+        .admin-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .admin-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .admin-btn:hover {
+            background: #e9ecef;
+            transform: translateX(8px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admin-btn i {
+            color: #667eea;
+            font-size: 1.1rem;
+            width: 20px;
+        }
+        
+        .recent-users {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .user-item:last-child {
+            border-bottom: none;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .user-info h4 {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .user-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .user-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .user-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .user-status.expired {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .quick-action {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .quick-action:hover {
+            transform: translateY(-3px);
+        }
+        
+        .quick-action i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .quick-action h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .admin-header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="admin-title">
+            <i class="fas fa-shield-alt"></i>
+            Dashboard Administrativo
+        </div>
+        <div class="admin-user">
+            <div class="admin-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="admin-info">
+                <h3 id="adminName">Administrador</h3>
+                <p id="adminEmail">ashercongintencia@gmail.com</p>
+            </div>
+            <button class="logout-btn" onclick="adminLogout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <!-- Seção de Boas-vindas -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Bem-vindo ao Painel Administrativo</h1>
+            <p class="welcome-subtitle">Gerencie todos os aspectos da plataforma Meu Bebê Inteligente</p>
+        </div>
+        
+        <!-- Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon users">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalUsers">1,247</h3>
+                    <p>Total de Usuários</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon revenue">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalRevenue">R$ 45,890</h3>
+                    <p>Receita Total</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon active">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="activeUsers">1,156</h3>
+                    <p>Usuários Ativos</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon expired">
+                    <i class="fas fa-user-times"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="expiredUsers">91</h3>
+                    <p>Assinaturas Expiradas</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seções Administrativas -->
+        <div class="admin-sections">
+            <!-- Gerenciar Usuários -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <div class="section-icon users">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Gerenciar Usuários</h3>
+                </div>
+                <div class="admin-actions">
+                    <a href="#" class="admin-btn" onclick="viewAllUsers()">
+                        <i class="fas fa-list"></i>
+                        <span>Ver Todos os Usuários</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="createUser()">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Criar Novo Usuário</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="exportUsers()">
+                        <i class="fas fa-download"></i>
+                        <span>Exportar Dados</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="manageSubscriptions()">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Gerenciar Assinaturas</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Relatórios de Vendas -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <div class="section-icon sales">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Relatórios de Vendas</h3>
+                </div>
+                <div class="admin-actions">
+                    <a href="#" class="admin-btn" onclick="viewSalesReport()">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relatório de Vendas</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="viewPayments()">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Histórico de Pagamentos</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="viewRevenue()">
+                        <i class="fas fa-coins"></i>
+                        <span>Análise de Receita</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="viewAnalytics()">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Analytics Detalhado</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Configurações do Sistema -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <div class="section-icon system">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3>Configurações</h3>
+                </div>
+                <div class="admin-actions">
+                    <a href="#" class="admin-btn" onclick="systemSettings()">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Configurações Gerais</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="backupData()">
+                        <i class="fas fa-database"></i>
+                        <span>Backup de Dados</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="systemLogs()">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Logs do Sistema</span>
+                    </a>
+                    <a href="#" class="admin-btn" onclick="securitySettings()">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Configurações de Segurança</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Usuários Recentes -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <div class="section-icon reports">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Usuários Recentes</h3>
+                </div>
+                <div class="recent-users" id="recentUsers">
+                    <!-- Usuários serão carregados aqui -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ações Rápidas -->
+        <div class="quick-actions">
+            <div class="quick-action" onclick="quickBackup()">
+                <i class="fas fa-download"></i>
+                <h4>Backup Rápido</h4>
+            </div>
+            <div class="quick-action" onclick="quickReport()">
+                <i class="fas fa-chart-line"></i>
+                <h4>Relatório Diário</h4>
+            </div>
+            <div class="quick-action" onclick="quickUsers()">
+                <i class="fas fa-users"></i>
+                <h4>Novos Usuários</h4>
+            </div>
+            <div class="quick-action" onclick="quickRevenue()">
+                <i class="fas fa-dollar-sign"></i>
+                <h4>Receita Hoje</h4>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Verificação de acesso administrativo
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAdmin = localStorage.getItem('isAdmin');
+            const adminEmail = localStorage.getItem('adminEmail');
+            
+            if (!isAdmin || isAdmin !== 'true') {
+                alert('❌ Acesso negado. Você precisa fazer login como administrador.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Atualizar informações do admin
+            document.getElementById('adminEmail').textContent = adminEmail;
+            
+            // Carregar dados do dashboard
+            loadDashboardData();
+        });
+        
+        function loadDashboardData() {
+            // Simular carregamento de dados (em produção, buscar do Supabase)
+            setTimeout(() => {
+                // Usuários recentes simulados
+                loadRecentUsers();
+            }, 1000);
+        }
+        
+        function loadRecentUsers() {
+            const recentUsersContainer = document.getElementById('recentUsers');
+            const mockUsers = [
+                { name: 'Maria Silva', email: 'maria@email.com', plan: 'Trimestral', status: 'active' },
+                { name: 'João Santos', email: 'joao@email.com', plan: 'Mensal', status: 'active' },
+                { name: 'Ana Costa', email: 'ana@email.com', plan: 'Anual', status: 'expired' },
+                { name: 'Pedro Lima', email: 'pedro@email.com', plan: 'Trimestral', status: 'active' },
+                { name: 'Carla Oliveira', email: 'carla@email.com', plan: 'Mensal', status: 'active' },
+                { name: 'Roberto Souza', email: 'roberto@email.com', plan: 'Anual', status: 'active' }
+            ];
+            
+            recentUsersContainer.innerHTML = mockUsers.map(user => `
+                <div class="user-item">
+                    <div class="user-avatar">
+                        ${user.name.charAt(0)}
+                    </div>
+                    <div class="user-info">
+                        <h4>${user.name}</h4>
+                        <p>${user.email} • ${user.plan}</p>
+                    </div>
+                    <div class="user-status ${user.status}">
+                        ${user.status === 'active' ? 'Ativo' : 'Expirado'}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Funções administrativas
+        function viewAllUsers() {
+            alert('🔍 Funcionalidade: Ver todos os usuários\n\nEm produção, isso abriria uma página com:\n• Lista completa de usuários\n• Filtros por status, plano, data\n• Opções de edição e exclusão\n• Paginação e busca');
+        }
+        
+        function createUser() {
+            alert('➕ Funcionalidade: Criar novo usuário\n\nEm produção, isso abriria um formulário para:\n• Criar usuários manualmente\n• Definir plano e duração\n• Configurar permissões\n• Enviar email de boas-vindas');
+        }
+        
+        function exportUsers() {
+            alert('📊 Funcionalidade: Exportar dados\n\nEm produção, isso geraria:\n• Arquivo CSV/Excel com todos os dados\n• Filtros personalizáveis\n• Relatórios específicos\n• Agendamento de exportações');
+        }
+        
+        function manageSubscriptions() {
+            alert('💳 Funcionalidade: Gerenciar assinaturas\n\nEm produção, isso permitiria:\n• Renovar assinaturas\n• Cancelar planos\n• Alterar tipos de plano\n• Gerenciar pagamentos');
+        }
+        
+        function viewSalesReport() {
+            alert('📈 Funcionalidade: Relatório de vendas\n\nEm produção, isso mostraria:\n• Gráficos de vendas por período\n• Comparação entre planos\n• Análise de conversão\n• Previsões de receita');
+        }
+        
+        function viewPayments() {
+            alert('💳 Funcionalidade: Histórico de pagamentos\n\nEm produção, isso mostraria:\n• Todos os pagamentos processados\n• Status de transações\n• Métodos de pagamento\n• Relatórios de inadimplência');
+        }
+        
+        function viewRevenue() {
+            alert('💰 Funcionalidade: Análise de receita\n\nEm produção, isso mostraria:\n• Receita por período\n• Análise de crescimento\n• Comparação com metas\n• Projeções futuras');
+        }
+        
+        function viewAnalytics() {
+            alert('📊 Funcionalidade: Analytics detalhado\n\nEm produção, isso mostraria:\n• Métricas de engajamento\n• Análise de comportamento\n• Funil de conversão\n• KPIs personalizados');
+        }
+        
+        function systemSettings() {
+            alert('⚙️ Funcionalidade: Configurações do sistema\n\nEm produção, isso permitiria:\n• Configurar preços dos planos\n• Definir períodos de teste\n• Configurar emails automáticos\n• Gerenciar conteúdo');
+        }
+        
+        function backupData() {
+            alert('💾 Funcionalidade: Backup de dados\n\nEm produção, isso:\n• Criaria backup completo do banco\n• Agendaria backups automáticos\n• Permitiria restauração\n• Monitoraria integridade');
+        }
+        
+        function systemLogs() {
+            alert('📋 Funcionalidade: Logs do sistema\n\nEm produção, isso mostraria:\n• Logs de atividades\n• Erros e exceções\n• Acessos administrativos\n• Auditoria de mudanças');
+        }
+        
+        function securitySettings() {
+            alert('🔒 Funcionalidade: Configurações de segurança\n\nEm produção, isso permitiria:\n• Configurar autenticação\n• Gerenciar permissões\n• Monitorar acessos\n• Configurar 2FA');
+        }
+        
+        // Ações rápidas
+        function quickBackup() {
+            alert('⚡ Backup rápido iniciado!\n\nEm produção, isso criaria um backup incremental dos dados mais recentes.');
+        }
+        
+        function quickReport() {
+            alert('📊 Relatório diário gerado!\n\nEm produção, isso mostraria um resumo das atividades do dia.');
+        }
+        
+        function quickUsers() {
+            alert('👥 Novos usuários hoje: 23\n\nEm produção, isso mostraria os usuários cadastrados nas últimas 24h.');
+        }
+        
+        function quickRevenue() {
+            alert('💰 Receita hoje: R$ 1,247\n\nEm produção, isso mostraria a receita gerada nas últimas 24h.');
+        }
+        
+        function adminLogout() {
+            if (confirm('Tem certeza que deseja sair da área administrativa?')) {
+                // Limpar dados administrativos
+                localStorage.removeItem('isAdmin');
+                localStorage.removeItem('adminEmail');
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userPlan');
+                localStorage.removeItem('paymentConfirmed');
+                localStorage.removeItem('adminLoginTime');
+                
+                // Redirecionar para login admin
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

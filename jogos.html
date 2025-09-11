@@ -1,0 +1,2749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogos Educativos - Meu Bebê Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Design Super Infantil para Página de Jogos */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(240, 147, 251, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 50%, #581c87 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 40px 40px;
+            box-shadow: 0 15px 40px rgba(30, 64, 175, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Elementos decorativos simples */
+        .geometric-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: simpleFloat 6s ease-in-out infinite;
+            backdrop-filter: blur(10px);
+        }
+
+        .shape-1 {
+            width: 80px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 60px;
+            height: 60px;
+            top: 25%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 70px;
+            height: 70px;
+            top: 65%;
+            left: 8%;
+            animation-delay: 4s;
+        }
+
+        .shape-4 {
+            width: 50px;
+            height: 50px;
+            top: 75%;
+            right: 12%;
+            animation-delay: 1s;
+        }
+
+        .shape-5 {
+            width: 40px;
+            height: 40px;
+            top: 45%;
+            left: 50%;
+            animation-delay: 3s;
+        }
+
+        @keyframes simpleFloat {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translateY(-15px) scale(1.05);
+                opacity: 0.5;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.3),
+                0 8px 16px rgba(0, 0, 0, 0.2);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            text-shadow: 
+                0 1px 2px rgba(0, 0, 0, 0.4),
+                0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+        }
+
+        .hero p br {
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        /* Ícones flutuantes simples */
+        .floating-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: gentleFloat 8s ease-in-out infinite;
+            opacity: 0.6;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .floating-icon:nth-child(1) {
+            top: 20%;
+            left: 12%;
+            animation-delay: 0s;
+        }
+
+        .floating-icon:nth-child(2) {
+            top: 30%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-icon:nth-child(3) {
+            top: 70%;
+            left: 10%;
+            animation-delay: 4s;
+        }
+
+        .floating-icon:nth-child(4) {
+            top: 80%;
+            right: 12%;
+            animation-delay: 6s;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { 
+                transform: translateY(0) scale(1); 
+                opacity: 0.4;
+            }
+            50% { 
+                transform: translateY(-8px) scale(1.02); 
+                opacity: 0.6;
+            }
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution {
+            position: relative;
+            z-index: 1;
+            padding-bottom: 4rem;
+        }
+        
+        .game-card {
+            background: linear-gradient(145deg, #fff 0%, #f8f9ff 100%);
+            border-radius: 25px;
+            box-shadow: 
+                0 20px 60px rgba(102, 126, 234, 0.15),
+                0 10px 30px rgba(118, 75, 162, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid #667eea;
+            position: relative;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(1deg); }
+        }
+        
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 25px 80px rgba(102, 126, 234, 0.25),
+                0 15px 40px rgba(118, 75, 162, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border-color: #764ba2;
+        }
+
+        .game-card::before {
+            content: '✨';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover::before {
+            opacity: 0.8;
+            transform: scale(1.2);
+        }
+        
+        .game-preview {
+            height: 220px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            border: 3px solid white;
+        }
+        
+        .game-preview:hover .play-overlay {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .play-overlay:hover {
+            background: linear-gradient(145deg, #764ba2, #667eea);
+            transform: translate(-50%, -50%) scale(1.2);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .play-overlay i {
+            font-size: 2rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-content {
+            padding: 2rem;
+            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+        }
+        
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .game-title::before {
+            content: '🎮';
+            font-size: 1.5rem;
+            animation: gameIconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes gameIconBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .game-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .game-level {
+            display: inline-block;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes levelPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 100%);
+            border-radius: 15px;
+            border: 2px solid #667eea;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1.5rem;
+                border-radius: 0 0 30px 30px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+                line-height: 1.3;
+                font-weight: 700;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+                line-height: 1.5;
+                font-weight: 400;
+            }
+            
+            .game-grid {
+                grid-template-columns: 1fr;
+                padding: 2rem 1rem;
+                gap: 2rem;
+            }
+            
+            .game-card {
+                margin-bottom: 1rem;
+            }
+            
+            .floating-icon {
+                font-size: 2rem;
+            }
+            
+            .floating-icon:nth-child(1) {
+                top: 15%;
+                left: 5%;
+            }
+
+            .floating-icon:nth-child(2) {
+                top: 25%;
+                right: 8%;
+            }
+
+            .floating-icon:nth-child(3) {
+                top: 65%;
+                left: 5%;
+            }
+
+            .floating-icon:nth-child(4) {
+                top: 75%;
+                right: 8%;
+            }
+
+            /* Ajustar formas geométricas para mobile */
+            .shape-1 {
+                width: 50px;
+                height: 50px;
+            }
+
+            .shape-2, .shape-4 {
+                width: 35px;
+                height: 35px;
+            }
+
+            .shape-3 {
+                width: 45px;
+                height: 45px;
+            }
+
+            .shape-5 {
+                width: 30px;
+                height: 30px;
+            }
+
+            .floating-icon {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 2.5rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .floating-icon {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Conteúdo Principal -->
+    <div class="content-with-sidebar">
+        <!-- Hero Section -->
+        <section class="hero">
+            <!-- Elementos decorativos geométricos -->
+            <div class="geometric-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+                <div class="shape shape-4"></div>
+                <div class="shape shape-5"></div>
+            </div>
+            
+            <div class="floating-icons">
+                <div class="floating-icon">🎮</div>
+                <div class="floating-icon">🎯</div>
+                <div class="floating-icon">✨</div>
+                <div class="floating-icon">🌟</div>
+            </div>
+            
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Jogos Educativos Super Divertidos
+                    </h1>
+                    <p class="hero-subtitle">
+                        Mini-jogos incríveis que fazem você aprender brincando<br>
+                        Memória, contagem, alfabeto e muito mais<br>
+                        Tudo seguro, educativo e super divertido
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    <!-- Games Section -->
+    <section class="solution">
+        <div class="container">
+            <div class="game-grid">
+                <!-- Jogo 1: Memória das Cores -->
+                <div class="game-card">
+                    <div class="game-preview">
+                        🎨
+                        <div class="play-overlay" onclick="playGame(1)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Memória das Cores</h3>
+                        <span class="game-level">🌟 Fácil</span>
+                        <p class="game-description">
+                            🧠 Jogo de memória para aprender e reconhecer cores de forma super divertida! 
+                            ✨ Perfeito para desenvolver concentração e memória visual!
+                        </p>
+                        <div class="game-stats">
+                            <div class="stat">
+                                <div class="stat-number">🃏 8</div>
+                                <div class="stat-label">Cartas</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">👶 2-4</div>
+                                <div class="stat-label">Anos</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">⏰ 5min</div>
+                                <div class="stat-label">Duração</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="playGame(1)" style="background: linear-gradient(145deg, #667eea, #764ba2); border: none; border-radius: 25px; padding: 1rem 2rem; font-size: 1.2rem; font-weight: bold; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);">
+                            <i class="fas fa-play"></i> 🎮 Jogar Agora!
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jogo 2: Contando Objetos -->
+                <div class="game-card">
+                    <div class="game-preview">
+                        🔢
+                        <div class="play-overlay" onclick="playGame(2)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Contando Objetos</h3>
+                        <span class="game-level">🌟 Fácil</span>
+                        <p class="game-description">
+                            🧮 Conte os objetos na tela e escolha o número correto! 
+                            ✨ Desenvolve noção de quantidade e reconhecimento de números de forma super divertida!
+                        </p>
+                        <div class="game-stats">
+                            <div class="stat">
+                                <div class="stat-number">🔢 1-10</div>
+                                <div class="stat-label">Números</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">👶 3-5</div>
+                                <div class="stat-label">Anos</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">⏰ 3min</div>
+                                <div class="stat-label">Duração</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="playGame(2)" style="background: linear-gradient(145deg, #667eea, #764ba2); border: none; border-radius: 25px; padding: 1rem 2rem; font-size: 1.2rem; font-weight: bold; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);">
+                            <i class="fas fa-play"></i> 🎮 Jogar Agora!
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jogo 3: Quebra-cabeça do Alfabeto -->
+                <div class="game-card">
+                    <div class="game-preview">
+                        🔤
+                        <div class="play-overlay" onclick="playGame(3)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Quebra-cabeça do Alfabeto</h3>
+                        <span class="game-level">🌟 Médio</span>
+                        <p class="game-description">
+                            🔤 Monte as letras do alfabeto na ordem correta! 
+                            ✨ Perfeito para aprender a sequência das letras de forma super divertida!
+                        </p>
+                        <div class="game-stats">
+                            <div class="stat">
+                                <div class="stat-number">🔤 26</div>
+                                <div class="stat-label">Letras</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">👶 4-6</div>
+                                <div class="stat-label">Anos</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">⏰ 10min</div>
+                                <div class="stat-label">Duração</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="playGame(3)" style="background: linear-gradient(145deg, #667eea, #764ba2); border: none; border-radius: 25px; padding: 1rem 2rem; font-size: 1.2rem; font-weight: bold; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);">
+                            <i class="fas fa-play"></i> 🎮 Jogar Agora!
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jogo 4: Sons dos Animais -->
+                <div class="game-card">
+                    <div class="game-preview">
+                        🐾
+                        <div class="play-overlay" onclick="playGame(4)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Sons dos Animais</h3>
+                        <span class="game-level">🌟 Fácil</span>
+                        <p class="game-description">
+                            🐾 Ouça o som e adivinhe qual animal está fazendo! 
+                            ✨ Desenvolve reconhecimento auditivo e vocabulário de forma super divertida!
+                        </p>
+                        <div class="game-stats">
+                            <div class="stat">
+                                <div class="stat-number">🐾 12</div>
+                                <div class="stat-label">Animais</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">👶 2-5</div>
+                                <div class="stat-label">Anos</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">⏰ 5min</div>
+                                <div class="stat-label">Duração</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="playGame(4)" style="background: linear-gradient(145deg, #667eea, #764ba2); border: none; border-radius: 25px; padding: 1rem 2rem; font-size: 1.2rem; font-weight: bold; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);">
+                            <i class="fas fa-play"></i> 🎮 Jogar Agora!
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jogo 5: Formas Geométricas -->
+                <div class="game-card">
+                    <div class="game-preview" style="background: linear-gradient(135deg, #FFB6C1 0%, #FECFEF 100%);">
+                        <i class="fas fa-shapes"></i>
+                        <div class="play-overlay" onclick="playGame(5)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Formas Geométricas</h3>
+                        <span class="game-level">Médio</span>
+                        <p class="game-description">
+                            Identifique e arraste as formas para os lugares corretos. 
+                            Desenvolve reconhecimento de formas e coordenação motora.
+                        </p>
+                        <div class="game-stats">
+                            <div class="stat">
+                                <div class="stat-number">6</div>
+                                <div class="stat-label">Formas</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">3-5</div>
+                                <div class="stat-label">Anos</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">7min</div>
+                                <div class="stat-label">Duração</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="playGame(5)">
+                            <i class="fas fa-play"></i> Jogar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jogo 6: Rimas Divertidas -->
+                <div class="game-card">
+                    <div class="game-preview" style="background: linear-gradient(135deg, #E6E6FA 0%, #DDA0DD 100%);">
+                        <i class="fas fa-book"></i>
+                        <div class="play-overlay" onclick="playGame(6)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Rimas Divertidas</h3>
+                        <span class="game-level">Médio</span>
+                        <p class="game-description">
+                            Encontre palavras que rimam. 
+                            Desenvolve consciência fonológica e vocabulário.
+                        </p>
+                        <div class="game-stats">
+                            <div class="stat">
+                                <div class="stat-number">20</div>
+                                <div class="stat-label">Palavras</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">4-6</div>
+                                <div class="stat-label">Anos</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">8min</div>
+                                <div class="stat-label">Duração</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="playGame(6)">
+                            <i class="fas fa-play"></i> Jogar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jogo 7: Histórias Bíblicas -->
+                <div class="game-card">
+                    <div class="game-preview" style="background: linear-gradient(135deg, #FFE4B5 0%, #F0E68C 100%);">
+                        <i class="fas fa-bible"></i>
+                        <div class="play-overlay" onclick="playGame(7)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Histórias Bíblicas</h3>
+                        <span class="game-level">Fácil</span>
+                        <p class="game-description">
+                            Monte as cenas das histórias bíblicas na ordem correta. 
+                            Ensina valores cristãos de forma lúdica.
+                        </p>
+                        <div class="game-stats">
+                            <div class="stat">
+                                <div class="stat-number">5</div>
+                                <div class="stat-label">Histórias</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">3-6</div>
+                                <div class="stat-label">Anos</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">6min</div>
+                                <div class="stat-label">Duração</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="playGame(7)">
+                            <i class="fas fa-play"></i> Jogar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jogo 8: Memória Musical -->
+                <div class="game-card">
+                    <div class="game-preview" style="background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);">
+                        <i class="fas fa-music"></i>
+                        <div class="play-overlay" onclick="playGame(8)">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Memória Musical</h3>
+                        <span class="game-level">Difícil</span>
+                        <p class="game-description">
+                            Reproduza a sequência musical tocada. 
+                            Desenvolve memória auditiva e senso rítmico.
+                        </p>
+                        <div class="game-stats">
+                            <div class="stat">
+                                <div class="stat-number">8</div>
+                                <div class="stat-label">Notas</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">4-6</div>
+                                <div class="stat-label">Anos</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">10min</div>
+                                <div class="stat-label">Duração</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="playGame(8)">
+                            <i class="fas fa-play"></i> Jogar Agora
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="nav-brand">
+                        <i class="fas fa-heart"></i>
+                        <span>Meu Bebê Inteligente</span>
+                    </div>
+                    <p>O lugar seguro e educativo para seu filho crescer aprendendo de verdade.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Recursos</h4>
+                        <a href="musicas.html">Músicas Educativas</a>
+                        <a href="videos.html">Vídeos Seguros</a>
+                        <a href="desenhos.html">Desenhos Cristãos</a>
+                        <a href="brincadeiras.html">Brincadeiras</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Suporte</h4>
+                        <a href="#">Central de Ajuda</a>
+                        <a href="#">Contato</a>
+                        <a href="#">Política de Privacidade</a>
+                        <a href="#">Termos de Uso</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Meu Bebê Inteligente. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    
+    </div> <!-- Fechar content-with-sidebar -->
+
+    <!-- Modal do Jogo -->
+    <div id="gameModal" class="game-modal">
+        <div class="game-modal-content">
+            <div class="game-modal-header">
+                <h2 id="gameModalTitle">Jogo Educativo</h2>
+                <button class="close-game-modal" onclick="closeGameModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="game-container" id="gameContainer">
+                <!-- Conteúdo do jogo será inserido aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Visual -->
+    <div id="gameFeedback" class="game-feedback">
+        <span id="feedbackText">🎉 Parabéns!</span>
+    </div>
+
+    <!-- Controle de Som -->
+    <div class="sound-controls">
+        <button id="soundToggle" class="sound-btn" onclick="toggleSound()">
+            <i class="fas fa-volume-up"></i>
+        </button>
+        <div class="volume-slider">
+            <input type="range" id="volumeControl" min="0" max="100" value="50" onchange="setVolume(this.value)">
+        </div>
+    </div>
+
+    <style>
+        /* Modal do Jogo - Design Super Infantil */
+        .game-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 25%, #fecfef 50%, #a8edea 75%, #fed6e3 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .game-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: modalEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalEntrance {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.7) rotate(-10deg); 
+            }
+            50% { 
+                opacity: 0.8; 
+                transform: scale(1.05) rotate(2deg); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1) rotate(0deg); 
+            }
+        }
+
+        .game-modal-content {
+            background: linear-gradient(145deg, #fff 0%, #f8f9ff 50%, #fff 100%);
+            border-radius: 35px;
+            width: 95%;
+            max-width: 900px;
+            max-height: 95vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 30px 100px rgba(255, 105, 180, 0.4),
+                0 20px 60px rgba(255, 182, 193, 0.3),
+                0 10px 30px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 5px solid #ff69b4;
+            animation: contentBounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        @keyframes contentBounce {
+            0% { 
+                transform: scale(0.8) translateY(-30px); 
+                opacity: 0; 
+            }
+            60% { 
+                transform: scale(1.08) translateY(10px); 
+                opacity: 0.9; 
+            }
+            100% { 
+                transform: scale(1) translateY(0); 
+                opacity: 1; 
+            }
+        }
+
+        .game-modal-content::before {
+            content: '✨';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            font-size: 2rem;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        .game-modal-content::after {
+            content: '🌟';
+            position: absolute;
+            top: -10px;
+            right: 25px;
+            font-size: 1.8rem;
+            animation: sparkle 2s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+            50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+        }
+
+        .game-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(90deg, #ff69b4, #ff1493, #ff69b4, #ff1493);
+            background-size: 300% 100%;
+            animation: rainbowFlow 4s ease-in-out infinite;
+            color: white;
+            border-radius: 30px 30px 0 0;
+            margin: -5px -5px 0 -5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes rainbowFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .game-modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .game-modal-header h2 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .close-game-modal {
+            background: linear-gradient(145deg, #ff4757, #ff3742);
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .close-game-modal::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .close-game-modal:hover {
+            transform: scale(1.15) rotate(90deg);
+            box-shadow: 0 15px 35px rgba(255, 71, 87, 0.7);
+        }
+
+        .close-game-modal:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .game-container {
+            padding: 2.5rem;
+            min-height: 450px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 50%, #f0f8ff 100%);
+            border-radius: 0 0 30px 30px;
+            position: relative;
+        }
+
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff69b4, #ff1493, #ff69b4);
+            background-size: 200% 100%;
+            animation: borderFlow 3s ease-in-out infinite;
+        }
+
+        @keyframes borderFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Estilos dos Jogos - Design Super Infantil */
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 25px;
+            box-shadow: 
+                0 20px 60px rgba(255, 182, 193, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 3px solid #ffb6c1;
+            position: relative;
+        }
+
+        .memory-game::before {
+            content: '🎮';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            background: linear-gradient(145deg, #ff69b4, #ff1493);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: gameIconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes gameIconBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(145deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            box-shadow: 
+                0 12px 30px rgba(255, 105, 180, 0.3),
+                0 6px 15px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 4px solid #ff69b4;
+            position: relative;
+            overflow: hidden;
+            animation: cardFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(1deg); }
+        }
+
+        .memory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .memory-card::after {
+            content: '✨';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: sparkleRotate 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkleRotate {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+        }
+
+        .memory-card:hover {
+            transform: scale(1.15) rotateY(10deg) rotateZ(5deg);
+            box-shadow: 
+                0 20px 50px rgba(255, 105, 180, 0.5),
+                0 10px 25px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border-color: #ff1493;
+        }
+
+        .memory-card:hover::before {
+            opacity: 1;
+        }
+
+        .memory-card:hover::after {
+            opacity: 1;
+            transform: scale(1.3);
+        }
+
+        .memory-card.flipped {
+            background: linear-gradient(145deg, #ff6b6b 0%, #ee5a24 50%, #ff6b6b 100%);
+            transform: rotateY(180deg) scale(1.1);
+            border-color: #ff4757;
+            animation: flipCelebration 0.8s ease;
+        }
+
+        @keyframes flipCelebration {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(90deg) scale(1.2); }
+            100% { transform: rotateY(180deg) scale(1.1); }
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(145deg, #00b894 0%, #00a085 50%, #00b894 100%);
+            transform: scale(0.9);
+            cursor: default;
+            border-color: #00a085;
+            animation: matchCelebration 1s ease;
+            position: relative;
+        }
+
+        @keyframes matchCelebration {
+            0% { transform: scale(1.3) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(1.2) rotate(-5deg); }
+            75% { transform: scale(1.05) rotate(2deg); }
+            100% { transform: scale(0.9) rotate(0deg); }
+        }
+
+        .memory-card.matched::after {
+            content: '🎉';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 1.5rem;
+            opacity: 1;
+            animation: confettiBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes confettiBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(180deg); }
+        }
+
+        .counting-game {
+            text-align: center;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 25px;
+            padding: 2rem;
+            border: 3px solid #ffb6c1;
+            box-shadow: 0 20px 60px rgba(255, 182, 193, 0.4);
+        }
+
+        .counting-objects {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            padding: 2rem;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            border-radius: 25px;
+            box-shadow: 
+                0 15px 40px rgba(255, 105, 180, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border: 3px solid #ff69b4;
+            position: relative;
+        }
+
+        .counting-objects::before {
+            content: '🔢';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            background: linear-gradient(145deg, #ff69b4, #ff1493);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: countIconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes countIconBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+            50% { transform: translateX(-50%) translateY(-5px) scale(1.1); }
+        }
+
+        .counting-object {
+            font-size: 5rem;
+            animation: superBounce 2s infinite alternate;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .counting-object::before {
+            content: '✨';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: sparkleFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
+            50% { transform: translateY(-5px) rotate(180deg); opacity: 1; }
+        }
+
+        .counting-object:hover {
+            transform: scale(1.3) rotate(10deg);
+            filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5));
+        }
+
+        .counting-object:hover::before {
+            opacity: 1;
+            transform: scale(1.5);
+        }
+
+        @keyframes superBounce {
+            0% { 
+                transform: translateY(0) rotate(0deg) scale(1); 
+            }
+            25% { 
+                transform: translateY(-10px) rotate(2deg) scale(1.05); 
+            }
+            50% { 
+                transform: translateY(-20px) rotate(-2deg) scale(1.1); 
+            }
+            75% { 
+                transform: translateY(-10px) rotate(1deg) scale(1.05); 
+            }
+            100% { 
+                transform: translateY(0) rotate(0deg) scale(1); 
+            }
+        }
+
+        .counting-options {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 25px;
+            border: 3px solid #ff69b4;
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.3);
+        }
+
+        .counting-option {
+            background: linear-gradient(145deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 1.5rem;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 10px 30px rgba(255, 105, 180, 0.3),
+                0 5px 15px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 4px solid #ff69b4;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            animation: optionFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes optionFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-2px) rotate(1deg); }
+        }
+
+        .counting-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .counting-option::after {
+            content: '🎯';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: targetSpin 2s ease-in-out infinite;
+        }
+
+        @keyframes targetSpin {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+        }
+
+        .counting-option:hover {
+            background: linear-gradient(145deg, #ff69b4 0%, #ff1493 50%, #ff69b4 100%);
+            transform: scale(1.2) translateY(-8px) rotate(5deg);
+            box-shadow: 
+                0 20px 50px rgba(255, 105, 180, 0.5),
+                0 10px 25px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border-color: #ff1493;
+        }
+
+        .counting-option:hover::before {
+            opacity: 1;
+        }
+
+        .counting-option:hover::after {
+            opacity: 1;
+            transform: scale(1.5);
+        }
+
+        .counting-option.correct {
+            background: linear-gradient(145deg, #00b894 0%, #00a085 50%, #00b894 100%);
+            animation: superCorrectAnswer 1s ease;
+            transform: scale(1.3);
+            border-color: #00a085;
+            position: relative;
+        }
+
+        .counting-option.correct::after {
+            content: '🎉';
+            opacity: 1;
+            animation: celebrationSpin 1s ease-in-out infinite;
+        }
+
+        @keyframes celebrationSpin {
+            0%, 100% { transform: rotate(0deg) scale(1.5); }
+            50% { transform: rotate(360deg) scale(2); }
+        }
+
+        .counting-option.wrong {
+            background: linear-gradient(145deg, #e17055 0%, #d63031 50%, #e17055 100%);
+            animation: superWrongAnswer 0.8s ease;
+            transform: scale(0.8);
+            border-color: #d63031;
+        }
+
+        .counting-option.wrong::after {
+            content: '😢';
+            opacity: 1;
+            animation: sadBounce 0.8s ease-in-out infinite;
+        }
+
+        @keyframes sadBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-3px) scale(1.1); }
+        }
+
+        @keyframes superCorrectAnswer {
+            0% { transform: scale(1.5) rotate(0deg); }
+            25% { transform: scale(1.2) rotate(5deg); }
+            50% { transform: scale(1.4) rotate(-5deg); }
+            75% { transform: scale(1.25) rotate(2deg); }
+            100% { transform: scale(1.3) rotate(0deg); }
+        }
+
+        @keyframes superWrongAnswer {
+            0% { transform: scale(0.6) rotate(0deg); }
+            25% { transform: scale(0.9) rotate(-5deg); }
+            50% { transform: scale(0.7) rotate(5deg); }
+            75% { transform: scale(0.85) rotate(-2deg); }
+            100% { transform: scale(0.8) rotate(0deg); }
+        }
+
+        .game-score {
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #ff69b4 100%);
+            background-size: 200% 100%;
+            animation: scoreGradient 3s ease-in-out infinite;
+            padding: 1.5rem 2rem;
+            border-radius: 25px;
+            box-shadow: 
+                0 15px 40px rgba(255, 105, 180, 0.4),
+                0 8px 20px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            border: 3px solid #ff1493;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes scoreGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .game-score::before {
+            content: '🏆';
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            animation: trophyBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes trophyBounce {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.2); }
+        }
+
+        .game-score::after {
+            content: '⭐';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            animation: starTwinkle 2s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { transform: translateY(-50%) scale(1) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-50%) scale(1.3) rotate(180deg); opacity: 1; }
+        }
+
+        .game-instructions {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            font-size: 1.4rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            border: 3px solid #ffb6c1;
+            box-shadow: 0 10px 30px rgba(255, 182, 193, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-instructions::before {
+            content: '💡';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 2rem;
+            animation: lightbulbGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes lightbulbGlow {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+            50% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+        }
+
+        .game-instructions p {
+            margin: 0.5rem 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-controls {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 20px;
+            border: 3px solid #ff69b4;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+        }
+
+        .btn-game {
+            background: linear-gradient(145deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 1.2rem 2rem;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0.5rem;
+            box-shadow: 
+                0 12px 30px rgba(255, 105, 180, 0.3),
+                0 6px 15px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 4px solid #ff69b4;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-game::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .btn-game::after {
+            content: '🎮';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: gameIconSpin 2s ease-in-out infinite;
+        }
+
+        @keyframes gameIconSpin {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+        }
+
+        .btn-game:hover {
+            background: linear-gradient(145deg, #ff69b4 0%, #ff1493 50%, #ff69b4 100%);
+            transform: scale(1.15) translateY(-5px) rotate(2deg);
+            box-shadow: 
+                0 20px 50px rgba(255, 105, 180, 0.5),
+                0 10px 25px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border-color: #ff1493;
+        }
+
+        .btn-game:hover::before {
+            opacity: 1;
+        }
+
+        .btn-game:hover::after {
+            opacity: 1;
+            transform: scale(1.5);
+        }
+
+        .btn-game:disabled {
+            background: var(--color-gray-medium);
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+
+        /* Feedback Visual */
+        .game-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-2xl);
+            border-radius: var(--border-radius-xl);
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        .game-feedback.show {
+            opacity: 1;
+            animation: feedbackPop 0.8s ease;
+        }
+
+        .game-feedback.error {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+        }
+
+        @keyframes feedbackPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* Estilos para outros jogos */
+        .game-grid-3x2 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .game-item {
+            aspect-ratio: 1;
+            background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--border-radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-item:hover {
+            transform: scale(1.1) rotateY(5deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-item.clicked {
+            background: linear-gradient(145deg, #00b894 0%, #00a085 100%);
+            transform: scale(0.95);
+            animation: itemClick 0.6s ease;
+        }
+
+        @keyframes itemClick {
+            0% { transform: scale(1.2); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(0.95); }
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .quiz-option {
+            background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-xl);
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .quiz-option:hover {
+            background: linear-gradient(145deg, #764ba2 0%, #667eea 100%);
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .quiz-option.correct {
+            background: linear-gradient(145deg, #00b894 0%, #00a085 100%);
+            animation: correctAnswer 0.8s ease;
+        }
+
+        .quiz-option.wrong {
+            background: linear-gradient(145deg, #e17055 0%, #d63031 100%);
+            animation: wrongAnswer 0.6s ease;
+        }
+
+        /* Controle de Som */
+        .sound-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.9);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-xl);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .sound-btn {
+            background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .sound-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .sound-btn.muted {
+            background: linear-gradient(145deg, #e17055 0%, #d63031 100%);
+        }
+
+        .volume-slider {
+            display: flex;
+            align-items: center;
+        }
+
+        .volume-slider input[type="range"] {
+            width: 80px;
+            height: 5px;
+            border-radius: 5px;
+            background: var(--color-gray-light);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .volume-slider input[type="range"]::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    
+    <script src="script.js"></script>
+    <script src="access-control.js"></script>
+    <script src="sidebar.js"></script>
+    <script>
+        let currentGame = null;
+        let gameScore = 0;
+        let gameTime = 0;
+        let gameTimer = null;
+        let soundEnabled = true;
+        let volume = 0.5;
+
+        function playGame(gameId) {
+            console.log('🎮 Iniciando jogo:', gameId);
+            const startTime = performance.now();
+            
+            // Som de clique
+            playSound('click');
+            
+            const gameNames = [
+                'Memória das Cores',
+                'Contando Objetos',
+                'Quebra-cabeça do Alfabeto',
+                'Sons dos Animais',
+                'Formas Geométricas',
+                'Rimas Divertidas',
+                'Histórias Bíblicas',
+                'Memória Musical'
+            ];
+            
+            const gameName = gameNames[gameId - 1];
+            currentGame = gameId;
+            gameScore = 0;
+            gameTime = 0;
+            
+            const modalTitle = document.getElementById('gameModalTitle');
+            const gameModal = document.getElementById('gameModal');
+            
+            if (modalTitle) {
+                modalTitle.textContent = gameName;
+            } else {
+                console.error('❌ Elemento gameModalTitle não encontrado');
+            }
+            
+            if (gameModal) {
+                gameModal.classList.add('active');
+            } else {
+                console.error('❌ Elemento gameModal não encontrado');
+            }
+            
+            // Carregar jogo específico
+            const gameLoadStart = performance.now();
+            
+            switch(gameId) {
+                case 1:
+                    loadMemoryGame();
+                    break;
+                case 2:
+                    loadCountingGame();
+                    break;
+                case 3:
+                    loadAlphabetGame();
+                    break;
+                case 4:
+                    loadAnimalSoundsGame();
+                    break;
+                case 5:
+                    loadShapesGame();
+                    break;
+                case 6:
+                    loadRhymesGame();
+                    break;
+                case 7:
+                    loadBibleStoriesGame();
+                    break;
+                case 8:
+                    loadMusicalMemoryGame();
+                    break;
+            }
+            
+            const gameLoadEnd = performance.now();
+            startGameTimer();
+            
+            const totalTime = performance.now() - startTime;
+            console.log(`🚀 Jogo ${gameId} (${gameName}) iniciado em: ${totalTime.toFixed(2)}ms`);
+        }
+
+        function closeGameModal() {
+            // Som de clique
+            playSound('click');
+            
+            const gameModal = document.getElementById('gameModal');
+            if (gameModal) {
+                gameModal.classList.remove('active');
+            } else {
+                console.error('❌ Elemento gameModal não encontrado');
+            }
+            
+            if (gameTimer) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+            }
+        }
+
+        function startGameTimer() {
+            if (gameTimer) {
+                clearInterval(gameTimer);
+            }
+            gameTimer = setInterval(() => {
+                gameTime++;
+                updateGameScore();
+            }, 1000);
+        }
+
+        function updateGameScore() {
+            const scoreElement = document.getElementById('gameScore');
+            if (scoreElement) {
+                scoreElement.textContent = `Pontos: ${gameScore} | Tempo: ${gameTime}s`;
+            }
+        }
+
+        function addScore(points) {
+            gameScore += points;
+            updateGameScore();
+        }
+
+        function showFeedback(message, isError = false) {
+            const feedback = document.getElementById('gameFeedback');
+            const feedbackText = document.getElementById('feedbackText');
+            
+            if (feedback && feedbackText) {
+                feedbackText.textContent = message;
+                feedback.className = `game-feedback ${isError ? 'error' : ''}`;
+                feedback.classList.add('show');
+                
+                // Tocar som de feedback
+                playSound(isError ? 'error' : 'success');
+                
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 2000);
+            } else {
+                console.error('❌ Elementos de feedback não encontrados');
+            }
+        }
+
+        // Sistema de Sons
+        function playSound(soundType, animalType = null) {
+            if (!soundEnabled) return;
+            
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                switch(soundType) {
+                    case 'success':
+                        playSuccessSound(audioContext);
+                        break;
+                    case 'error':
+                        playErrorSound(audioContext);
+                        break;
+                    case 'click':
+                        playClickSound(audioContext);
+                        break;
+                    case 'flip':
+                        playFlipSound(audioContext);
+                        break;
+                    case 'match':
+                        playMatchSound(audioContext);
+                        break;
+                    case 'animal':
+                        playAnimalSound(audioContext, animalType);
+                        break;
+                    case 'music':
+                        playMusicSound(audioContext);
+                        break;
+                }
+            } catch (error) {
+                console.error('❌ Erro ao tocar som:', error);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const soundBtn = document.getElementById('soundToggle');
+            const icon = soundBtn.querySelector('i');
+            
+            if (soundEnabled) {
+                icon.className = 'fas fa-volume-up';
+                soundBtn.classList.remove('muted');
+            } else {
+                icon.className = 'fas fa-volume-mute';
+                soundBtn.classList.add('muted');
+            }
+        }
+
+        function setVolume(value) {
+            volume = value / 100;
+        }
+
+        function playSuccessSound(audioContext) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+            oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+            
+            gainNode.gain.setValueAtTime(0.3 * volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function playErrorSound(audioContext) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(150, audioContext.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(100, audioContext.currentTime + 0.2);
+            
+            gainNode.gain.setValueAtTime(0.3 * volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        function playClickSound(audioContext) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.05);
+            
+            gainNode.gain.setValueAtTime(0.2 * volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        function playFlipSound(audioContext) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.15 * volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+
+        function playMatchSound(audioContext) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+            oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+            oscillator.frequency.setValueAtTime(1046.50, audioContext.currentTime + 0.3); // C6
+            
+            gainNode.gain.setValueAtTime(0.25 * volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.6);
+        }
+
+        function playAnimalSound(audioContext, animalType = 'generic') {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Sons específicos para cada animal com mais realismo
+            switch(animalType) {
+                case 'cat':
+                    // Som de gato (miau) - frequência média-alta com variação
+                    oscillator.frequency.setValueAtTime(450, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(400, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(350, audioContext.currentTime + 0.2);
+                    oscillator.frequency.setValueAtTime(300, audioContext.currentTime + 0.3);
+                    oscillator.frequency.setValueAtTime(250, audioContext.currentTime + 0.4);
+                    break;
+                case 'dog':
+                    // Som de cachorro (au au) - frequência média com repetição
+                    oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(180, audioContext.currentTime + 0.2);
+                    oscillator.frequency.setValueAtTime(160, audioContext.currentTime + 0.3);
+                    break;
+                case 'cow':
+                    // Som de vaca (muu) - frequência baixa e longa
+                    oscillator.frequency.setValueAtTime(140, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(120, audioContext.currentTime + 0.2);
+                    oscillator.frequency.setValueAtTime(100, audioContext.currentTime + 0.4);
+                    oscillator.frequency.setValueAtTime(80, audioContext.currentTime + 0.6);
+                    break;
+                case 'pig':
+                    // Som de porco (oinc) - frequência média-baixa com oscilação
+                    oscillator.frequency.setValueAtTime(160, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(180, audioContext.currentTime + 0.2);
+                    oscillator.frequency.setValueAtTime(150, audioContext.currentTime + 0.3);
+                    break;
+                case 'frog':
+                    // Som de sapo (coax) - frequência baixa com variação
+                    oscillator.frequency.setValueAtTime(90, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(110, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(100, audioContext.currentTime + 0.2);
+                    oscillator.frequency.setValueAtTime(80, audioContext.currentTime + 0.3);
+                    oscillator.frequency.setValueAtTime(70, audioContext.currentTime + 0.4);
+                    break;
+                case 'chicken':
+                    // Som de galo (cocoricó) - frequência alta com variação
+                    oscillator.frequency.setValueAtTime(550, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(650, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.2);
+                    oscillator.frequency.setValueAtTime(500, audioContext.currentTime + 0.3);
+                    oscillator.frequency.setValueAtTime(450, audioContext.currentTime + 0.4);
+                    break;
+                default:
+                    // Som genérico de animal
+                    oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(250, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime + 0.2);
+            }
+            
+            // Ajustar volume e duração baseado no tipo de animal
+            let duration = 0.5;
+            let baseVolume = 0.25;
+            
+            switch(animalType) {
+                case 'cow':
+                    duration = 0.8; // Som mais longo
+                    baseVolume = 0.3;
+                    break;
+                case 'chicken':
+                    duration = 0.6; // Som mais longo
+                    baseVolume = 0.3;
+                    break;
+                case 'frog':
+                    duration = 0.6; // Som mais longo
+                    baseVolume = 0.2;
+                    break;
+            }
+            
+            gainNode.gain.setValueAtTime(baseVolume * volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        function playMusicSound(audioContext) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Melodia musical
+            oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
+            oscillator.frequency.setValueAtTime(493.88, audioContext.currentTime + 0.1); // B4
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime + 0.2); // C5
+            oscillator.frequency.setValueAtTime(587.33, audioContext.currentTime + 0.3); // D5
+            
+            gainNode.gain.setValueAtTime(0.2 * volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        // Jogo 1: Memória das Cores
+        function loadMemoryGame() {
+            const startTime = performance.now();
+            
+            const colors = ['🔴', '🔵', '🟡', '🟢', '🟠', '🟣', '🟤', '⚪'];
+            const gameCards = [...colors, ...colors].sort(() => Math.random() - 0.5);
+            
+            const gameHTML = `
+                <div class="game-instructions">
+                    <p>🎯 Encontre os pares de cores iguais!</p>
+                    <p>Clique em duas cartas para virá-las. Se forem iguais, elas ficam viradas!</p>
+                </div>
+                <div class="game-score" id="gameScore">Pontos: 0 | Tempo: 0s</div>
+                <div class="memory-game">
+                    ${gameCards.map((color, index) => `
+                        <div class="memory-card" data-color="${color}" data-index="${index}" onclick="flipMemoryCard(this)">
+                            <span style="display: none;">${color}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="game-controls">
+                    <button class="btn-game" onclick="loadMemoryGame()">🔄 Reiniciar</button>
+                    <button class="btn-game" onclick="closeGameModal()">❌ Fechar</button>
+                </div>
+            `;
+            
+            const container = document.getElementById('gameContainer');
+            if (container) {
+                container.innerHTML = gameHTML;
+            } else {
+                console.error('❌ Elemento gameContainer não encontrado');
+            }
+            
+            const totalTime = performance.now() - startTime;
+            console.log(`✅ Jogo de memória carregado em: ${totalTime.toFixed(2)}ms`);
+        }
+
+        function flipMemoryCard(card) {
+            if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+            
+            const flippedCards = document.querySelectorAll('.memory-card.flipped:not(.matched)');
+            if (flippedCards.length >= 2) return;
+            
+            // Som de virar carta
+            playSound('flip');
+            
+            card.classList.add('flipped');
+            card.querySelector('span').style.display = 'block';
+            
+            const allFlipped = document.querySelectorAll('.memory-card.flipped:not(.matched)');
+            
+            if (allFlipped.length === 2) {
+                const [card1, card2] = allFlipped;
+                
+                if (card1.dataset.color === card2.dataset.color) {
+                    // Par encontrado!
+                    setTimeout(() => {
+                        card1.classList.add('matched');
+                        card2.classList.add('matched');
+                        addScore(10);
+                        
+                        // Som de par encontrado
+                        playSound('match');
+                        
+                        // Verificar se o jogo acabou
+                        const allCards = document.querySelectorAll('.memory-card');
+                        const matchedCards = document.querySelectorAll('.memory-card.matched');
+                        
+                        if (allCards.length === matchedCards.length) {
+                            setTimeout(() => {
+                                showFeedback('🎉 Parabéns! Jogo da Memória Completo!');
+                                setTimeout(() => {
+                                    loadMemoryGame();
+                                }, 3000);
+                            }, 500);
+                        }
+                    }, 500);
+                } else {
+                    // Par errado
+                    setTimeout(() => {
+                        card1.classList.remove('flipped');
+                        card2.classList.remove('flipped');
+                        card1.querySelector('span').style.display = 'none';
+                        card2.querySelector('span').style.display = 'none';
+                    }, 1000);
+                }
+            }
+        }
+
+        // Jogo 2: Contando Objetos
+        function loadCountingGame() {
+            const objects = ['🍎', '⭐', '🎈', '🐱', '🚗', '🌺', '🍪', '🎯', '🦋', '🎨'];
+            const count = Math.floor(Math.random() * 5) + 1;
+            const selectedObjects = objects.slice(0, count);
+            
+            const gameHTML = `
+                <div class="game-instructions">
+                    <p>🔢 Conte os objetos na tela e escolha o número correto!</p>
+                </div>
+                <div class="game-score" id="gameScore">Pontos: 0 | Tempo: 0s</div>
+                <div class="counting-game">
+                    <div class="counting-objects">
+                        ${selectedObjects.map(obj => `<span class="counting-object">${obj}</span>`).join('')}
+                    </div>
+                    <p style="font-size: var(--font-size-lg); margin: var(--spacing-lg) 0;">Quantos objetos você vê?</p>
+                    <div class="counting-options">
+                        ${[1, 2, 3, 4, 5].map(num => `
+                            <button class="counting-option" onclick="checkCountingAnswer(${num}, ${count})">${num}</button>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <button class="btn-game" onclick="loadCountingGame()">🔄 Nova Pergunta</button>
+                    <button class="btn-game" onclick="closeGameModal()">❌ Fechar</button>
+                </div>
+            `;
+            
+            document.getElementById('gameContainer').innerHTML = gameHTML;
+        }
+
+        function checkCountingAnswer(selected, correct) {
+            // Som de clique
+            playSound('click');
+            
+            const options = document.querySelectorAll('.counting-option');
+            options.forEach(option => {
+                option.disabled = true;
+                if (parseInt(option.textContent) === correct) {
+                    option.classList.add('correct');
+                } else if (parseInt(option.textContent) === selected && selected !== correct) {
+                    option.classList.add('wrong');
+                }
+            });
+            
+            if (selected === correct) {
+                addScore(20);
+                setTimeout(() => {
+                    showFeedback('🎉 Correto! Muito bem!');
+                    setTimeout(() => {
+                        loadCountingGame();
+                    }, 2000);
+                }, 1500);
+            } else {
+                setTimeout(() => {
+                    showFeedback(`❌ Não foi dessa vez! A resposta era ${correct}.`, true);
+                    setTimeout(() => {
+                        loadCountingGame();
+                    }, 2000);
+                }, 1500);
+            }
+        }
+
+        // Jogos adicionais (simplificados)
+        function loadAlphabetGame() {
+            const gameHTML = `
+                <div class="game-instructions">
+                    <p>🔤 Clique nas letras para formar palavras!</p>
+                </div>
+                <div class="game-score" id="gameScore">Pontos: 0 | Tempo: 0s</div>
+                <div class="game-grid-3x2">
+                    ${['C', 'A', 'S', 'A', 'M', 'E', 'S', 'A'].map(letter => `
+                        <div class="game-item" onclick="selectLetter('${letter}', this)">${letter}</div>
+                    `).join('')}
+                </div>
+                <div class="game-controls">
+                    <button class="btn-game" onclick="closeGameModal()">❌ Fechar</button>
+                </div>
+            `;
+            document.getElementById('gameContainer').innerHTML = gameHTML;
+        }
+
+        function selectLetter(letter, element) {
+            // Som de clique
+            playSound('click');
+            
+            addScore(5);
+            element.classList.add('clicked');
+            showFeedback(`Letra: ${letter}`);
+        }
+
+        function loadAnimalSoundsGame() {
+            const gameHTML = `
+                <div class="game-instructions">
+                    <p>🐾 Clique no animal para ouvir seu som!</p>
+                </div>
+                <div class="game-score" id="gameScore">Pontos: 0 | Tempo: 0s</div>
+                <div class="game-grid-3x2">
+                    <div class="game-item" onclick="handleAnimalClick('🐱', 'Miau!', this)">🐱</div>
+                    <div class="game-item" onclick="handleAnimalClick('🐶', 'Au au!', this)">🐶</div>
+                    <div class="game-item" onclick="handleAnimalClick('🐮', 'Muu!', this)">🐮</div>
+                    <div class="game-item" onclick="handleAnimalClick('🐷', 'Oinc!', this)">🐷</div>
+                    <div class="game-item" onclick="handleAnimalClick('🐸', 'Coax!', this)">🐸</div>
+                    <div class="game-item" onclick="handleAnimalClick('🐔', 'Cocoricó!', this)">🐔</div>
+                </div>
+                <div class="game-controls">
+                    <button class="btn-game" onclick="closeGameModal()">❌ Fechar</button>
+                </div>
+            `;
+            document.getElementById('gameContainer').innerHTML = gameHTML;
+        }
+
+        function handleAnimalClick(animal, sound, element) {
+            // Determinar tipo de animal baseado no emoji
+            let animalType = 'generic';
+            switch(animal) {
+                case '🐱':
+                    animalType = 'cat';
+                    break;
+                case '🐶':
+                    animalType = 'dog';
+                    break;
+                case '🐮':
+                    animalType = 'cow';
+                    break;
+                case '🐷':
+                    animalType = 'pig';
+                    break;
+                case '🐸':
+                    animalType = 'frog';
+                    break;
+                case '🐔':
+                    animalType = 'chicken';
+                    break;
+            }
+            
+            // Som específico do animal
+            playSound('animal', animalType);
+            
+            addScore(5);
+            element.classList.add('clicked');
+            showFeedback(`${animal} ${sound}`);
+        }
+
+        function loadShapesGame() {
+            const gameHTML = `
+                <div class="game-instructions">
+                    <p>🔷 Identifique as formas geométricas!</p>
+                </div>
+                <div class="game-score" id="gameScore">Pontos: 0 | Tempo: 0s</div>
+                <div class="game-grid-3x2">
+                    <div class="game-item" onclick="identifyShape('🔴', 'Círculo', this)">🔴</div>
+                    <div class="game-item" onclick="identifyShape('🔷', 'Losango', this)">🔷</div>
+                    <div class="game-item" onclick="identifyShape('🔶', 'Triângulo', this)">🔶</div>
+                    <div class="game-item" onclick="identifyShape('⬜', 'Quadrado', this)">⬜</div>
+                    <div class="game-item" onclick="identifyShape('⭐', 'Estrela', this)">⭐</div>
+                    <div class="game-item" onclick="identifyShape('❤️', 'Coração', this)">❤️</div>
+                </div>
+                <div class="game-controls">
+                    <button class="btn-game" onclick="closeGameModal()">❌ Fechar</button>
+                </div>
+            `;
+            document.getElementById('gameContainer').innerHTML = gameHTML;
+        }
+
+        function identifyShape(shape, name, element) {
+            // Som de clique
+            playSound('click');
+            
+            addScore(5);
+            element.classList.add('clicked');
+            showFeedback(`${shape} Esta é a forma: ${name}`);
+        }
+
+        function loadRhymesGame() {
+            const gameHTML = `
+                <div class="game-instructions">
+                    <p>📚 Encontre palavras que rimam!</p>
+                </div>
+                <div class="game-score" id="gameScore">Pontos: 0 | Tempo: 0s</div>
+                <div style="text-align: center;">
+                    <p style="font-size: 1.5rem; margin: 20px 0; font-weight: bold; color: var(--color-gray-dark);">Qual palavra rima com "CASA"?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="checkRhyme('ASA', true, this)">ASA</button>
+                        <button class="quiz-option" onclick="checkRhyme('MESA', true, this)">MESA</button>
+                        <button class="quiz-option" onclick="checkRhyme('GATO', false, this)">GATO</button>
+                        <button class="quiz-option" onclick="checkRhyme('CACHORRO', false, this)">CACHORRO</button>
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <button class="btn-game" onclick="loadRhymesGame()">🔄 Nova Pergunta</button>
+                    <button class="btn-game" onclick="closeGameModal()">❌ Fechar</button>
+                </div>
+            `;
+            document.getElementById('gameContainer').innerHTML = gameHTML;
+        }
+
+        function checkRhyme(word, isCorrect, element) {
+            // Som de clique
+            playSound('click');
+            
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.disabled = true;
+                if (option.textContent === word) {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                    } else {
+                        option.classList.add('wrong');
+                    }
+                }
+            });
+            
+            if (isCorrect) {
+                addScore(10);
+                setTimeout(() => {
+                    showFeedback(`🎉 Correto! "${word}" rima com "CASA"!`);
+                    setTimeout(() => {
+                        loadRhymesGame();
+                    }, 2000);
+                }, 1500);
+            } else {
+                setTimeout(() => {
+                    showFeedback(`❌ "${word}" não rima com "CASA". Tente novamente!`, true);
+                    setTimeout(() => {
+                        loadRhymesGame();
+                    }, 2000);
+                }, 1500);
+            }
+        }
+
+        function loadBibleStoriesGame() {
+            const gameHTML = `
+                <div class="game-instructions">
+                    <p>📖 Monte as histórias bíblicas na ordem correta!</p>
+                </div>
+                <div class="game-score" id="gameScore">Pontos: 0 | Tempo: 0s</div>
+                <div style="text-align: center;">
+                    <p style="font-size: 1.5rem; margin: 20px 0; font-weight: bold; color: var(--color-gray-dark);">Qual foi a primeira história da Bíblia?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="checkBibleStory('A Criação', true, this)">A Criação</button>
+                        <button class="quiz-option" onclick="checkBibleStory('Noé e a Arca', false, this)">Noé e a Arca</button>
+                        <button class="quiz-option" onclick="checkBibleStory('Davi e Golias', false, this)">Davi e Golias</button>
+                        <button class="quiz-option" onclick="checkBibleStory('Jesus nasce', false, this)">Jesus nasce</button>
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <button class="btn-game" onclick="loadBibleStoriesGame()">🔄 Nova Pergunta</button>
+                    <button class="btn-game" onclick="closeGameModal()">❌ Fechar</button>
+                </div>
+            `;
+            document.getElementById('gameContainer').innerHTML = gameHTML;
+        }
+
+        function checkBibleStory(story, isCorrect, element) {
+            // Som de clique
+            playSound('click');
+            
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.disabled = true;
+                if (option.textContent === story) {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                    } else {
+                        option.classList.add('wrong');
+                    }
+                }
+            });
+            
+            if (isCorrect) {
+                addScore(15);
+                setTimeout(() => {
+                    showFeedback(`🎉 Correto! "${story}" foi a primeira história da Bíblia!`);
+                    setTimeout(() => {
+                        loadBibleStoriesGame();
+                    }, 2000);
+                }, 1500);
+            } else {
+                setTimeout(() => {
+                    showFeedback(`❌ "${story}" não foi a primeira história. A primeira foi "A Criação"!`, true);
+                    setTimeout(() => {
+                        loadBibleStoriesGame();
+                    }, 2000);
+                }, 1500);
+            }
+        }
+
+        function loadMusicalMemoryGame() {
+            const gameHTML = `
+                <div class="game-instructions">
+                    <p>🎵 Reproduza a sequência musical!</p>
+                </div>
+                <div class="game-score" id="gameScore">Pontos: 0 | Tempo: 0s</div>
+                <div style="text-align: center;">
+                    <p style="font-size: 1.5rem; margin: 20px 0; font-weight: bold; color: var(--color-gray-dark);">Clique nos instrumentos na ordem que aparecem!</p>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-lg); max-width: 500px; margin: 0 auto;">
+                        <div class="game-item" onclick="playMusicalNote('🎹', 'Piano', this)">🎹</div>
+                        <div class="game-item" onclick="playMusicalNote('🥁', 'Tambor', this)">🥁</div>
+                        <div class="game-item" onclick="playMusicalNote('🎺', 'Trompete', this)">🎺</div>
+                        <div class="game-item" onclick="playMusicalNote('🎸', 'Guitarra', this)">🎸</div>
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <button class="btn-game" onclick="closeGameModal()">❌ Fechar</button>
+                </div>
+            `;
+            document.getElementById('gameContainer').innerHTML = gameHTML;
+        }
+
+        function playMusicalNote(instrument, name, element) {
+            // Som musical
+            playSound('music');
+            
+            addScore(5);
+            element.classList.add('clicked');
+            showFeedback(`${instrument} Toca o som do ${name}!`);
+        }
+
+        // Fechar modal ao clicar fora
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('gameModal');
+            if (e.target === modal) {
+                closeGameModal();
+            }
+        });
+
+        // Fechar modal com tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeGameModal();
+            }
+        });
+    </script>
+    
+    <script src="sounds.js"></script>
+    <script>
+        // Adicionar sons de clique nos botões dos jogos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sons nos botões de jogo
+            const gameButtons = document.querySelectorAll('.game-btn, .start-game-btn, .close-modal-btn');
+            gameButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    playSound('click');
+                });
+            });
+            
+            // Som de sucesso ao acertar
+            const originalShowSuccess = showSuccess;
+            showSuccess = function(message) {
+                originalShowSuccess(message);
+                playSound('success');
+            };
+            
+            // Som de erro ao errar
+            const originalShowError = showError;
+            showError = function(message) {
+                originalShowError(message);
+                playSound('error');
+            };
+        });
+    </script>
+</body>
+</html>
