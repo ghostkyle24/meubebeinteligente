@@ -19,6 +19,17 @@
             };
             script.onerror = function() {
                 console.error('❌ Falha ao carregar QRCode do CDN alternativo');
+                // Tentar terceiro CDN
+                console.log('🔄 Tentando terceiro CDN...');
+                const script2 = document.createElement('script');
+                script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js';
+                script2.onload = function() {
+                    console.log('✅ QRCode carregado do terceiro CDN');
+                };
+                script2.onerror = function() {
+                    console.error('❌ Todos os CDNs falharam - usando fallback');
+                };
+                document.head.appendChild(script2);
             };
             document.head.appendChild(script);
         }
@@ -1504,7 +1515,9 @@
                     console.log('🔍 Last transaction:', result.charges?.[0]?.last_transaction);
                     
                     const qrCode = result.charges?.[0]?.last_transaction?.qr_code;
+                    const qrCodeUrl = result.charges?.[0]?.last_transaction?.qr_code_url;
                     console.log('🔍 QR Code extraído:', qrCode);
+                    console.log('🔍 QR Code URL:', qrCodeUrl);
                     
                     // Gerar QR Code
                     const qrCodeElement = document.getElementById('pixQRCode');
@@ -1555,7 +1568,7 @@
                                         console.log('✅ QR Code gerado com sucesso após timeout');
                                     } catch (error) {
                                         console.error('❌ Erro ao gerar QR Code após timeout:', error);
-                                        showQRCodeFallback(qrCodeElement);
+                                        showQRCodeFallback(qrCodeElement, qrCodeUrl);
                                     }
                                 } else {
                                     console.error('❌ Biblioteca QRCode ainda não está carregada após timeout');
@@ -1575,11 +1588,11 @@
                                                 console.log('✅ QR Code gerado com sucesso após segundo timeout');
                                             } catch (error) {
                                                 console.error('❌ Erro ao gerar QR Code após segundo timeout:', error);
-                                                showQRCodeFallback(qrCodeElement);
+                                                showQRCodeFallback(qrCodeElement, qrCodeUrl);
                                             }
                                         } else {
                                             console.error('❌ Biblioteca QRCode definitivamente não está carregada');
-                                            showQRCodeFallback(qrCodeElement);
+                                            showQRCodeFallback(qrCodeElement, qrCodeUrl);
                                         }
                                     }, 2000);
                                 }
@@ -1631,15 +1644,28 @@
             }
         }
         
-        function showQRCodeFallback(element) {
-            // Fallback: mostrar o código PIX como texto
-            element.innerHTML = `
-                <div style="padding: 20px; text-align: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px;">
-                    <i class="fas fa-qrcode" style="font-size: 48px; color: #6c757d; margin-bottom: 10px;"></i>
-                    <p style="margin: 0; font-size: 12px; color: #6c757d;">QR Code não disponível</p>
-                    <p style="margin: 5px 0 0 0; font-size: 10px; color: #6c757d;">Use o código PIX abaixo</p>
-                </div>
-            `;
+        function showQRCodeFallback(element, qrCodeUrl = null) {
+            // Fallback: mostrar o código PIX como texto ou URL do QR Code
+            if (qrCodeUrl) {
+                element.innerHTML = `
+                    <div style="padding: 20px; text-align: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px;">
+                        <i class="fas fa-qrcode" style="font-size: 48px; color: #6c757d; margin-bottom: 10px;"></i>
+                        <p style="margin: 0; font-size: 12px; color: #6c757d;">QR Code não disponível</p>
+                        <p style="margin: 5px 0 0 0; font-size: 10px; color: #6c757d;">Use o código PIX abaixo</p>
+                        <a href="${qrCodeUrl}" target="_blank" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 12px;">
+                            <i class="fas fa-external-link-alt"></i> Abrir QR Code
+                        </a>
+                    </div>
+                `;
+            } else {
+                element.innerHTML = `
+                    <div style="padding: 20px; text-align: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px;">
+                        <i class="fas fa-qrcode" style="font-size: 48px; color: #6c757d; margin-bottom: 10px;"></i>
+                        <p style="margin: 0; font-size: 12px; color: #6c757d;">QR Code não disponível</p>
+                        <p style="margin: 5px 0 0 0; font-size: 10px; color: #6c757d;">Use o código PIX abaixo</p>
+                    </div>
+                `;
+            }
         }
         
         function startRealPaymentVerification() {
