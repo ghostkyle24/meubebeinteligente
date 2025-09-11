@@ -63,6 +63,17 @@ export default async function handler(req, res) {
                     country: 'BR'
                 }
             },
+            billing: {
+                name: customer.name,
+                address: {
+                    line_1: 'Rua das Flores, 123',
+                    line_2: 'Apto 101',
+                    zip_code: '01234567',
+                    city: 'São Paulo',
+                    state: 'SP',
+                    country: 'BR'
+                }
+            },
             payments: [
                 {
                     payment_method: paymentMethod,
@@ -78,17 +89,7 @@ export default async function handler(req, res) {
                             exp_month: card.exp_month,
                             exp_year: card.exp_year,
                             cvv: card.cvv
-                        } : undefined,
-                        billing_address: {
-                            street: 'Rua das Flores',
-                            street_number: '123',
-                            complementary: 'Apto 101',
-                            neighborhood: 'Jardins',
-                            zipcode: '01234567',
-                            city: 'São Paulo',
-                            state: 'SP',
-                            country: 'BR'
-                        }
+                        } : undefined
                     } : undefined
                 }
             ]
