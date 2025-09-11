@@ -1332,6 +1332,7 @@
         
         function validateRegistration() {
             const email = document.getElementById('userEmail').value.trim();
+            const cpf = document.getElementById('userCPF').value.trim();
             const password = document.getElementById('userPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             
@@ -1346,6 +1347,20 @@
             if (!emailRegex.test(email)) {
                 alert('Por favor, digite um email válido.');
                 document.getElementById('userEmail').focus();
+                return false;
+            }
+            
+            // Validar CPF
+            if (!cpf) {
+                alert('Por favor, digite seu CPF.');
+                document.getElementById('userCPF').focus();
+                return false;
+            }
+            
+            const cpfNumbers = cpf.replace(/\D/g, '');
+            if (cpfNumbers.length !== 11) {
+                alert('Por favor, digite um CPF válido.');
+                document.getElementById('userCPF').focus();
                 return false;
             }
             
@@ -1446,11 +1461,10 @@
             const planConfig = PLANS[selectedPlan];
             const totalAmount = planConfig.price + orderbumpTotal;
             const email = document.getElementById('userEmail').value.trim();
-            const cpf = document.getElementById('userCPF').value.trim();
             
             // Validar campos obrigatórios
-            if (!email || !cpf) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
+            if (!email) {
+                alert('Por favor, preencha o email.');
                 return;
             }
             
@@ -1812,18 +1826,8 @@
         async function createUserAccount(paymentMethod = 'pix') {
             const email = document.getElementById('userEmail').value.trim();
             const password = document.getElementById('userPassword').value;
-            const cpf = document.getElementById('userCPF').value.trim();
             const plan = selectedPlan;
             const planConfig = PLANS[plan];
-            const orderbumpItems = [];
-            
-            // Coletar orderbump selecionados
-            if (document.getElementById('orderbump1').checked) {
-                orderbumpItems.push('Controle parental avançado');
-            }
-            if (document.getElementById('orderbump2').checked) {
-                orderbumpItems.push('Plano alimentar personalizado');
-            }
             
             // Calcular data de expiração
             const startDate = new Date();
@@ -1831,21 +1835,41 @@
             endDate.setMonth(endDate.getMonth() + planConfig.duration);
             
             try {
-                // Hash da senha
-                const passwordHash = await hashPassword(password);
+                // Inicializar Supabase se não estiver inicializado
+                console.log('🔄 Verificando Supabase...');
                 
-                // Dados do usuário para Supabase
+                if (typeof window.supabase === 'undefined' || !window.supabase || !window.supabase.auth) {
+                    console.log('🔄 Inicializando Supabase...');
+                    await initSupabase();
+                }
+                
+                // Verificar se o Supabase foi inicializado corretamente
+                if (typeof window.supabase === 'undefined' || !window.supabase.auth) {
+                    console.error('❌ Supabase ainda não está disponível');
+                    throw new Error('Supabase não foi inicializado corretamente');
+                }
+                
+                console.log('✅ Supabase pronto para uso');
+                
+                // Criar usuário usando o sistema de autenticação do Supabase
+                const { data, error } = await window.supabase.auth.signUp({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) {
+                    throw new Error(`Erro ao criar conta: ${error.message}`);
+                }
+                
+                console.log('✅ Usuário criado com sucesso:', data);
+                
+                // Salvar dados do usuário no localStorage
                 const userData = {
                     email: email,
-                    password_hash: passwordHash,
-                    cpf: cpf.replace(/\D/g, ''), // Remove formatação
                     plan: plan,
                     plan_name: planConfig.name,
                     plan_duration: planConfig.duration,
                     plan_price: planConfig.price,
-                    orderbump: orderbumpItems,
-                    orderbump_total: orderbumpTotal,
-                    total_paid: planConfig.price + orderbumpTotal,
                     start_date: startDate.toISOString(),
                     end_date: endDate.toISOString(),
                     status: 'active',
@@ -1854,36 +1878,7 @@
                     payment_session_id: paymentSessionId
                 };
                 
-                // Inicializar Supabase se não estiver inicializado
-                console.log('🔄 Verificando Supabase...');
-                console.log('window.supabase:', typeof window.supabase);
-                
-                if (typeof window.supabase === 'undefined' || !window.supabase || !window.supabase.from) {
-                    console.log('🔄 Inicializando Supabase...');
-                    await initSupabase();
-                }
-                
-                // Verificar se o Supabase foi inicializado corretamente
-                if (typeof window.supabase === 'undefined' || !window.supabase.from) {
-                    console.error('❌ Supabase ainda não está disponível');
-                    throw new Error('Supabase não foi inicializado corretamente');
-                }
-                
-                console.log('✅ Supabase pronto para uso');
-                
-                // Inserir usuário no Supabase
-                const { data, error } = await window.supabase
-                    .from('users')
-                    .insert([userData])
-                    .select();
-                
-                if (error) {
-                    throw new Error(`Erro ao criar conta: ${error.message}`);
-                }
-                
-                
-                // Salvar dados do usuário no localStorage também
-                localStorage.setItem('userAccount', JSON.stringify(data[0]));
+                localStorage.setItem('userAccount', JSON.stringify(userData));
                 localStorage.setItem('userEmail', email);
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userPlan', planConfig.name);
@@ -2182,63 +2177,63 @@
         }
         
         async function loginAsUser(email, password) {
-            
             // Inicializar Supabase
-            
             if (typeof window.supabase === 'undefined' || !window.supabase) {
                 await initSupabase();
             }
             
             // Verificar se o cliente foi criado corretamente
-            if (!window.supabase || typeof window.supabase.from !== 'function') {
+            if (!window.supabase || typeof window.supabase.auth !== 'function') {
                 await initSupabase();
                 
-                if (!window.supabase || typeof window.supabase.from !== 'function') {
+                if (!window.supabase || typeof window.supabase.auth !== 'function') {
                     throw new Error('Erro ao inicializar conexão com o banco de dados');
                 }
             }
-            const { data: users, error } = await supabase
-                .from('users')
-                .select('*')
-                .eq('email', email)
-                .eq('status', 'active');
+            
+            // Fazer login usando o sistema de autenticação do Supabase
+            const { data, error } = await window.supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
             
             if (error) {
-                throw new Error('Erro ao verificar usuário');
+                if (error.message.includes('Invalid login credentials')) {
+                    throw new Error('Email ou senha incorretos');
+                } else if (error.message.includes('Email not confirmed')) {
+                    throw new Error('Email não confirmado. Verifique sua caixa de entrada.');
+                } else {
+                    throw new Error('Erro ao fazer login: ' + error.message);
+                }
             }
             
+            // Verificar se o usuário tem dados salvos no localStorage (assinatura ativa)
+            const userAccount = localStorage.getItem('userAccount');
+            const userEndDate = localStorage.getItem('userEndDate');
             
-            if (!users || users.length === 0) {
-                throw new Error('Usuário não encontrado ou conta inativa');
-            }
-            
-            const user = users[0];
-            
-            // Verificar senha
-            const passwordHash = await hashPassword(password);
-            
-            if (user.password_hash !== passwordHash) {
-                throw new Error('Senha incorreta');
-            }
-            
-            // Verificar se a assinatura está ativa
-            const endDate = new Date(user.end_date);
-            const now = new Date();
-            
-            if (now > endDate) {
-                throw new Error('Sua assinatura expirou. Renove para continuar acessando.');
+            if (userEndDate) {
+                const endDate = new Date(userEndDate);
+                const now = new Date();
+                
+                if (now > endDate) {
+                    throw new Error('Sua assinatura expirou. Renove para continuar acessando.');
+                }
             }
             
             // Salvar dados do usuário
             const userData = {
-                userAccount: JSON.stringify(user),
                 userEmail: email,
                 isLoggedIn: 'true',
-                userPlan: user.plan_name,
-                userEndDate: user.end_date,
                 paymentConfirmed: 'true',
                 isAdmin: 'false'
             };
+            
+            // Adicionar dados do plano se existirem
+            if (userAccount) {
+                const accountData = JSON.parse(userAccount);
+                userData.userPlan = accountData.plan_name;
+                userData.userEndDate = accountData.end_date;
+            }
             
             Object.entries(userData).forEach(([key, value]) => {
                 localStorage.setItem(key, value);
