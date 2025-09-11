@@ -50,6 +50,14 @@ export default async function handler(req, res) {
                         area_code: areaCode, // Código de área extraído
                         number: phoneNumber // Número sem código de área
                     }
+                },
+                address: {
+                    line_1: 'Rua das Flores, 123',
+                    line_2: 'Apto 101',
+                    zip_code: '01234567',
+                    city: 'São Paulo',
+                    state: 'SP',
+                    country: 'BR'
                 }
             },
             payments: [
@@ -67,7 +75,15 @@ export default async function handler(req, res) {
                             exp_month: card.exp_month,
                             exp_year: card.exp_year,
                             cvv: card.cvv
-                        } : undefined
+                        } : undefined,
+                        billing_address: {
+                            line_1: 'Rua das Flores, 123',
+                            line_2: 'Apto 101',
+                            zip_code: '01234567',
+                            city: 'São Paulo',
+                            state: 'SP',
+                            country: 'BR'
+                        }
                     } : undefined
                 }
             ]
