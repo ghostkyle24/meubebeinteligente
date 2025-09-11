@@ -132,7 +132,8 @@ const META_PIXEL_CONFIG = {
             custom_data: {
                 plan_name: planName,
                 plan_duration: this.getDuration(planName),
-                subscription_id: userData.subscriptionId || null
+                subscription_id: userData.subscriptionId || null,
+                transaction_id: userData.transactionId || null
             },
             
             // Dados do navegador (serão preenchidos pelo backend)

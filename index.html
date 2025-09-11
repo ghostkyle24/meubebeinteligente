@@ -1835,6 +1835,7 @@
                 META_PIXEL_CONFIG.sendCustomerData(email, planName, planPrice, {
                     userId: email, // Usando email como ID único
                     subscriptionId: `sub_${Date.now()}_${planName.toLowerCase()}`,
+                    transactionId: `txn_${Date.now()}_${planName.toLowerCase()}`, // ID da transação
                     country: 'BR',
                     state: 'SP', // Você pode coletar isso no formulário
                     city: 'São Paulo' // Você pode coletar isso no formulário
