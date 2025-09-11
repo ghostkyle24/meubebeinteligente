@@ -30,49 +30,56 @@ export default async function handler(req, res) {
         const areaCode = phone.substring(0, 2);
         const phoneNumber = phone.substring(2);
 
-        // Preparar dados do pedido (estrutura simplificada para API v1)
+        // Preparar dados do pedido (API v5 - ESTRUTURA CORRETA)
         const orderData = {
-            api_key: PAGARME_API_KEY,
-            amount: Math.round(plan.price * 100), // em centavos
-            payment_method: paymentMethod,
-            card_number: card ? card.number : undefined,
-            card_cvv: card ? card.cvv : undefined,
-            card_expiration_date: card ? `${card.exp_month}${card.exp_year}` : undefined,
-            card_holder_name: card ? card.holder_name : undefined,
+            items: [
+                {
+                    code: `PLANO_${plan.name.toUpperCase()}`,
+                    name: `Plano ${plan.name} - Meu Bebê Inteligente`,
+                    description: `Assinatura do plano ${plan.name} - Meu Bebê Inteligente`,
+                    quantity: 1,
+                    unit_amount: Math.round(plan.price * 100), // em centavos
+                    amount: Math.round(plan.price * 100) // em centavos
+                }
+            ],
             customer: {
-                external_id: `customer_${Date.now()}`,
                 name: customer.name,
-                type: 'individual',
-                country: 'br',
                 email: customer.email,
-                documents: [
-                    {
-                        type: 'cpf',
-                        number: customer.document || '00000000000'
+                document: customer.document || '00000000000',
+                type: 'individual',
+                phones: {
+                    mobile_phone: {
+                        country_code: '55',
+                        area_code: areaCode,
+                        number: phoneNumber
                     }
-                ],
-                phone_numbers: [`+55${phone}`],
-                birthday: '1985-01-01'
-            },
-            billing: {
-                name: customer.name,
+                },
                 address: {
-                    street: 'Rua das Flores',
-                    street_number: '123',
-                    neighborhood: 'Jardins',
-                    zipcode: '01234567',
+                    line_1: 'Rua das Flores, 123',
+                    line_2: 'Apto 101',
+                    zip_code: '01234567',
                     city: 'São Paulo',
                     state: 'SP',
                     country: 'BR'
                 }
             },
-            items: [
+            payments: [
                 {
-                    id: `PLANO_${plan.name.toUpperCase()}`,
-                    title: `Plano ${plan.name} - Meu Bebê Inteligente`,
-                    unit_price: Math.round(plan.price * 100), // em centavos
-                    quantity: 1,
-                    tangible: false
+                    payment_method: paymentMethod,
+                    pix: paymentMethod === 'pix' ? {
+                        expires_in: 3600
+                    } : undefined,
+                    credit_card: paymentMethod === 'credit_card' ? {
+                        installments: 1,
+                        statement_descriptor: 'MEU BEBE INTELIGENTE',
+                        card: card ? {
+                            number: card.number,
+                            holder_name: card.holder_name,
+                            exp_month: card.exp_month,
+                            exp_year: card.exp_year,
+                            cvv: card.cvv
+                        } : undefined
+                    } : undefined
                 }
             ]
         };
@@ -109,15 +116,15 @@ export default async function handler(req, res) {
             });
         }
 
-        console.log('📦 Criando transação no Pagar.me:', JSON.stringify(orderData, null, 2));
+        console.log('📦 Criando pedido no Pagar.me API v5:', JSON.stringify(orderData, null, 2));
         console.log('💳 Dados do cartão:', JSON.stringify(card, null, 2));
-        console.log('🏠 Endereço do cliente:', orderData.customer);
-        console.log('🏠 Endereço de cobrança:', orderData.billing);
+        console.log('🏠 Endereço do cliente:', orderData.customer.address);
 
-        // Fazer requisição para Pagar.me
-        const response = await fetch('https://api.pagar.me/core/v1/transactions', {
+        // Fazer requisição para Pagar.me API v5
+        const response = await fetch('https://api.pagar.me/core/v5/orders', {
             method: 'POST',
             headers: {
+                'Authorization': `Basic ${Buffer.from(PAGARME_API_KEY + ':').toString('base64')}`,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
@@ -149,12 +156,14 @@ export default async function handler(req, res) {
         }
 
         if (response.ok) {
-            console.log('✅ Transação criada com sucesso:', result);
+            console.log('✅ Pedido criado com sucesso:', result);
             
             // Verificar se o pagamento foi aprovado
             let paymentApproved = false;
-            if (result.status === 'paid' || result.status === 'authorized') {
-                paymentApproved = true;
+            if (result.charges && result.charges.length > 0) {
+                const charge = result.charges[0];
+                paymentApproved = charge.status === 'paid' || 
+                                 (charge.last_transaction && charge.last_transaction.status === 'paid');
             }
             
             // Preparar resposta para o frontend
