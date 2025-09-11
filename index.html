@@ -2027,6 +2027,10 @@
                     if (charge.last_transaction) {
                         console.log('🔍 Last transaction:', charge.last_transaction);
                         console.log('🔍 Transaction status:', charge.last_transaction.status);
+                        console.log('🔍 Transaction success:', charge.last_transaction.success);
+                        console.log('🔍 Gateway response:', charge.last_transaction.gateway_response);
+                        console.log('🔍 Gateway message:', charge.last_transaction.gateway_message);
+                        console.log('🔍 Acquirer response:', charge.last_transaction.acquirer_response);
                     }
                 }
                 
