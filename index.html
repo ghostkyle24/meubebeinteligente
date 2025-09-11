@@ -9,7 +9,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="config.js"></script>
+    <script>
+        // Configurações inline para evitar problemas de carregamento
+        const CONFIG = {
+            // Supabase - Configurações diretas
+            SUPABASE_URL: 'https://htmofgizynztknpekfbu.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0bW9mZ2l6eW56dGtucGVrZmJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzYwMTYsImV4cCI6MjA3MzExMjAxNn0.a_3_-ncgdXkY2At0ougpZWsXuCrYe-T60RhezGPiE-w',
+            
+            // Pagar.me - Configurações diretas
+            PAGARME_API_KEY: 'sk_85c717614bea451eb81fa2b9e4b09109',
+            
+            // Admin - Configurações diretas
+            ADMIN_EMAIL: 'ashercongintencia@gmail.com',
+            ADMIN_EMAIL_ALT: 'ashercontingencia@gmail.com',
+            ADMIN_PASSWORD: 'DIVJroiDIVJ#18072002',
+            
+            // Configurações do Site
+            SITE_NAME: 'Meu Bebê Inteligente',
+            SITE_URL: 'https://meubebeinteligente.vercel.app',
+            
+            // Meta Pixel
+            META_PIXEL_ID: '636104805955276',
+            META_ACCESS_TOKEN: 'EAAPZBiaTYbAkBPXrv4sDTGeaYKB8JOnArQvHHgGoQwtJGfS5VkHYb7Pvf8ISfUVWUR6Xk3rlD1f15DQPcniM6qy62hZCXIg75AUvEcseuzJnqTyGFIVf3y3DJRATxaHTXKccIHuagOjgaI3X2xFHJXddIMc71aHSMiYHYmIwoH7O5H1G9lha0HSSNg0QZDZD',
+            
+            // Planos
+            PLANS: {
+                monthly: { price: 29, duration: 1, period: 'month', name: 'Mensal' },
+                quarterly: { price: 79, duration: 3, period: 'months', name: 'Trimestral' },
+                yearly: { price: 290, duration: 12, period: 'months', name: 'Anual' }
+            }
+        };
+    </script>
     <script src="meta-pixel-config.js"></script>
     
     <!-- Meta Pixel Code -->
@@ -1160,14 +1190,16 @@
 
     <script src="script.js"></script>
     <script>
+        // Variáveis globais (declaradas primeiro)
+        let selectedPlan = 'quarterly';
+        let orderbumpTotal = 0;
+        
         // Usar configurações do arquivo config.js
         const PAGARME_API_KEY = CONFIG.PAGARME_API_KEY;
         const SUPABASE_URL = CONFIG.SUPABASE_URL;
         const SUPABASE_ANON_KEY = CONFIG.SUPABASE_ANON_KEY;
         const ADMIN_EMAIL = CONFIG.ADMIN_EMAIL;
         const ADMIN_EMAIL_ALT = CONFIG.ADMIN_EMAIL_ALT;
-        
-        
         
         // Função para scroll suave para a seção de preços
         function scrollToPricing() {
@@ -1187,10 +1219,6 @@
                 });
             }
         }
-        
-        // Variáveis globais
-        let selectedPlan = 'quarterly';
-        let orderbumpTotal = 0;
         
         // Configuração dos planos
         const PLANS = {
