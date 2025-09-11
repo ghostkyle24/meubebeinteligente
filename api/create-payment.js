@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         // Token de acesso do Pagar.me
         const PAGARME_API_KEY = 'sk_85c717614bea451eb81fa2b9e4b09109';
 
-        // Preparar dados do pedido (estrutura correta do Pagar.me)
+        // Preparar dados do pedido (estrutura correta do Pagar.me v5)
         const orderData = {
             items: [
                 {
@@ -47,8 +47,7 @@ export default async function handler(req, res) {
                         expires_in: 3600 // 1 hora
                     } : undefined
                 }
-            ],
-            closed: true
+            ]
         };
 
         // Adicionar orderbumps se houver
@@ -59,6 +58,25 @@ export default async function handler(req, res) {
                     quantity: 1,
                     unit_amount: Math.round(item.price * 100) // em centavos
                 });
+            });
+        }
+        
+        // Calcular total dos itens
+        const totalItems = orderData.items.reduce((sum, item) => sum + (item.unit_amount * item.quantity), 0);
+        orderData.amount = totalItems;
+
+        // Validações antes de enviar
+        if (!customer.email || !customer.document) {
+            return res.status(400).json({
+                success: false,
+                error: 'Email e CPF são obrigatórios'
+            });
+        }
+        
+        if (orderData.items.length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: 'Nenhum item no pedido'
             });
         }
 
@@ -80,6 +98,11 @@ export default async function handler(req, res) {
 
         const result = await response.json();
         console.log('📡 Response body:', JSON.stringify(result, null, 2));
+        
+        // Log detalhado dos erros se houver
+        if (result.errors) {
+            console.log('❌ Erros detalhados:', JSON.stringify(result.errors, null, 2));
+        }
 
         if (response.ok) {
             console.log('✅ Pedido criado com sucesso:', result);
