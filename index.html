@@ -2185,10 +2185,10 @@
             }
             
             // Verificar se o cliente foi criado corretamente
-            if (!window.supabase || typeof window.supabase.auth !== 'function') {
+            if (!window.supabase || !window.supabase.auth) {
                 await initSupabase();
                 
-                if (!window.supabase || typeof window.supabase.auth !== 'function') {
+                if (!window.supabase || !window.supabase.auth) {
                     throw new Error('Erro ao inicializar conexão com o banco de dados');
                 }
             }
