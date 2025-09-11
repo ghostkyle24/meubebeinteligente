@@ -1227,9 +1227,9 @@ html {
     }
     
     .qr-code-placeholder {
-        width: 120px;
-        height: 120px;
-        margin: 0 auto var(--spacing-lg);
+        width: 100px;
+        height: 100px;
+        margin: 0 auto var(--spacing-md);
     }
     
     .pix-info {
