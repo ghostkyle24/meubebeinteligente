@@ -8,6 +8,7 @@ export default async function handler(req, res) {
     }
 
     try {
+        console.log('🚀 API ATUALIZADA - Versão com endereço de cobrança');
         console.log('📥 Request body recebido:', JSON.stringify(req.body, null, 2));
         
         const { 
