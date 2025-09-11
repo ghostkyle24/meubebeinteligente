@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="meta-pixel-config.js"></script>
     
     <!-- Meta Pixel Code -->
@@ -22,9 +23,7 @@
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
         
-        // Pixel ID real
-        fbq('init', '636104805955276');
-        fbq('track', 'PageView');
+        // Pixel será inicializado pelo meta-pixel-config.js
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"
@@ -1159,9 +1158,6 @@
         </div>
     </div>
 
-    <script src="config.js"></script>
-    <script>
-    </script>
     <script src="script.js"></script>
     <script>
         // Usar configurações do arquivo config.js
@@ -1192,15 +1188,16 @@
             }
         }
         
+        // Variáveis globais
+        let selectedPlan = 'quarterly';
+        let orderbumpTotal = 0;
+        
         // Configuração dos planos
         const PLANS = {
             monthly: { price: 29, duration: 1, period: 'month', name: 'Mensal' },
             quarterly: { price: 79, duration: 3, period: 'months', name: 'Trimestral' },
             yearly: { price: 290, duration: 12, period: 'months', name: 'Anual' }
         };
-        
-        let selectedPlan = 'quarterly';
-        let orderbumpTotal = 0;
         
         // Menu mobile para navbar da página de vendas
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
