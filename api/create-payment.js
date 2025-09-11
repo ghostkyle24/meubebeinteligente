@@ -19,13 +19,20 @@ export default async function handler(req, res) {
         // Token de acesso do Pagar.me
         const PAGARME_API_KEY = 'sk_85c717614bea451eb81fa2b9e4b09109';
 
+        // Parse do telefone para extrair código de área e número
+        const phone = customer.phone || '11999999999';
+        const areaCode = phone.substring(0, 2);
+        const phoneNumber = phone.substring(2);
+
         // Preparar dados do pedido (estrutura correta do Pagar.me v5)
         const orderData = {
             items: [
                 {
                     name: `Plano ${plan.name} - Meu Bebê Inteligente`,
+                    description: `Assinatura do plano ${plan.name} - Meu Bebê Inteligente`,
                     quantity: 1,
-                    unit_amount: Math.round(amount * 100) // em centavos
+                    unit_amount: Math.round(plan.price * 100), // em centavos
+                    amount: Math.round(plan.price * 100) // em centavos
                 }
             ],
             customer: {
@@ -36,7 +43,8 @@ export default async function handler(req, res) {
                 phones: {
                     mobile_phone: {
                         country_code: '55',
-                        number: customer.phone || '11999999999'
+                        area_code: areaCode, // Código de área extraído
+                        number: phoneNumber // Número sem código de área
                     }
                 }
             },
@@ -55,8 +63,10 @@ export default async function handler(req, res) {
             orderbumpItems.forEach((item, index) => {
                 orderData.items.push({
                     name: item.name,
+                    description: item.name,
                     quantity: 1,
-                    unit_amount: Math.round(item.price * 100) // em centavos
+                    unit_amount: Math.round(item.price * 100), // em centavos
+                    amount: Math.round(item.price * 100) // em centavos
                 });
             });
         }
