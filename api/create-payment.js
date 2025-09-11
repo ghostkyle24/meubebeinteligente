@@ -10,7 +10,6 @@ export default async function handler(req, res) {
     try {
         console.log('🚀 API ATUALIZADA - Versão com endereço de cobrança');
         console.log('📥 Request body recebido:', JSON.stringify(req.body, null, 2));
-        console.log('🔍 Payment method:', paymentMethod);
         
         const { 
             amount, 
@@ -20,6 +19,8 @@ export default async function handler(req, res) {
             paymentMethod = 'pix',
             card
         } = req.body;
+        
+        console.log('🔍 Payment method:', paymentMethod);
 
         // Token de acesso do Pagar.me
         const PAGARME_API_KEY = 'sk_85c717614bea451eb81fa2b9e4b09109';
