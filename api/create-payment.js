@@ -8,12 +8,15 @@ export default async function handler(req, res) {
     }
 
     try {
+        console.log('📥 Request body recebido:', JSON.stringify(req.body, null, 2));
+        
         const { 
             amount, 
             customer, 
             plan, 
             orderbumpItems = [],
-            paymentMethod = 'pix' 
+            paymentMethod = 'pix',
+            card
         } = req.body;
 
         // Token de acesso do Pagar.me
@@ -57,7 +60,7 @@ export default async function handler(req, res) {
                     credit_card: paymentMethod === 'credit_card' ? {
                         installments: 1,
                         statement_descriptor: 'MEU BEBE INTELIGENTE',
-                        card: req.body.card || {}
+                        card: card || {}
                     } : undefined
                 }
             ]

@@ -1951,31 +1951,28 @@
             try {
                 updatePaymentStatus('Processando cartão...', 'spinner', '#ffc107');
                 
-                // Criar pedido real no Pagar.me
+                // Preparar dados do cliente
+                const customerData = {
+                    name: cardName,
+                    email: email,
+                    document: document.getElementById('userCPF').value.trim().replace(/\D/g, ''),
+                    phone: '11999999999'
+                };
+
+                // Preparar dados do pedido para nossa API
                 const orderData = {
-                    items: [{
-                        name: `Plano ${planConfig.name} - Meu Bebê Inteligente`,
-                        quantity: 1,
-                        unit_amount: Math.round(totalAmount * 100) // em centavos
-                    }],
-                    customer: {
-                        email: email,
-                        name: cardName
-                    },
-                    payments: [{
-                        payment_method: 'credit_card',
-                        credit_card: {
-                            installments: 1,
-                            statement_descriptor: 'MEU BEBE INTELIGENTE',
-                            card: {
-                                number: cardNumber,
-                                holder_name: cardName,
-                                exp_month: parseInt(cardExpiry.split('/')[0]),
-                                exp_year: parseInt('20' + cardExpiry.split('/')[1]),
-                                cvv: cardCvv
-                            }
-                        }
-                    }]
+                    amount: totalAmount,
+                    customer: customerData,
+                    plan: planConfig,
+                    orderbumpItems: getSelectedOrderbumps(),
+                    paymentMethod: 'credit_card',
+                    card: {
+                        number: cardNumber,
+                        holder_name: cardName,
+                        exp_month: parseInt(cardExpiry.split('/')[0]),
+                        exp_year: parseInt('20' + cardExpiry.split('/')[1]),
+                        cvv: cardCvv
+                    }
                 };
                 
                 // Usar nossa API para processar o pagamento (resolve problemas de CORS)
