@@ -30,11 +30,15 @@ export default async function handler(req, res) {
         const areaCode = phone.substring(0, 2);
         const phoneNumber = phone.substring(2);
 
-        // Preparar dados do pedido (estrutura correta do Pagar.me v1)
+        // Preparar dados do pedido (estrutura simplificada para API v1)
         const orderData = {
             api_key: PAGARME_API_KEY,
             amount: Math.round(plan.price * 100), // em centavos
             payment_method: paymentMethod,
+            card_number: card ? card.number : undefined,
+            card_cvv: card ? card.cvv : undefined,
+            card_expiration_date: card ? `${card.exp_month}${card.exp_year}` : undefined,
+            card_holder_name: card ? card.holder_name : undefined,
             customer: {
                 external_id: `customer_${Date.now()}`,
                 name: customer.name,
@@ -50,12 +54,6 @@ export default async function handler(req, res) {
                 phone_numbers: [`+55${phone}`],
                 birthday: '1985-01-01'
             },
-            ...(paymentMethod === 'credit_card' && card ? {
-                card_number: card.number,
-                card_cvv: card.cvv,
-                card_expiration_date: `${card.exp_month}${card.exp_year}`,
-                card_holder_name: card.holder_name
-            } : {}),
             billing: {
                 name: customer.name,
                 address: {
