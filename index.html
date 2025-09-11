@@ -1169,17 +1169,6 @@
                     </div>
                     <div class="payment-status">
                         <p><i class="fas fa-clock"></i> Aguardando pagamento...</p>
-                        <div class="payment-timer">
-                            <span id="paymentTimer">Aguardando...</span>
-                        </div>
-                    </div>
-                    <div class="payment-actions">
-                        <button onclick="checkPaymentStatus()" class="btn btn-primary">
-                            <i class="fas fa-sync"></i> Verificar Pagamento
-                        </button>
-                        <button onclick="cancelPayment()" class="btn btn-outline">
-                            <i class="fas fa-times"></i> Cancelar
-                        </button>
                     </div>
                 </div>
             </div>
@@ -1509,15 +1498,10 @@
                     paymentSessionId = result.order_id;
                 
                     // Extrair QR Code da resposta
-                    console.log('🔍 Estrutura completa da resposta:', result);
-                    console.log('🔍 Charges:', result.charges);
-                    console.log('🔍 Primeira charge:', result.charges?.[0]);
-                    console.log('🔍 Last transaction:', result.charges?.[0]?.last_transaction);
-                    
                     const qrCode = result.charges?.[0]?.last_transaction?.qr_code;
                     const qrCodeUrl = result.charges?.[0]?.last_transaction?.qr_code_url;
-                    console.log('🔍 QR Code extraído:', qrCode);
-                    console.log('🔍 QR Code URL:', qrCodeUrl);
+                    console.log('🔍 QR Code extraído:', qrCode ? 'Sim' : 'Não');
+                    console.log('🔍 QR Code URL:', qrCodeUrl ? 'Sim' : 'Não');
                     
                     // Gerar QR Code
                     const qrCodeElement = document.getElementById('pixQRCode');
@@ -1525,8 +1509,6 @@
                         qrCodeElement.innerHTML = '';
                         
                         // Verificar se a biblioteca QRCode está carregada
-                        console.log('🔍 Verificando biblioteca QRCode:', typeof QRCode);
-                        console.log('🔍 QRCode disponível:', typeof QRCode !== 'undefined');
                         
                         if (typeof QRCode !== 'undefined') {
                             try {
@@ -1551,68 +1533,21 @@
                                 `;
                             }
                         } else {
-                            console.error('❌ Biblioteca QRCode não está carregada');
-                            // Tentar aguardar o carregamento da biblioteca
-                            setTimeout(() => {
-                                if (typeof QRCode !== 'undefined') {
-                                    console.log('✅ Biblioteca QRCode carregada após timeout');
-                                    try {
-                                        QRCode.toCanvas(qrCodeElement, qrCode, {
-                                            width: 200,
-                                            height: 200,
-                                            color: {
-                                                dark: '#000000',
-                                                light: '#FFFFFF'
-                                            }
-                                        });
-                                        console.log('✅ QR Code gerado com sucesso após timeout');
-                                    } catch (error) {
-                                        console.error('❌ Erro ao gerar QR Code após timeout:', error);
-                                        showQRCodeFallback(qrCodeElement, qrCodeUrl);
-                                    }
-                                } else {
-                                    console.error('❌ Biblioteca QRCode ainda não está carregada após timeout');
-                                    // Tentar mais uma vez após 2 segundos
-                                    setTimeout(() => {
-                                        if (typeof QRCode !== 'undefined') {
-                                            console.log('✅ Biblioteca QRCode carregada após segundo timeout');
-                                            try {
-                                                QRCode.toCanvas(qrCodeElement, qrCode, {
-                                                    width: 200,
-                                                    height: 200,
-                                                    color: {
-                                                        dark: '#000000',
-                                                        light: '#FFFFFF'
-                                                    }
-                                                });
-                                                console.log('✅ QR Code gerado com sucesso após segundo timeout');
-                                            } catch (error) {
-                                                console.error('❌ Erro ao gerar QR Code após segundo timeout:', error);
-                                                showQRCodeFallback(qrCodeElement, qrCodeUrl);
-                                            }
-                                        } else {
-                                            console.error('❌ Biblioteca QRCode definitivamente não está carregada');
-                                            showQRCodeFallback(qrCodeElement, qrCodeUrl);
-                                        }
-                                    }, 2000);
-                                }
-                            }, 1000);
+                            // Usar fallback imediatamente para ser mais rápido
+                            showQRCodeFallback(qrCodeElement, qrCodeUrl);
                         }
                     } else {
-                        console.error('❌ QR Code não encontrado na resposta ou elemento não existe');
-                        console.log('Elemento encontrado:', qrCodeElement);
-                        console.log('QR Code extraído:', qrCode);
+                        console.error('❌ QR Code não encontrado na resposta');
                     }
                     
                     // Atualizar código PIX
                     const pixCodeElement = document.getElementById('pixCode');
                     if (pixCodeElement && qrCode) {
                         pixCodeElement.value = qrCode;
-                        console.log('✅ Código PIX copiado para o campo');
                     }
                 
                     // Atualizar status
-                    updatePaymentStatus('PIX gerado! Escaneie o QR Code ou copie o código.', 'check', '#28a745');
+                    updatePaymentStatus('PIX gerado!', 'check', '#28a745');
                     
                     // Iniciar verificação de pagamento
                     startRealPaymentVerification();
@@ -1708,10 +1643,7 @@
                         return;
                     }
                     
-                    // Atualizar timer
-                    const elapsedTime = (new Date() - paymentStartTime) / 1000;
-                    const remainingTime = Math.max(0, 3600 - elapsedTime); // 1 hora
-                    updatePaymentTimer(remainingTime);
+                    // Timer removido para simplificar
                 } else {
                     console.error('Erro na verificação:', result.error);
                 }
@@ -1745,24 +1677,6 @@
             }
         }
         
-        function updatePaymentTimer(remainingSeconds) {
-            const timerElement = document.getElementById('paymentTimer');
-            if (timerElement) {
-                const minutes = Math.floor(remainingSeconds / 60);
-                const seconds = Math.floor(remainingSeconds % 60);
-                timerElement.textContent = `Tempo restante: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
-        }
-        
-        function cancelPayment() {
-            if (paymentCheckInterval) {
-                clearInterval(paymentCheckInterval);
-                paymentCheckInterval = null;
-            }
-            
-            closePaymentModal();
-            alert('Pagamento cancelado.');
-        }
         
         function copyPixCode() {
             const pixCode = document.getElementById('pixCode');
@@ -2093,11 +2007,28 @@
                     <button onclick="redirectToDashboard()" class="btn btn-primary">
                         <i class="fas fa-arrow-right"></i> Acessar Dashboard
                     </button>
+                    <p style="margin-top: 15px; font-size: 14px; color: #6c757d;">
+                        <i class="fas fa-clock"></i> Redirecionando automaticamente em <span id="countdown">5</span> segundos...
+                    </p>
                 </div>
             `;
             
             document.body.appendChild(successModal);
             document.body.style.overflow = 'hidden';
+            
+            // Countdown automático para redirecionamento
+            let countdown = 5;
+            const countdownElement = document.getElementById('countdown');
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdownElement) {
+                    countdownElement.textContent = countdown;
+                }
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    redirectToDashboard();
+                }
+            }, 1000);
         }
         
         function redirectToDashboard() {
@@ -2107,6 +2038,14 @@
                 successModal.remove();
             }
             document.body.style.overflow = 'auto';
+            
+            // Limpar qualquer countdown ativo
+            const countdownElements = document.querySelectorAll('#countdown');
+            countdownElements.forEach(element => {
+                if (element.parentElement) {
+                    element.parentElement.remove();
+                }
+            });
             
             // Redirecionar para dashboard
             window.location.href = 'dashboard.html';
