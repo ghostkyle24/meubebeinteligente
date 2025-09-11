@@ -66,9 +66,11 @@ export default async function handler(req, res) {
             billing: {
                 name: customer.name,
                 address: {
-                    line_1: 'Rua das Flores, 123',
-                    line_2: 'Apto 101',
-                    zip_code: '01234567',
+                    street: 'Rua das Flores',
+                    street_number: '123',
+                    complementary: 'Apto 101',
+                    neighborhood: 'Jardins',
+                    zipcode: '01234567',
                     city: 'São Paulo',
                     state: 'SP',
                     country: 'BR'
