@@ -8,6 +8,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        // Fallback para QRCode se o CDN principal falhar
+        if (typeof QRCode === 'undefined') {
+            console.log('🔄 Tentando carregar QRCode do CDN alternativo...');
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
+            script.onload = function() {
+                console.log('✅ QRCode carregado do CDN alternativo');
+            };
+            script.onerror = function() {
+                console.error('❌ Falha ao carregar QRCode do CDN alternativo');
+            };
+            document.head.appendChild(script);
+        }
+    </script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configurações inline para evitar problemas de carregamento
@@ -1524,14 +1539,51 @@
                             }
                         } else {
                             console.error('❌ Biblioteca QRCode não está carregada');
-                            // Fallback: mostrar o código PIX como texto
-                            qrCodeElement.innerHTML = `
-                                <div style="padding: 20px; text-align: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px;">
-                                    <i class="fas fa-qrcode" style="font-size: 48px; color: #6c757d; margin-bottom: 10px;"></i>
-                                    <p style="margin: 0; font-size: 12px; color: #6c757d;">QR Code não disponível</p>
-                                    <p style="margin: 5px 0 0 0; font-size: 10px; color: #6c757d;">Use o código PIX abaixo</p>
-                                </div>
-                            `;
+                            // Tentar aguardar o carregamento da biblioteca
+                            setTimeout(() => {
+                                if (typeof QRCode !== 'undefined') {
+                                    console.log('✅ Biblioteca QRCode carregada após timeout');
+                                    try {
+                                        QRCode.toCanvas(qrCodeElement, qrCode, {
+                                            width: 200,
+                                            height: 200,
+                                            color: {
+                                                dark: '#000000',
+                                                light: '#FFFFFF'
+                                            }
+                                        });
+                                        console.log('✅ QR Code gerado com sucesso após timeout');
+                                    } catch (error) {
+                                        console.error('❌ Erro ao gerar QR Code após timeout:', error);
+                                        showQRCodeFallback(qrCodeElement);
+                                    }
+                                } else {
+                                    console.error('❌ Biblioteca QRCode ainda não está carregada após timeout');
+                                    // Tentar mais uma vez após 2 segundos
+                                    setTimeout(() => {
+                                        if (typeof QRCode !== 'undefined') {
+                                            console.log('✅ Biblioteca QRCode carregada após segundo timeout');
+                                            try {
+                                                QRCode.toCanvas(qrCodeElement, qrCode, {
+                                                    width: 200,
+                                                    height: 200,
+                                                    color: {
+                                                        dark: '#000000',
+                                                        light: '#FFFFFF'
+                                                    }
+                                                });
+                                                console.log('✅ QR Code gerado com sucesso após segundo timeout');
+                                            } catch (error) {
+                                                console.error('❌ Erro ao gerar QR Code após segundo timeout:', error);
+                                                showQRCodeFallback(qrCodeElement);
+                                            }
+                                        } else {
+                                            console.error('❌ Biblioteca QRCode definitivamente não está carregada');
+                                            showQRCodeFallback(qrCodeElement);
+                                        }
+                                    }, 2000);
+                                }
+                            }, 1000);
                         }
                     } else {
                         console.error('❌ QR Code não encontrado na resposta ou elemento não existe');
@@ -1577,6 +1629,17 @@
                     correctLevel: QRCode.CorrectLevel.H
                 });
             }
+        }
+        
+        function showQRCodeFallback(element) {
+            // Fallback: mostrar o código PIX como texto
+            element.innerHTML = `
+                <div style="padding: 20px; text-align: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px;">
+                    <i class="fas fa-qrcode" style="font-size: 48px; color: #6c757d; margin-bottom: 10px;"></i>
+                    <p style="margin: 0; font-size: 12px; color: #6c757d;">QR Code não disponível</p>
+                    <p style="margin: 5px 0 0 0; font-size: 10px; color: #6c757d;">Use o código PIX abaixo</p>
+                </div>
+            `;
         }
         
         function startRealPaymentVerification() {
