@@ -19,20 +19,19 @@ export default async function handler(req, res) {
         // Token de acesso do Pagar.me
         const PAGARME_API_KEY = 'sk_85c717614bea451eb81fa2b9e4b09109';
 
-        // Preparar dados do pedido
+        // Preparar dados do pedido (estrutura correta do Pagar.me)
         const orderData = {
             items: [
                 {
-                    amount: amount * 100, // Pagar.me espera em centavos
-                    description: `Plano ${plan.name} - Meu Bebê Inteligente`,
+                    name: `Plano ${plan.name} - Meu Bebê Inteligente`,
                     quantity: 1,
-                    code: `plan_${plan.name.toLowerCase()}`
+                    unit_amount: Math.round(amount * 100) // em centavos
                 }
             ],
             customer: {
                 name: customer.name,
                 email: customer.email,
-                document: customer.document || '00000000000', // CPF padrão se não fornecido
+                document: customer.document || '00000000000',
                 type: 'individual',
                 phones: {
                     mobile_phone: {
@@ -46,17 +45,6 @@ export default async function handler(req, res) {
                     payment_method: paymentMethod,
                     pix: paymentMethod === 'pix' ? {
                         expires_in: 3600 // 1 hora
-                    } : undefined,
-                    credit_card: paymentMethod === 'credit_card' ? {
-                        installments: 1,
-                        statement_descriptor: 'MEU BEBE INTELIGENTE',
-                        card: {
-                            number: customer.card?.number,
-                            holder_name: customer.card?.holder_name,
-                            exp_month: customer.card?.exp_month,
-                            exp_year: customer.card?.exp_year,
-                            cvv: customer.card?.cvv
-                        }
                     } : undefined
                 }
             ],
@@ -67,15 +55,14 @@ export default async function handler(req, res) {
         if (orderbumpItems.length > 0) {
             orderbumpItems.forEach((item, index) => {
                 orderData.items.push({
-                    amount: item.price * 100,
-                    description: item.name,
+                    name: item.name,
                     quantity: 1,
-                    code: `orderbump_${index}`
+                    unit_amount: Math.round(item.price * 100) // em centavos
                 });
             });
         }
 
-        console.log('📦 Criando pedido no Pagar.me:', orderData);
+        console.log('📦 Criando pedido no Pagar.me:', JSON.stringify(orderData, null, 2));
 
         // Fazer requisição para Pagar.me
         const response = await fetch('https://api.pagar.me/core/v5/orders', {
@@ -88,7 +75,11 @@ export default async function handler(req, res) {
             body: JSON.stringify(orderData)
         });
 
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
+
         const result = await response.json();
+        console.log('📡 Response body:', JSON.stringify(result, null, 2));
 
         if (response.ok) {
             console.log('✅ Pedido criado com sucesso:', result);
@@ -107,11 +98,15 @@ export default async function handler(req, res) {
             // Se for PIX, adicionar dados do PIX
             if (paymentMethod === 'pix' && result.charges && result.charges[0]) {
                 const charge = result.charges[0];
-                paymentResponse.pix = {
-                    qr_code: charge.last_transaction?.qr_code,
-                    qr_code_url: charge.last_transaction?.qr_code_url,
-                    expires_at: charge.last_transaction?.expires_at
-                };
+                const pixTransaction = charge.last_transaction;
+                
+                if (pixTransaction && pixTransaction.pix) {
+                    paymentResponse.pix = {
+                        qr_code: pixTransaction.pix.qr_code,
+                        qr_code_url: pixTransaction.pix.qr_code_url,
+                        expires_at: pixTransaction.pix.expires_at
+                    };
+                }
             }
 
             return res.status(200).json(paymentResponse);

@@ -1068,8 +1068,20 @@
                 <p>Preencha seus dados para criar sua conta:</p>
                 <div class="registration-form">
                     <div class="form-group">
+                        <label for="userName">Nome Completo:</label>
+                        <input type="text" id="userName" placeholder="Seu nome completo" required>
+                    </div>
+                    <div class="form-group">
                         <label for="userEmail">Email:</label>
                         <input type="email" id="userEmail" placeholder="seu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userCPF">CPF:</label>
+                        <input type="text" id="userCPF" placeholder="000.000.000-00" maxlength="14" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPhone">Telefone:</label>
+                        <input type="text" id="userPhone" placeholder="(11) 99999-9999" maxlength="15" required>
                     </div>
                     <div class="form-group">
                         <label for="userPassword">Senha:</label>
@@ -1402,11 +1414,56 @@
             return orderbumpItems;
         }
         
+        // Função para aplicar máscara de CPF
+        function formatCPF(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+                .replace(/(-\d{2})\d+?$/, '$1');
+        }
+        
+        // Função para aplicar máscara de telefone
+        function formatPhone(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{5})(\d)/, '$1-$2')
+                .replace(/(-\d{4})\d+?$/, '$1');
+        }
+        
+        // Adicionar event listeners para máscaras
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpfInput = document.getElementById('userCPF');
+            const phoneInput = document.getElementById('userPhone');
+            
+            if (cpfInput) {
+                cpfInput.addEventListener('input', function(e) {
+                    e.target.value = formatCPF(e.target.value);
+                });
+            }
+            
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    e.target.value = formatPhone(e.target.value);
+                });
+            }
+        });
+        
         async function generatePixPayment() {
             const planConfig = PLANS[selectedPlan];
             const totalAmount = planConfig.price + orderbumpTotal;
             const email = document.getElementById('userEmail').value.trim();
-            const name = document.getElementById('userName')?.value.trim() || email.split('@')[0];
+            const name = document.getElementById('userName').value.trim();
+            const cpf = document.getElementById('userCPF').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+            
+            // Validar campos obrigatórios
+            if (!email || !name || !cpf || !phone) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
             
             // Gerar ID único para a sessão de pagamento
             paymentSessionId = 'pix_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -1419,8 +1476,8 @@
                 const customerData = {
                     name: name,
                     email: email,
-                    document: '00000000000', // CPF padrão
-                    phone: '11999999999' // Telefone padrão
+                    document: cpf.replace(/\D/g, ''), // Remove formatação do CPF
+                    phone: phone.replace(/\D/g, '') // Remove formatação do telefone
                 };
                 
                 // Preparar dados do pedido
@@ -1728,6 +1785,9 @@
         async function createUserAccount(paymentMethod = 'pix') {
             const email = document.getElementById('userEmail').value.trim();
             const password = document.getElementById('userPassword').value;
+            const name = document.getElementById('userName').value.trim();
+            const cpf = document.getElementById('userCPF').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
             const plan = selectedPlan;
             const planConfig = PLANS[plan];
             const orderbumpItems = [];
@@ -1753,6 +1813,9 @@
                 const userData = {
                     email: email,
                     password_hash: passwordHash,
+                    name: name,
+                    cpf: cpf.replace(/\D/g, ''), // Remove formatação
+                    phone: phone.replace(/\D/g, ''), // Remove formatação
                     plan: plan,
                     plan_name: planConfig.name,
                     plan_duration: planConfig.duration,
