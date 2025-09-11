@@ -2194,16 +2194,24 @@
             }
             
             // Fazer login usando o sistema de autenticação do Supabase
+            console.log('🔐 Tentando fazer login com:', { email, passwordLength: password.length });
+            
             const { data, error } = await window.supabase.auth.signInWithPassword({
                 email: email,
                 password: password
             });
             
+            console.log('🔐 Resultado do login:', { data, error });
+            
             if (error) {
+                console.error('❌ Erro detalhado do Supabase:', error);
+                
                 if (error.message.includes('Invalid login credentials')) {
                     throw new Error('Email ou senha incorretos');
                 } else if (error.message.includes('Email not confirmed')) {
                     throw new Error('Email não confirmado. Verifique sua caixa de entrada.');
+                } else if (error.message.includes('User not found')) {
+                    throw new Error('Usuário não encontrado. Verifique se você fez o pagamento corretamente.');
                 } else {
                     throw new Error('Erro ao fazer login: ' + error.message);
                 }
