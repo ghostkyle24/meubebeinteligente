@@ -61,7 +61,6 @@ export default async function handler(req, res) {
                 address: {
                     street: 'Rua das Flores',
                     street_number: '123',
-                    complementary: 'Apto 101',
                     neighborhood: 'Jardins',
                     zipcode: '01234567',
                     city: 'São Paulo',
