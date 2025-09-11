@@ -1482,11 +1482,20 @@
                     // Salvar ID do pedido
                     paymentSessionId = result.order_id;
                 
+                    // Extrair QR Code da resposta
+                    console.log('🔍 Estrutura completa da resposta:', result);
+                    console.log('🔍 Charges:', result.charges);
+                    console.log('🔍 Primeira charge:', result.charges?.[0]);
+                    console.log('🔍 Last transaction:', result.charges?.[0]?.last_transaction);
+                    
+                    const qrCode = result.charges?.[0]?.last_transaction?.qr_code;
+                    console.log('🔍 QR Code extraído:', qrCode);
+                    
                     // Gerar QR Code
-                    const qrCodeElement = document.getElementById('qrCode');
-                    if (qrCodeElement && result.pix?.qr_code) {
+                    const qrCodeElement = document.getElementById('pixQRCode');
+                    if (qrCodeElement && qrCode) {
                         qrCodeElement.innerHTML = '';
-                        QRCode.toCanvas(qrCodeElement, result.pix.qr_code, {
+                        QRCode.toCanvas(qrCodeElement, qrCode, {
                             width: 200,
                             height: 200,
                             color: {
@@ -1494,12 +1503,18 @@
                                 light: '#FFFFFF'
                             }
                         });
+                        console.log('✅ QR Code gerado com sucesso');
+                    } else {
+                        console.error('❌ QR Code não encontrado na resposta ou elemento não existe');
+                        console.log('Elemento encontrado:', qrCodeElement);
+                        console.log('QR Code extraído:', qrCode);
                     }
                     
                     // Atualizar código PIX
                     const pixCodeElement = document.getElementById('pixCode');
-                    if (pixCodeElement && result.pix?.qr_code) {
-                        pixCodeElement.value = result.pix.qr_code;
+                    if (pixCodeElement && qrCode) {
+                        pixCodeElement.value = qrCode;
+                        console.log('✅ Código PIX copiado para o campo');
                     }
                 
                     // Atualizar status
