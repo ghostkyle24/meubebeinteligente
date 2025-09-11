@@ -1255,15 +1255,11 @@
             </div>
             
             <div class="payment-methods">
-                <h4>Escolha a forma de pagamento:</h4>
+                <h4>Forma de pagamento:</h4>
                 <div class="payment-options">
                     <button class="payment-btn pix-btn" onclick="processPayment('pix')">
                         <i class="fas fa-qrcode"></i>
                         PIX
-                    </button>
-                    <button class="payment-btn card-btn" onclick="processPayment('card')">
-                        <i class="fas fa-credit-card"></i>
-                        Cartão de Crédito
                     </button>
                 </div>
             </div>
@@ -1463,8 +1459,8 @@
                 document.getElementById('cardArea').style.display = 'none';
                 generatePixPayment();
             } else if (method === 'card') {
-                document.getElementById('cardArea').style.display = 'block';
-                document.getElementById('pixArea').style.display = 'none';
+                alert('Pagamento com cartão temporariamente indisponível. Use o PIX para finalizar sua compra.');
+                return;
             }
         }
         

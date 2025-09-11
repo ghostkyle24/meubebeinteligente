@@ -1211,11 +1211,39 @@ html {
     .pix-content {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .pix-qr {
+        order: 1;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .pix-copy {
+        order: 2;
+        margin-bottom: var(--spacing-lg);
     }
     
     .qr-code-placeholder {
         width: 150px;
         height: 150px;
+        margin: 0 auto var(--spacing-md);
+    }
+    
+    .pix-code-container {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .pix-code-container input {
+        text-align: center;
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-sm);
+    }
+    
+    .pix-code-container button {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-sm);
     }
     
     .payment-options {
@@ -1224,5 +1252,10 @@ html {
     
     .form-row {
         grid-template-columns: 1fr;
+    }
+    
+    .payment-status {
+        order: 3;
+        margin-top: var(--spacing-lg);
     }
 }
