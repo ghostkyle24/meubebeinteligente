@@ -30,38 +30,28 @@ export default async function handler(req, res) {
         const areaCode = phone.substring(0, 2);
         const phoneNumber = phone.substring(2);
 
-        // Preparar dados do pedido (estrutura correta do Pagar.me v5)
+        // Preparar dados do pedido (estrutura correta do Pagar.me v1)
         const orderData = {
-            items: [
-                {
-                    code: `PLANO_${plan.name.toUpperCase()}`,
-                    name: `Plano ${plan.name} - Meu Bebê Inteligente`,
-                    description: `Assinatura do plano ${plan.name} - Meu Bebê Inteligente`,
-                    quantity: 1,
-                    unit_amount: Math.round(plan.price * 100), // em centavos
-                    amount: Math.round(plan.price * 100) // em centavos
-                }
-            ],
+            amount: Math.round(plan.price * 100), // em centavos
+            payment_method: paymentMethod,
+            card_number: card ? card.number : undefined,
+            card_cvv: card ? card.cvv : undefined,
+            card_expiration_date: card ? `${card.exp_month}${card.exp_year}` : undefined,
+            card_holder_name: card ? card.holder_name : undefined,
             customer: {
+                external_id: `customer_${Date.now()}`,
                 name: customer.name,
-                email: customer.email,
-                document: customer.document || '00000000000',
                 type: 'individual',
-                phones: {
-                    mobile_phone: {
-                        country_code: '55',
-                        area_code: areaCode, // Código de área extraído
-                        number: phoneNumber // Número sem código de área
+                country: 'br',
+                email: customer.email,
+                documents: [
+                    {
+                        type: 'cpf',
+                        number: customer.document || '00000000000'
                     }
-                },
-                address: {
-                    line_1: 'Rua das Flores, 123',
-                    line_2: 'Apto 101',
-                    zip_code: '01234567',
-                    city: 'São Paulo',
-                    state: 'SP',
-                    country: 'BR'
-                }
+                ],
+                phone_numbers: [`+55${phone}`],
+                birthday: '1985-01-01'
             },
             billing: {
                 name: customer.name,
@@ -76,23 +66,13 @@ export default async function handler(req, res) {
                     country: 'BR'
                 }
             },
-            payments: [
+            items: [
                 {
-                    payment_method: paymentMethod,
-                    pix: paymentMethod === 'pix' ? {
-                        expires_in: 3600 // 1 hora
-                    } : undefined,
-                    credit_card: paymentMethod === 'credit_card' ? {
-                        installments: 1,
-                        statement_descriptor: 'MEU BEBE INTELIGENTE',
-                        card: card ? {
-                            number: card.number,
-                            holder_name: card.holder_name,
-                            exp_month: card.exp_month,
-                            exp_year: card.exp_year,
-                            cvv: card.cvv
-                        } : undefined
-                    } : undefined
+                    id: `PLANO_${plan.name.toUpperCase()}`,
+                    title: `Plano ${plan.name} - Meu Bebê Inteligente`,
+                    unit_price: Math.round(plan.price * 100), // em centavos
+                    quantity: 1,
+                    tangible: false
                 }
             ]
         };
@@ -101,18 +81,17 @@ export default async function handler(req, res) {
         if (orderbumpItems.length > 0) {
             orderbumpItems.forEach((item, index) => {
                 orderData.items.push({
-                    code: `ORDERBUMP_${index + 1}`,
-                    name: item.name,
-                    description: item.name,
+                    id: `ORDERBUMP_${index + 1}`,
+                    title: item.name,
+                    unit_price: Math.round(item.price * 100), // em centavos
                     quantity: 1,
-                    unit_amount: Math.round(item.price * 100), // em centavos
-                    amount: Math.round(item.price * 100) // em centavos
+                    tangible: false
                 });
             });
         }
         
         // Calcular total dos itens
-        const totalItems = orderData.items.reduce((sum, item) => sum + (item.unit_amount * item.quantity), 0);
+        const totalItems = orderData.items.reduce((sum, item) => sum + (item.unit_price * item.quantity), 0);
         orderData.amount = totalItems;
 
         // Validações antes de enviar
@@ -130,13 +109,13 @@ export default async function handler(req, res) {
             });
         }
 
-        console.log('📦 Criando pedido no Pagar.me:', JSON.stringify(orderData, null, 2));
+        console.log('📦 Criando transação no Pagar.me:', JSON.stringify(orderData, null, 2));
         console.log('💳 Dados do cartão:', JSON.stringify(card, null, 2));
-        console.log('🏠 Endereço do cliente:', orderData.customer.address);
-        console.log('🏠 Endereço de cobrança do cartão:', orderData.payments[0].credit_card?.billing_address);
+        console.log('🏠 Endereço do cliente:', orderData.customer);
+        console.log('🏠 Endereço de cobrança:', orderData.billing);
 
         // Fazer requisição para Pagar.me
-        const response = await fetch('https://api.pagar.me/core/v5/orders', {
+        const response = await fetch('https://api.pagar.me/core/v1/transactions', {
             method: 'POST',
             headers: {
                 'Authorization': `Basic ${Buffer.from(PAGARME_API_KEY + ':').toString('base64')}`,
@@ -171,14 +150,12 @@ export default async function handler(req, res) {
         }
 
         if (response.ok) {
-            console.log('✅ Pedido criado com sucesso:', result);
+            console.log('✅ Transação criada com sucesso:', result);
             
             // Verificar se o pagamento foi aprovado
             let paymentApproved = false;
-            if (result.charges && result.charges.length > 0) {
-                const charge = result.charges[0];
-                paymentApproved = charge.status === 'paid' || 
-                                 (charge.last_transaction && charge.last_transaction.status === 'paid');
+            if (result.status === 'paid' || result.status === 'authorized') {
+                paymentApproved = true;
             }
             
             // Preparar resposta para o frontend
@@ -189,7 +166,7 @@ export default async function handler(req, res) {
                 amount: result.amount,
                 currency: result.currency,
                 customer: result.customer,
-                charges: result.charges,
+                charges: result.charges || [],
                 payment_approved: paymentApproved
             };
 
