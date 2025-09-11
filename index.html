@@ -1855,14 +1855,21 @@
                 };
                 
                 // Inicializar Supabase se não estiver inicializado
-                if (typeof window.supabase === 'undefined' || !window.supabase) {
+                console.log('🔄 Verificando Supabase...');
+                console.log('window.supabase:', typeof window.supabase);
+                
+                if (typeof window.supabase === 'undefined' || !window.supabase || !window.supabase.from) {
+                    console.log('🔄 Inicializando Supabase...');
                     await initSupabase();
                 }
                 
                 // Verificar se o Supabase foi inicializado corretamente
                 if (typeof window.supabase === 'undefined' || !window.supabase.from) {
+                    console.error('❌ Supabase ainda não está disponível');
                     throw new Error('Supabase não foi inicializado corretamente');
                 }
+                
+                console.log('✅ Supabase pronto para uso');
                 
                 // Inserir usuário no Supabase
                 const { data, error } = await window.supabase
@@ -1913,50 +1920,48 @@
         async function initSupabase() {
             console.log('🔄 Inicializando Supabase...');
             
+            // Aguardar um pouco para garantir que a biblioteca foi carregada
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
             // Verificar se a biblioteca supabase está disponível globalmente
-            if (typeof window.supabase === 'undefined' || !window.supabase) {
-                console.log('📦 Carregando biblioteca Supabase...');
+            if (typeof window.supabase === 'undefined' || !window.supabase || !window.supabase.createClient) {
+                console.log('📦 Aguardando biblioteca Supabase carregar...');
                 
-                // Carregar biblioteca Supabase se não estiver carregada
-                const script = document.createElement('script');
-                script.src = 'https://unpkg.com/@supabase/supabase-js@2';
-                document.head.appendChild(script);
+                // Aguardar até 10 segundos para a biblioteca carregar
+                let attempts = 0;
+                const maxAttempts = 10;
                 
-                return new Promise((resolve, reject) => {
-                    script.onload = () => {
-                        try {
-                            console.log('✅ Biblioteca Supabase carregada');
-                            // Verificar se a biblioteca foi carregada corretamente
-                            if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
-                                window.supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-                                console.log('✅ Cliente Supabase criado');
-                                resolve();
-                            } else {
-                                reject(new Error('Biblioteca Supabase não disponível'));
-                            }
-                        } catch (error) {
-                            console.error('❌ Erro ao criar cliente Supabase:', error);
-                            reject(error);
-                        }
-                    };
-                    script.onerror = () => {
-                        console.error('❌ Erro ao carregar biblioteca Supabase');
-                        reject(new Error('Erro ao carregar biblioteca Supabase'));
-                    };
-                });
-            } else {
-                try {
-                    console.log('🔄 Supabase já carregado, criando cliente...');
-                    if (window.supabase.createClient) {
-                        window.supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-                        console.log('✅ Cliente Supabase criado');
-                    } else {
-                        throw new Error('Método createClient não disponível');
+                while (attempts < maxAttempts) {
+                    if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+                        console.log('✅ Biblioteca Supabase encontrada');
+                        break;
                     }
-                } catch (error) {
-                    console.error('❌ Erro ao criar cliente Supabase:', error);
-                    throw error;
+                    console.log(`⏳ Tentativa ${attempts + 1}/${maxAttempts} - Aguardando Supabase...`);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    attempts++;
                 }
+                
+                if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+                    throw new Error('Biblioteca Supabase não carregou após 10 segundos');
+                }
+            }
+            
+            try {
+                console.log('🔄 Criando cliente Supabase...');
+                window.supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                console.log('✅ Cliente Supabase criado com sucesso');
+                
+                // Testar a conexão
+                const { data, error } = await window.supabase.from('users').select('count').limit(1);
+                if (error) {
+                    console.warn('⚠️ Aviso ao testar conexão:', error.message);
+                } else {
+                    console.log('✅ Conexão com Supabase testada com sucesso');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao criar cliente Supabase:', error);
+                throw error;
             }
         }
         
