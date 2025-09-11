@@ -511,13 +511,9 @@
                 // Mostrar feedback de carregamento
                 showDownloadFeedback(drawing.name, 'loading');
                 
-                // Buscar a imagem
-                const response = await fetch(drawing.url, {
-                    mode: 'cors',
-                    headers: {
-                        'Access-Control-Allow-Origin': '*'
-                    }
-                });
+                // Usar nossa API para fazer o download (resolve problemas de CORS)
+                const apiUrl = `/api/download-image?url=${encodeURIComponent(drawing.url)}`;
+                const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
                     throw new Error('Erro ao carregar a imagem');
