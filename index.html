@@ -2031,6 +2031,11 @@
                         console.log('🔍 Gateway response:', charge.last_transaction.gateway_response);
                         console.log('🔍 Gateway message:', charge.last_transaction.gateway_message);
                         console.log('🔍 Acquirer response:', charge.last_transaction.acquirer_response);
+                        
+                        // Log detalhado dos erros do gateway
+                        if (charge.last_transaction.gateway_response && charge.last_transaction.gateway_response.errors) {
+                            console.log('❌ Erros do gateway:', charge.last_transaction.gateway_response.errors);
+                        }
                     }
                 }
                 
