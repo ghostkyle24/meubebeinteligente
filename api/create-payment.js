@@ -31,6 +31,7 @@ export default async function handler(req, res) {
         const orderData = {
             items: [
                 {
+                    code: `PLANO_${plan.name.toUpperCase()}`,
                     name: `Plano ${plan.name} - Meu Bebê Inteligente`,
                     description: `Assinatura do plano ${plan.name} - Meu Bebê Inteligente`,
                     quantity: 1,
@@ -76,6 +77,7 @@ export default async function handler(req, res) {
         if (orderbumpItems.length > 0) {
             orderbumpItems.forEach((item, index) => {
                 orderData.items.push({
+                    code: `ORDERBUMP_${index + 1}`,
                     name: item.name,
                     description: item.name,
                     quantity: 1,
