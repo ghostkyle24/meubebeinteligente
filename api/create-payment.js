@@ -128,9 +128,30 @@ export default async function handler(req, res) {
         if (result.errors) {
             console.log('❌ Erros detalhados:', JSON.stringify(result.errors, null, 2));
         }
+        
+        // Log específico para pagamentos com cartão
+        if (paymentMethod === 'credit_card' && result.charges) {
+            console.log('💳 Status das charges:', result.charges.map(charge => ({
+                id: charge.id,
+                status: charge.status,
+                payment_method: charge.payment_method,
+                last_transaction: charge.last_transaction ? {
+                    status: charge.last_transaction.status,
+                    gateway_response: charge.last_transaction.gateway_response
+                } : null
+            })));
+        }
 
         if (response.ok) {
             console.log('✅ Pedido criado com sucesso:', result);
+            
+            // Verificar se o pagamento foi aprovado
+            let paymentApproved = false;
+            if (result.charges && result.charges.length > 0) {
+                const charge = result.charges[0];
+                paymentApproved = charge.status === 'paid' || 
+                                 (charge.last_transaction && charge.last_transaction.status === 'paid');
+            }
             
             // Preparar resposta para o frontend
             const paymentResponse = {
@@ -140,7 +161,8 @@ export default async function handler(req, res) {
                 amount: result.amount,
                 currency: result.currency,
                 customer: result.customer,
-                charges: result.charges
+                charges: result.charges,
+                payment_approved: paymentApproved
             };
 
             // Se for PIX, adicionar dados do PIX

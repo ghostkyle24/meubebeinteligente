@@ -1951,6 +1951,14 @@
             try {
                 updatePaymentStatus('Processando cartão...', 'spinner', '#ffc107');
                 
+                console.log('💳 Iniciando processamento do cartão...');
+                console.log('💳 Dados do cartão:', {
+                    number: cardNumber,
+                    expiry: cardExpiry,
+                    cvv: cardCvv,
+                    name: cardName
+                });
+                
                 // Preparar dados do cliente
                 const customerData = {
                     name: cardName,
@@ -1958,6 +1966,8 @@
                     document: document.getElementById('userCPF').value.trim().replace(/\D/g, ''),
                     phone: '11999999999'
                 };
+
+                console.log('👤 Dados do cliente:', customerData);
 
                 // Preparar dados do pedido para nossa API
                 const orderData = {
@@ -1974,8 +1984,11 @@
                         cvv: cardCvv
                     }
                 };
+
+                console.log('📦 Dados do pedido:', orderData);
                 
                 // Usar nossa API para processar o pagamento (resolve problemas de CORS)
+                console.log('🚀 Enviando requisição para API...');
                 const response = await fetch('/api/create-payment', {
                     method: 'POST',
                     headers: {
@@ -1984,23 +1997,47 @@
                     body: JSON.stringify(orderData)
                 });
                 
+                console.log('📡 Status da resposta:', response.status, response.statusText);
+                
                 if (!response.ok) {
                     const errorData = await response.json();
+                    console.error('❌ Erro na API:', errorData);
                     throw new Error(errorData.message || `Erro na API: ${response.status}`);
                 }
                 
                 const order = await response.json();
                 
+                console.log('💳 Resposta completa do pagamento:', order);
+                console.log('💳 Status do pedido:', order.status);
+                console.log('💳 Charges:', order.charges);
+                console.log('💳 Payment approved:', order.payment_approved);
+                
                 // Salvar ID do pedido
                 paymentSessionId = order.id;
                 
                 // Verificar status do pagamento
-                if (order.status === 'paid') {
+                console.log('🔍 Verificando status do pagamento...');
+                console.log('🔍 order.payment_approved:', order.payment_approved);
+                console.log('🔍 order.status:', order.status);
+                
+                if (order.charges && order.charges.length > 0) {
+                    const charge = order.charges[0];
+                    console.log('🔍 Primeira charge:', charge);
+                    console.log('🔍 Charge status:', charge.status);
+                    if (charge.last_transaction) {
+                        console.log('🔍 Last transaction:', charge.last_transaction);
+                        console.log('🔍 Transaction status:', charge.last_transaction.status);
+                    }
+                }
+                
+                if (order.payment_approved || order.status === 'paid') {
+                    console.log('✅ Pagamento aprovado!');
                     updatePaymentStatus('Pagamento aprovado! Criando sua conta...', 'check-circle', '#28a745');
                     setTimeout(() => {
                         createUserAccount('card');
                     }, 2000);
                 } else {
+                    console.error('❌ Pagamento não aprovado. Status:', order.status, 'Charges:', order.charges);
                     throw new Error('Pagamento não foi aprovado');
                 }
                 
