@@ -32,6 +32,7 @@ export default async function handler(req, res) {
 
         // Preparar dados do pedido (estrutura correta do Pagar.me v1)
         const orderData = {
+            api_key: PAGARME_API_KEY,
             amount: Math.round(plan.price * 100), // em centavos
             payment_method: paymentMethod,
             customer: {
@@ -120,7 +121,6 @@ export default async function handler(req, res) {
         const response = await fetch('https://api.pagar.me/core/v1/transactions', {
             method: 'POST',
             headers: {
-                'Authorization': `Basic ${Buffer.from(PAGARME_API_KEY + ':').toString('base64')}`,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
