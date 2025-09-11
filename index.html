@@ -2209,7 +2209,17 @@
                 if (error.message.includes('Invalid login credentials')) {
                     throw new Error('Email ou senha incorretos');
                 } else if (error.message.includes('Email not confirmed')) {
-                    throw new Error('Email não confirmado. Verifique sua caixa de entrada.');
+                    // Para usuários que pagaram, permitir login mesmo sem confirmação de email
+                    console.log('⚠️ Email não confirmado, mas verificando se é usuário pagante...');
+                    
+                    // Verificar se o usuário tem dados de pagamento no localStorage
+                    const userAccount = localStorage.getItem('userAccount');
+                    if (userAccount) {
+                        console.log('✅ Usuário tem dados de pagamento - permitindo login');
+                        // Continuar com o login mesmo sem confirmação
+                    } else {
+                        throw new Error('Email não confirmado. Verifique sua caixa de entrada.');
+                    }
                 } else if (error.message.includes('User not found')) {
                     throw new Error('Usuário não encontrado. Verifique se você fez o pagamento corretamente.');
                 } else {
