@@ -10,6 +10,7 @@ export default async function handler(req, res) {
     try {
         console.log('🚀 API ATUALIZADA - Versão com endereço de cobrança');
         console.log('📥 Request body recebido:', JSON.stringify(req.body, null, 2));
+        console.log('🔍 Payment method:', paymentMethod);
         
         const { 
             amount, 
@@ -79,7 +80,6 @@ export default async function handler(req, res) {
                         } : undefined,
                         billing_address: {
                             line_1: 'Rua das Flores, 123',
-                            line_2: 'Apto 101',
                             zip_code: '01234567',
                             city: 'São Paulo',
                             state: 'SP',
