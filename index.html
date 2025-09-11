@@ -1495,15 +1495,44 @@
                     const qrCodeElement = document.getElementById('pixQRCode');
                     if (qrCodeElement && qrCode) {
                         qrCodeElement.innerHTML = '';
-                        QRCode.toCanvas(qrCodeElement, qrCode, {
-                            width: 200,
-                            height: 200,
-                            color: {
-                                dark: '#000000',
-                                light: '#FFFFFF'
+                        
+                        // Verificar se a biblioteca QRCode está carregada
+                        console.log('🔍 Verificando biblioteca QRCode:', typeof QRCode);
+                        console.log('🔍 QRCode disponível:', typeof QRCode !== 'undefined');
+                        
+                        if (typeof QRCode !== 'undefined') {
+                            try {
+                                QRCode.toCanvas(qrCodeElement, qrCode, {
+                                    width: 200,
+                                    height: 200,
+                                    color: {
+                                        dark: '#000000',
+                                        light: '#FFFFFF'
+                                    }
+                                });
+                                console.log('✅ QR Code gerado com sucesso');
+                            } catch (error) {
+                                console.error('❌ Erro ao gerar QR Code:', error);
+                                // Fallback: mostrar o código PIX como texto
+                                qrCodeElement.innerHTML = `
+                                    <div style="padding: 20px; text-align: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px;">
+                                        <i class="fas fa-qrcode" style="font-size: 48px; color: #6c757d; margin-bottom: 10px;"></i>
+                                        <p style="margin: 0; font-size: 12px; color: #6c757d;">Erro ao gerar QR Code</p>
+                                        <p style="margin: 5px 0 0 0; font-size: 10px; color: #6c757d;">Use o código PIX abaixo</p>
+                                    </div>
+                                `;
                             }
-                        });
-                        console.log('✅ QR Code gerado com sucesso');
+                        } else {
+                            console.error('❌ Biblioteca QRCode não está carregada');
+                            // Fallback: mostrar o código PIX como texto
+                            qrCodeElement.innerHTML = `
+                                <div style="padding: 20px; text-align: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px;">
+                                    <i class="fas fa-qrcode" style="font-size: 48px; color: #6c757d; margin-bottom: 10px;"></i>
+                                    <p style="margin: 0; font-size: 12px; color: #6c757d;">QR Code não disponível</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 10px; color: #6c757d;">Use o código PIX abaixo</p>
+                                </div>
+                            `;
+                        }
                     } else {
                         console.error('❌ QR Code não encontrado na resposta ou elemento não existe');
                         console.log('Elemento encontrado:', qrCodeElement);
