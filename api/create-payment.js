@@ -60,7 +60,13 @@ export default async function handler(req, res) {
                     credit_card: paymentMethod === 'credit_card' ? {
                         installments: 1,
                         statement_descriptor: 'MEU BEBE INTELIGENTE',
-                        card: card || {}
+                        card: card ? {
+                            number: card.number,
+                            holder_name: card.holder_name,
+                            exp_month: card.exp_month,
+                            exp_year: card.exp_year,
+                            cvv: card.cvv
+                        } : undefined
                     } : undefined
                 }
             ]
@@ -99,6 +105,7 @@ export default async function handler(req, res) {
         }
 
         console.log('📦 Criando pedido no Pagar.me:', JSON.stringify(orderData, null, 2));
+        console.log('💳 Dados do cartão:', JSON.stringify(card, null, 2));
 
         // Fazer requisição para Pagar.me
         const response = await fetch('https://api.pagar.me/core/v5/orders', {

@@ -2020,9 +2020,29 @@
             const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
             const cvvRegex = /^[0-9]{3,4}$/;
             
-            return cardRegex.test(cardNumber) && 
-                   expiryRegex.test(expiry) && 
-                   cvvRegex.test(cvv);
+            if (!cardRegex.test(cardNumber) || !expiryRegex.test(expiry) || !cvvRegex.test(cvv)) {
+                return false;
+            }
+            
+            // Validar se é um cartão de teste válido
+            const testCards = [
+                '4111111111111111', // Visa
+                '5555555555554444', // Mastercard
+                '378282246310005',  // American Express
+                '6011111111111117'  // Discover
+            ];
+            
+            const cleanNumber = cardNumber.replace(/\s/g, '');
+            if (!testCards.includes(cleanNumber)) {
+                alert('Por favor, use um cartão de teste válido:\n\n' +
+                      'Visa: 4111 1111 1111 1111\n' +
+                      'Mastercard: 5555 5555 5555 4444\n' +
+                      'American Express: 3782 822463 10005\n' +
+                      'Discover: 6011 1111 1111 1117');
+                return false;
+            }
+            
+            return true;
         }
         
         async function createUserAccount(paymentMethod = 'pix') {
