@@ -2034,7 +2034,7 @@
                         
                         // Log detalhado dos erros do gateway
                         if (charge.last_transaction.gateway_response && charge.last_transaction.gateway_response.errors) {
-                            console.log('❌ Erros do gateway:', charge.last_transaction.gateway_response.errors);
+                            console.log('❌ Erros do gateway:', JSON.stringify(charge.last_transaction.gateway_response.errors, null, 2));
                         }
                     }
                 }
