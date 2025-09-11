@@ -1461,10 +1461,11 @@
             const planConfig = PLANS[selectedPlan];
             const totalAmount = planConfig.price + orderbumpTotal;
             const email = document.getElementById('userEmail').value.trim();
+            const cpf = document.getElementById('userCPF').value.trim();
             
             // Validar campos obrigatórios
-            if (!email) {
-                alert('Por favor, preencha o email.');
+            if (!email || !cpf) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
                 return;
             }
             
