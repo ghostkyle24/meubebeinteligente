@@ -22,8 +22,8 @@ export default async function handler(req, res) {
         
         console.log('🔍 Payment method:', paymentMethod);
 
-        // Token de acesso do Pagar.me
-        const PAGARME_API_KEY = 'sk_85c717614bea451eb81fa2b9e4b09109';
+        // Token de acesso do Pagar.me (SANDBOX/TESTE)
+        const PAGARME_API_KEY = 'ak_test_grX96QdGicOa2BLGZrDRTR5qNQxJW0';
 
         // Parse do telefone para extrair código de área e número
         const phone = customer.phone || '11999999999';
