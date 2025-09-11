@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    cpf VARCHAR(14), -- CPF do usuário
     plan VARCHAR(50) NOT NULL, -- 'monthly', 'quarterly', 'yearly', 'admin'
     plan_name VARCHAR(100) NOT NULL,
     plan_duration INTEGER NOT NULL, -- duração em meses
@@ -24,6 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
     status VARCHAR(20) DEFAULT 'active', -- 'active', 'expired', 'cancelled'
     payment_method VARCHAR(50), -- 'pix', 'card', 'admin'
     payment_status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'confirmed', 'failed'
+    payment_session_id VARCHAR(255), -- ID da sessão de pagamento
     is_admin BOOLEAN DEFAULT FALSE, -- indica se é administrador
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
