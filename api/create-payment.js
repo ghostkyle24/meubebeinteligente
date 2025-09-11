@@ -75,15 +75,7 @@ export default async function handler(req, res) {
                             exp_month: card.exp_month,
                             exp_year: card.exp_year,
                             cvv: card.cvv
-                        } : undefined,
-                        billing_address: {
-                            line_1: 'Rua das Flores, 123',
-                            line_2: 'Apto 101',
-                            zip_code: '01234567',
-                            city: 'São Paulo',
-                            state: 'SP',
-                            country: 'BR'
-                        }
+                        } : undefined
                     } : undefined
                 }
             ]
@@ -124,6 +116,7 @@ export default async function handler(req, res) {
 
         console.log('📦 Criando pedido no Pagar.me:', JSON.stringify(orderData, null, 2));
         console.log('💳 Dados do cartão:', JSON.stringify(card, null, 2));
+        console.log('🏠 Endereço de cobrança adicionado:', orderData.customer.address);
 
         // Fazer requisição para Pagar.me
         const response = await fetch('https://api.pagar.me/core/v5/orders', {
