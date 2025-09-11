@@ -1583,6 +1583,42 @@
                 .replace(/(\d{3})(\d{1,2})/, '$1-$2')
                 .replace(/(-\d{2})\d+?$/, '$1');
         }
+
+        function formatCardNumber(value) {
+            // Remove todos os caracteres não numéricos
+            const numbers = value.replace(/\D/g, '');
+            
+            // Limita a 16 dígitos
+            const limitedNumbers = numbers.substring(0, 16);
+            
+            // Adiciona espaços a cada 4 dígitos
+            return limitedNumbers.replace(/(\d{4})(?=\d)/g, '$1 ');
+        }
+
+        function formatCardExpiry(value) {
+            // Remove todos os caracteres não numéricos
+            const numbers = value.replace(/\D/g, '');
+            
+            // Limita a 4 dígitos
+            const limitedNumbers = numbers.substring(0, 4);
+            
+            // Adiciona barra após 2 dígitos
+            if (limitedNumbers.length >= 2) {
+                return limitedNumbers.substring(0, 2) + '/' + limitedNumbers.substring(2);
+            }
+            
+            return limitedNumbers;
+        }
+
+        function formatCardCvv(value) {
+            // Remove todos os caracteres não numéricos e limita a 4 dígitos
+            return value.replace(/\D/g, '').substring(0, 4);
+        }
+
+        function formatCardName(value) {
+            // Converte para maiúsculas e remove caracteres especiais
+            return value.toUpperCase().replace(/[^A-Z\s]/g, '');
+        }
         
         // Adicionar event listener para máscara de CPF
         document.addEventListener('DOMContentLoaded', function() {
@@ -1591,6 +1627,36 @@
             if (cpfInput) {
                 cpfInput.addEventListener('input', function(e) {
                     e.target.value = formatCPF(e.target.value);
+                });
+            }
+
+            // Formatação automática dos campos do cartão
+            const cardNumberInput = document.getElementById('cardNumber');
+            const cardExpiryInput = document.getElementById('cardExpiry');
+            const cardCvvInput = document.getElementById('cardCvv');
+            const cardNameInput = document.getElementById('cardName');
+
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function(e) {
+                    e.target.value = formatCardNumber(e.target.value);
+                });
+            }
+
+            if (cardExpiryInput) {
+                cardExpiryInput.addEventListener('input', function(e) {
+                    e.target.value = formatCardExpiry(e.target.value);
+                });
+            }
+
+            if (cardCvvInput) {
+                cardCvvInput.addEventListener('input', function(e) {
+                    e.target.value = formatCardCvv(e.target.value);
+                });
+            }
+
+            if (cardNameInput) {
+                cardNameInput.addEventListener('input', function(e) {
+                    e.target.value = formatCardName(e.target.value);
                 });
             }
         });

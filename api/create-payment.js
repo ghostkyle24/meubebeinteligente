@@ -53,6 +53,11 @@ export default async function handler(req, res) {
                     payment_method: paymentMethod,
                     pix: paymentMethod === 'pix' ? {
                         expires_in: 3600 // 1 hora
+                    } : undefined,
+                    credit_card: paymentMethod === 'credit_card' ? {
+                        installments: 1,
+                        statement_descriptor: 'MEU BEBE INTELIGENTE',
+                        card: req.body.card || {}
                     } : undefined
                 }
             ]
