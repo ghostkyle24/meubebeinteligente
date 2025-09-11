@@ -1377,10 +1377,36 @@
         let paymentCheckInterval = null;
         let paymentStartTime = null;
         
+        // Função para obter itens de orderbump selecionados
+        function getOrderbumpItems() {
+            const orderbumpItems = [];
+            
+            // Verificar orderbumps selecionados
+            const orderbump1 = document.getElementById('orderbump1');
+            const orderbump2 = document.getElementById('orderbump2');
+            
+            if (orderbump1 && orderbump1.checked) {
+                orderbumpItems.push({
+                    name: 'Controle parental para nenhum dispositivo da casa ter acesso a sites adultos',
+                    price: 19.90
+                });
+            }
+            
+            if (orderbump2 && orderbump2.checked) {
+                orderbumpItems.push({
+                    name: 'Um plano alimentar totalmente personalizado para o seu filho',
+                    price: 27.40
+                });
+            }
+            
+            return orderbumpItems;
+        }
+        
         async function generatePixPayment() {
             const planConfig = PLANS[selectedPlan];
             const totalAmount = planConfig.price + orderbumpTotal;
             const email = document.getElementById('userEmail').value.trim();
+            const name = document.getElementById('userName')?.value.trim() || email.split('@')[0];
             
             // Gerar ID único para a sessão de pagamento
             paymentSessionId = 'pix_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -1389,66 +1415,76 @@
             try {
                 updatePaymentStatus('Gerando PIX...', 'spinner', '#ffc107');
                 
-                // Criar pedido real no Pagar.me
-                const orderData = {
-                    items: [{
-                        name: `Plano ${planConfig.name} - Meu Bebê Inteligente`,
-                        quantity: 1,
-                        unit_amount: Math.round(totalAmount * 100) // em centavos
-                    }],
-                    customer: {
-                        email: email,
-                        name: email.split('@')[0]
-                    },
-                    payments: [{
-                        payment_method: 'pix',
-                        pix: {
-                            expires_in: 3600 // 1 hora
-                        }
-                    }]
+                // Preparar dados do cliente
+                const customerData = {
+                    name: name,
+                    email: email,
+                    document: '00000000000', // CPF padrão
+                    phone: '11999999999' // Telefone padrão
                 };
                 
-                const response = await fetch('https://api.pagar.me/core/v5/orders', {
+                // Preparar dados do pedido
+                const paymentData = {
+                    amount: totalAmount,
+                    customer: customerData,
+                    plan: planConfig,
+                    orderbumpItems: getOrderbumpItems(),
+                    paymentMethod: 'pix'
+                };
+                
+                console.log('📦 Criando pedido via backend:', paymentData);
+                
+                // Chamar endpoint do backend
+                const response = await fetch('/api/create-payment', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Basic ${btoa(PAGARME_API_KEY + ':')}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(orderData)
+                    body: JSON.stringify(paymentData)
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`Erro na API: ${response.status}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('✅ Pedido criado com sucesso:', result);
+                    
+                    // Salvar ID do pedido
+                    paymentSessionId = result.order_id;
+                
+                    // Gerar QR Code
+                    const qrCodeElement = document.getElementById('qrCode');
+                    if (qrCodeElement && result.pix?.qr_code) {
+                        qrCodeElement.innerHTML = '';
+                        QRCode.toCanvas(qrCodeElement, result.pix.qr_code, {
+                            width: 200,
+                            height: 200,
+                            color: {
+                                dark: '#000000',
+                                light: '#FFFFFF'
+                            }
+                        });
+                    }
+                    
+                    // Atualizar código PIX
+                    const pixCodeElement = document.getElementById('pixCode');
+                    if (pixCodeElement && result.pix?.qr_code) {
+                        pixCodeElement.value = result.pix.qr_code;
+                    }
+                
+                    // Atualizar status
+                    updatePaymentStatus('PIX gerado! Escaneie o QR Code ou copie o código.', 'check', '#28a745');
+                    
+                    // Iniciar verificação de pagamento
+                    startPaymentVerification();
+                    
+                } else {
+                    console.error('❌ Erro ao criar pedido:', result);
+                    updatePaymentStatus(`Erro ao gerar PIX: ${result.error || 'Erro desconhecido'}`, 'times', '#dc3545');
                 }
                 
-                const order = await response.json();
-                
-                // Salvar ID do pedido
-                paymentSessionId = order.id;
-                
-                // Gerar QR Code real
-                const pixCode = order.payments[0].pix.qr_code;
-                document.getElementById('pixCode').value = pixCode;
-                generateQRCode(pixCode);
-                
-                // Atualizar interface
-                const qrPlaceholder = document.getElementById('pixQRCode');
-                qrPlaceholder.innerHTML = `
-                    <div id="qrcode"></div>
-                    <p>Escaneie com seu app de pagamento</p>
-                    <small>PIX: R$ ${totalAmount.toFixed(2)}</small>
-                `;
-                
-                // Iniciar verificação real de pagamento
-                startRealPaymentVerification();
-                
-                // Mostrar status inicial
-                updatePaymentStatus('Aguardando pagamento...', 'clock', '#ffc107');
-                
             } catch (error) {
-                console.error('Erro ao gerar PIX:', error);
+                console.error('❌ Erro ao gerar PIX:', error);
                 updatePaymentStatus('Erro ao gerar PIX. Tente novamente.', 'times', '#dc3545');
-                alert('Erro ao processar pagamento PIX. Verifique sua conexão e tente novamente.');
             }
         }
         
