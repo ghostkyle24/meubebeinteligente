@@ -1777,52 +1777,54 @@
                     paymentSessionId = result.order_id;
                 
                     // Extrair QR Code da resposta
-                    const qrCode = result.charges?.[0]?.last_transaction?.qr_code;
-                    const qrCodeUrl = result.charges?.[0]?.last_transaction?.qr_code_url;
-                    console.log('🔍 QR Code extraído:', qrCode ? 'Sim' : 'Não');
-                    console.log('🔍 QR Code URL:', qrCodeUrl ? 'Sim' : 'Não');
-                    
-                    // Gerar QR Code
-                    const qrCodeElement = document.getElementById('pixQRCode');
-                    if (qrCodeElement && qrCode) {
-                        qrCodeElement.innerHTML = '';
+                    // Verificar se tem dados do PIX (nova estrutura Asaas)
+                    if (result.pix && result.pix.qr_code_url) {
+                        const qrCode = result.pix.qr_code_url;
+                        const qrCodeUrl = result.pix.qr_code;
                         
-                        // Verificar se a biblioteca QRCode está carregada
+                        console.log('🔍 QR Code extraído:', qrCode ? 'Sim' : 'Não');
+                        console.log('🔍 QR Code URL:', qrCodeUrl ? 'Sim' : 'Não');
                         
-                        if (typeof QRCode !== 'undefined') {
-                            try {
-                                QRCode.toCanvas(qrCodeElement, qrCode, {
-                                    width: 100,
-                                    height: 100,
-                                    color: {
-                                        dark: '#000000',
-                                        light: '#FFFFFF'
-                                    }
-                                });
-                                console.log('✅ QR Code gerado com sucesso');
-                            } catch (error) {
-                                console.error('❌ Erro ao gerar QR Code:', error);
-                                // Fallback: mostrar o código PIX como texto
-                                qrCodeElement.innerHTML = `
-                                    <div style="padding: 10px; text-align: center; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; width: 100px; height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                                        <i class="fas fa-qrcode" style="font-size: 24px; color: #6c757d; margin-bottom: 5px;"></i>
-                                        <p style="margin: 0; font-size: 8px; color: #6c757d;">Erro QR Code</p>
-                                        <p style="margin: 2px 0 0 0; font-size: 7px; color: #6c757d;">Use código PIX</p>
-                                    </div>
-                                `;
+                        // Gerar QR Code
+                        const qrCodeElement = document.getElementById('pixQRCode');
+                        if (qrCodeElement && qrCode) {
+                            qrCodeElement.innerHTML = '';
+                            
+                            if (typeof QRCode !== 'undefined') {
+                                try {
+                                    QRCode.toCanvas(qrCodeElement, qrCode, {
+                                        width: 100,
+                                        height: 100,
+                                        color: {
+                                            dark: '#000000',
+                                            light: '#FFFFFF'
+                                        }
+                                    });
+                                    console.log('✅ QR Code gerado com sucesso');
+                                } catch (error) {
+                                    console.error('❌ Erro ao gerar QR Code:', error);
+                                    showQRCodeFallback(qrCodeElement, qrCodeUrl);
+                                }
+                            } else {
+                                showQRCodeFallback(qrCodeElement, qrCodeUrl);
                             }
-                        } else {
-                            // Usar fallback imediatamente para ser mais rápido
-                            showQRCodeFallback(qrCodeElement, qrCodeUrl);
                         }
+                        
+                        // Atualizar código PIX
+                        const pixCodeElement = document.getElementById('pixCode');
+                        if (pixCodeElement && qrCode) {
+                            pixCodeElement.value = qrCode;
+                        }
+                        
+                    } else if (result.pix_pending) {
+                        console.log('⏳ PIX pendente - iniciando busca por QR Code...');
+                        updatePaymentStatus('Gerando QR Code PIX...', 'spinner', '#ffc107');
+                        
+                        // Iniciar busca por QR Code
+                        startQRCodePolling();
                     } else {
                         console.error('❌ QR Code não encontrado na resposta');
-                    }
-                    
-                    // Atualizar código PIX
-                    const pixCodeElement = document.getElementById('pixCode');
-                    if (pixCodeElement && qrCode) {
-                        pixCodeElement.value = qrCode;
+                        updatePaymentStatus('Erro ao gerar PIX. Tente novamente.', 'times', '#dc3545');
                     }
                 
                     // Atualizar status
@@ -1888,6 +1890,73 @@
             }
         }
         
+        // Função para buscar QR Code via polling
+        function startQRCodePolling() {
+            let attempts = 0;
+            const maxAttempts = 30; // 30 tentativas (1 minuto)
+            
+            const qrCodeInterval = setInterval(async () => {
+                attempts++;
+                console.log(`🔄 Buscando QR Code... tentativa ${attempts}/${maxAttempts}`);
+                
+                try {
+                    const response = await fetch(`/api/check-payment?orderId=${paymentSessionId}`);
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        
+                        if (result.success && result.pix && result.pix.qr_code_url) {
+                            console.log('✅ QR Code encontrado!');
+                            clearInterval(qrCodeInterval);
+                            
+                            // Gerar QR Code
+                            const qrCodeElement = document.getElementById('pixQRCode');
+                            if (qrCodeElement) {
+                                qrCodeElement.innerHTML = '';
+                                
+                                if (typeof QRCode !== 'undefined') {
+                                    try {
+                                        QRCode.toCanvas(qrCodeElement, result.pix.qr_code_url, {
+                                            width: 100,
+                                            height: 100,
+                                            color: {
+                                                dark: '#000000',
+                                                light: '#FFFFFF'
+                                            }
+                                        });
+                                        console.log('✅ QR Code gerado com sucesso');
+                                    } catch (error) {
+                                        console.error('❌ Erro ao gerar QR Code:', error);
+                                        showQRCodeFallback(qrCodeElement, result.pix.qr_code);
+                                    }
+                                } else {
+                                    showQRCodeFallback(qrCodeElement, result.pix.qr_code);
+                                }
+                            }
+                            
+                            // Atualizar código PIX
+                            const pixCodeElement = document.getElementById('pixCode');
+                            if (pixCodeElement && result.pix.qr_code_url) {
+                                pixCodeElement.value = result.pix.qr_code_url;
+                            }
+                            
+                            updatePaymentStatus('PIX gerado!', 'check', '#28a745');
+                            
+                            // Iniciar verificação de pagamento
+                            startRealPaymentVerification();
+                        }
+                    }
+                } catch (error) {
+                    console.error('❌ Erro ao buscar QR Code:', error);
+                }
+                
+                if (attempts >= maxAttempts) {
+                    clearInterval(qrCodeInterval);
+                    updatePaymentStatus('Timeout ao gerar PIX. Tente novamente.', 'times', '#dc3545');
+                }
+            }, 2000); // A cada 2 segundos
+        }
+        
         function startRealPaymentVerification() {
             // Verificar pagamento a cada 10 segundos
             paymentCheckInterval = setInterval(() => {
@@ -1916,13 +1985,13 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Verificar se o pagamento foi confirmado
-                    if (result.status === 'paid') {
+                    // Verificar se o pagamento foi confirmado (status do Asaas)
+                    if (result.status === 'RECEIVED' || result.status === 'CONFIRMED' || result.status === 'RECEIVED_IN_CASH') {
                         confirmPayment();
                         return;
                     }
                     
-                    // Timer removido para simplificar
+                    console.log('📊 Status do pagamento:', result.status);
                 } else {
                     console.error('Erro na verificação:', result.error);
                 }

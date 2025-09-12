@@ -41,25 +41,12 @@ export default async function handler(req, res) {
         const payment = await response.json();
         console.log('📡 Payment status:', payment.status);
         
-        // Se for PIX e ainda não tem pixTransaction, buscar novamente
+        // Se for PIX e ainda não tem pixTransaction, tentar buscar novamente
         if (payment.billingType === 'PIX' && !payment.pixTransaction && payment.status === 'PENDING') {
-            console.log('🔄 Buscando dados do PIX...');
+            console.log('🔄 PIX Transaction não disponível, status:', payment.status);
             
-            // Aguardar um pouco e tentar novamente
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const pixResponse = await fetch(`${ASAAS_BASE_URL}/payments/${orderId}`, {
-                method: 'GET',
-                headers: {
-                    'access_token': ASAAS_API_KEY,
-                    'Accept': 'application/json'
-                }
-            });
-            
-            if (pixResponse.ok) {
-                const pixPayment = await pixResponse.json();
-                payment.pixTransaction = pixPayment.pixTransaction;
-            }
+            // No sandbox, o PIX pode demorar para ser processado
+            // Vamos retornar que está pendente para o frontend continuar fazendo polling
         }
         
         // Preparar resposta

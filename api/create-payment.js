@@ -269,14 +269,11 @@ export default async function handler(req, res) {
                 description: result.description
             };
 
-            // Se for PIX, buscar dados do PIX
+            // Se for PIX, tentar buscar dados do PIX (pode não estar disponível imediatamente)
             if (normalizedPaymentMethod === 'PIX') {
-                console.log('🔄 Buscando dados do PIX...');
+                console.log('🔄 Verificando dados do PIX...');
                 
-                // Aguardar um pouco para o PIX ser processado
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Buscar dados atualizados do pagamento
+                // Tentar buscar dados do PIX imediatamente
                 const pixResponse = await fetch(`${ASAAS_BASE_URL}/payments/${result.id}`, {
                     method: 'GET',
                     headers: {
@@ -295,6 +292,11 @@ export default async function handler(req, res) {
                             qr_code_url: pixPayment.pixTransaction.payload,
                             expires_at: pixPayment.pixTransaction.expirationDate
                         };
+                        console.log('✅ QR Code disponível imediatamente!');
+                    } else {
+                        console.log('⏳ QR Code não disponível ainda - será buscado via polling');
+                        // Adicionar flag para indicar que o frontend deve fazer polling
+                        paymentResponse.pix_pending = true;
                     }
                 }
             }
