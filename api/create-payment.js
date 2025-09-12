@@ -269,13 +269,34 @@ export default async function handler(req, res) {
                 description: result.description
             };
 
-            // Se for PIX, adicionar dados do PIX
-            if (normalizedPaymentMethod === 'PIX' && result.pixTransaction) {
-                paymentResponse.pix = {
-                    qr_code: result.pixTransaction.encodedImage,
-                    qr_code_url: result.pixTransaction.payload,
-                    expires_at: result.pixTransaction.expirationDate
-                };
+            // Se for PIX, buscar dados do PIX
+            if (normalizedPaymentMethod === 'PIX') {
+                console.log('🔄 Buscando dados do PIX...');
+                
+                // Aguardar um pouco para o PIX ser processado
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Buscar dados atualizados do pagamento
+                const pixResponse = await fetch(`${ASAAS_BASE_URL}/payments/${result.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'access_token': ASAAS_API_KEY,
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (pixResponse.ok) {
+                    const pixPayment = await pixResponse.json();
+                    console.log('📡 Dados do PIX:', pixPayment.pixTransaction);
+                    
+                    if (pixPayment.pixTransaction) {
+                        paymentResponse.pix = {
+                            qr_code: pixPayment.pixTransaction.encodedImage,
+                            qr_code_url: pixPayment.pixTransaction.payload,
+                            expires_at: pixPayment.pixTransaction.expirationDate
+                        };
+                    }
+                }
             }
 
             // Se for cartão de crédito, adicionar informações da transação
