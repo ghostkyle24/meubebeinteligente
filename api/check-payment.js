@@ -1,4 +1,6 @@
-import { ASAAS_API_KEY, ASAAS_BASE_URL } from '../config.js';
+// Configurações do Asaas
+const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmNmNjUzNjFiLTEyMjUtNGMzMy04ZDhjLWUwMzQ3ZjdjOTYxODo6JGFhY2hfNTI2ZWJjMDAtZTQ3YS00ZWM3LTg1MzktMTg2OGM3YTZlZTZm';
+const ASAAS_BASE_URL = 'https://sandbox.asaas.com/api/v3';
 
 export default async function handler(req, res) {
     // Configurar CORS
