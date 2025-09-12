@@ -1,5 +1,5 @@
-// Webhook para receber notificações do Pagar.me
-// Este endpoint será chamado automaticamente pelo Pagar.me quando um pagamento for confirmado
+// Webhook para receber notificações do Asaas
+// Este endpoint será chamado automaticamente pelo Asaas quando um pagamento for confirmado
 
 export default async function handler(req, res) {
     // Verificar se é POST
@@ -8,18 +8,19 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { status, transaction } = req.body;
+        const webhookData = req.body;
         
-        console.log('📥 Webhook Pagar.me recebido:', { status, transaction });
+        console.log('📥 Webhook Asaas recebido:', JSON.stringify(webhookData, null, 2));
 
         // Verificar se o pagamento foi aprovado
-        if (status === 'paid' || status === 'processing') {
-            console.log('✅ Pagamento confirmado:', transaction.id);
+        if (webhookData.event === 'PAYMENT_CONFIRMED' || webhookData.event === 'PAYMENT_RECEIVED') {
+            console.log('✅ Pagamento confirmado:', webhookData.payment?.id);
             
-            // Extrair dados do cliente
-            const customerEmail = transaction.customer?.email;
-            const customerName = transaction.customer?.name;
-            const amount = transaction.amount / 100; // Pagar.me envia em centavos
+            // Extrair dados do pagamento
+            const payment = webhookData.payment;
+            const customerEmail = payment?.customer?.email;
+            const customerName = payment?.customer?.name;
+            const amount = payment?.value; // Asaas envia em reais
             const planName = getPlanName(amount);
             
             // Enviar evento para Meta Conversions API
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
                     content_type: 'subscription',
                     plan_name: planName,
                     plan_duration: getPlanDuration(planName),
-                    transaction_id: transaction.id
+                    transaction_id: payment.id
                 },
                 attribution_data: {
                     attribution_share: "1.0"
@@ -57,7 +58,7 @@ export default async function handler(req, res) {
             console.log('📊 Evento enviado para Meta com sucesso');
         }
 
-        // Responder ao Pagar.me que recebemos a notificação
+        // Responder ao Asaas que recebemos a notificação
         res.status(200).json({ 
             received: true, 
             status: 'success',
@@ -65,7 +66,7 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error('❌ Erro no webhook Pagar.me:', error);
+        console.error('❌ Erro no webhook Asaas:', error);
         res.status(500).json({ 
             error: 'Erro interno do servidor',
             details: error.message
@@ -112,7 +113,7 @@ function getPlanName(amount) {
     switch (amount) {
         case 29: return 'Mensal';
         case 79: return 'Trimestral';
-        case 290: return 'Anual';
+        case 299: return 'Anual';
         default: return 'Mensal';
     }
 }

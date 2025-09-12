@@ -1,4 +1,4 @@
-// API endpoint para criar pagamentos via Pagar.me
+// API endpoint para criar pagamentos via Asaas
 // Este endpoint será usado no Vercel como serverless function
 
 export default async function handler(req, res) {
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        console.log('🚀 API ATUALIZADA - Versão com endereço de cobrança');
+        console.log('🚀 API ATUALIZADA - Versão com Asaas');
         console.log('📥 Request body recebido:', JSON.stringify(req.body, null, 2));
         
         const { 
@@ -16,90 +16,79 @@ export default async function handler(req, res) {
             customer, 
             plan, 
             orderbumpItems = [],
-            paymentMethod = 'pix',
+            paymentMethod = 'PIX',
             card
         } = req.body;
         
         console.log('🔍 Payment method:', paymentMethod);
 
-        // Token de acesso do Pagar.me (PRODUÇÃO)
-        const PAGARME_API_KEY = 'sk_85c717614bea451eb81fa2b9e4b09109';
+        // Configurações do Asaas
+        const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmNmNjUzNjFiLTEyMjUtNGMzMy04ZDhjLWUwMzQ3ZjdjOTYxODo6JGFhY2hfNTI2ZWJjMDAtZTQ3YS00ZWM3LTg1MzktMTg2OGM3YTZlZTZm';
+        const ASAAS_BASE_URL = 'https://www.asaas.com/api/v3';
 
         // Parse do telefone para extrair código de área e número
         const phone = customer.phone || '11999999999';
         const areaCode = phone.substring(0, 2);
         const phoneNumber = phone.substring(2);
 
-        // Preparar dados do pedido (API v5 - ESTRUTURA CORRETA)
-        const orderData = {
-            items: [
-                {
-                    code: `PLANO_${plan.name.toUpperCase()}`,
-                    name: `Plano ${plan.name} - Meu Bebê Inteligente`,
-                    description: `Assinatura do plano ${plan.name} - Meu Bebê Inteligente`,
-                    quantity: 1,
-                    unit_amount: Math.round(plan.price * 100), // em centavos
-                    amount: Math.round(plan.price * 100) // em centavos
-                }
-            ],
-            customer: {
-                name: customer.name,
-                email: customer.email,
-                document: customer.document || '00000000000',
-                type: 'individual',
-                phones: {
-                    mobile_phone: {
-                        country_code: '55',
-                        area_code: areaCode,
-                        number: phoneNumber
-                    }
-                },
-                address: {
-                    line_1: 'Rua das Flores, 123',
-                    line_2: 'Apto 101',
-                    zip_code: '01234567',
-                    city: 'São Paulo',
-                    state: 'SP',
-                    country: 'BR'
-                }
-            },
-            payments: [
-                {
-                    payment_method: paymentMethod,
-                    pix: paymentMethod === 'pix' ? {
-                        expires_in: 3600
-                    } : undefined,
-                    credit_card: paymentMethod === 'credit_card' ? {
-                        installments: 1,
-                        statement_descriptor: 'MEU BEBE INTELIGENTE',
-                        card: card ? {
-                            number: card.number,
-                            holder_name: card.holder_name,
-                            exp_month: card.exp_month,
-                            exp_year: card.exp_year,
-                            cvv: card.cvv
-                        } : undefined
-                    } : undefined
-                }
-            ]
+        // Calcular valor total (plano + orderbumps)
+        let totalAmount = plan.price;
+        if (orderbumpItems.length > 0) {
+            totalAmount += orderbumpItems.reduce((sum, item) => sum + item.price, 0);
+        }
+
+        // Preparar dados do cliente para o Asaas
+        const customerData = {
+            name: customer.name,
+            email: customer.email,
+            cpfCnpj: customer.document || '00000000000',
+            phone: phone,
+            mobilePhone: phone,
+            postalCode: '01234567',
+            address: 'Rua das Flores, 123',
+            addressNumber: '101',
+            complement: 'Apto 101',
+            province: 'Centro',
+            city: 'São Paulo',
+            state: 'SP'
         };
 
-        // Adicionar orderbumps se houver
-        if (orderbumpItems.length > 0) {
-            orderbumpItems.forEach((item, index) => {
-                orderData.items.push({
-                    id: `ORDERBUMP_${index + 1}`,
-                    title: item.name,
-                    unit_price: Math.round(item.price * 100), // em centavos
-                    quantity: 1,
-                    tangible: false
-                });
-            });
+        // Preparar dados da cobrança para o Asaas
+        const paymentData = {
+            customer: '', // Será preenchido após criar o cliente
+            billingType: paymentMethod === 'PIX' ? 'PIX' : 'CREDIT_CARD',
+            value: totalAmount,
+            dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 dias
+            description: `Plano ${plan.name} - Meu Bebê Inteligente`,
+            externalReference: `PLANO_${plan.name.toUpperCase()}_${Date.now()}`,
+            notificationDisabled: false
+        };
+
+        // Se for PIX, adicionar configurações específicas
+        if (paymentMethod === 'PIX') {
+            paymentData.pixTransaction = {
+                expiresAfter: 3600 // 1 hora
+            };
         }
-        
-        // Calcular total dos itens
-        const totalItems = orderData.items.reduce((sum, item) => sum + (item.unit_price * item.quantity), 0);
-        orderData.amount = totalItems;
+
+        // Se for cartão de crédito, adicionar configurações específicas
+        if (paymentMethod === 'CREDIT_CARD' && card) {
+            paymentData.creditCard = {
+                holderName: card.holder_name,
+                number: card.number,
+                expiryMonth: card.exp_month,
+                expiryYear: card.exp_year,
+                ccv: card.cvv
+            };
+            paymentData.creditCardHolderInfo = {
+                name: card.holder_name,
+                email: customer.email,
+                cpfCnpj: customer.document || '00000000000',
+                postalCode: '01234567',
+                addressNumber: '101',
+                phone: phone
+            };
+        }
 
         // Validações antes de enviar
         if (!customer.email || !customer.document) {
@@ -109,26 +98,50 @@ export default async function handler(req, res) {
             });
         }
         
-        if (orderData.items.length === 0) {
+        if (totalAmount <= 0) {
             return res.status(400).json({
                 success: false,
-                error: 'Nenhum item no pedido'
+                error: 'Valor do pedido deve ser maior que zero'
             });
         }
 
-        console.log('📦 Criando pedido no Pagar.me API v5:', JSON.stringify(orderData, null, 2));
+        console.log('📦 Criando cliente no Asaas:', JSON.stringify(customerData, null, 2));
         console.log('💳 Dados do cartão:', JSON.stringify(card, null, 2));
-        console.log('🏠 Endereço do cliente:', orderData.customer.address);
+        console.log('💰 Valor total:', totalAmount);
 
-        // Fazer requisição para Pagar.me API v5
-        const response = await fetch('https://api.pagar.me/core/v5/orders', {
+        // Primeiro, criar o cliente no Asaas
+        const customerResponse = await fetch(`${ASAAS_BASE_URL}/customers`, {
             method: 'POST',
             headers: {
-                'Authorization': `Basic ${Buffer.from(PAGARME_API_KEY + ':').toString('base64')}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'access_token': ASAAS_API_KEY,
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(orderData)
+            body: JSON.stringify(customerData)
+        });
+
+        const customerResult = await customerResponse.json();
+        console.log('👤 Cliente criado:', JSON.stringify(customerResult, null, 2));
+
+        if (!customerResponse.ok) {
+            console.error('❌ Erro ao criar cliente:', customerResult);
+            return res.status(400).json({
+                success: false,
+                error: 'Erro ao criar cliente no Asaas',
+                details: customerResult
+            });
+        }
+
+        // Agora criar a cobrança
+        paymentData.customer = customerResult.id;
+        console.log('📦 Criando cobrança no Asaas:', JSON.stringify(paymentData, null, 2));
+
+        const response = await fetch(`${ASAAS_BASE_URL}/payments`, {
+            method: 'POST',
+            headers: {
+                'access_token': ASAAS_API_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(paymentData)
         });
 
         console.log('📡 Response status:', response.status);
@@ -141,29 +154,14 @@ export default async function handler(req, res) {
         if (result.errors) {
             console.log('❌ Erros detalhados:', JSON.stringify(result.errors, null, 2));
         }
-        
-        // Log específico para pagamentos com cartão
-        if (paymentMethod === 'credit_card' && result.charges) {
-            console.log('💳 Status das charges:', result.charges.map(charge => ({
-                id: charge.id,
-                status: charge.status,
-                payment_method: charge.payment_method,
-                last_transaction: charge.last_transaction ? {
-                    status: charge.last_transaction.status,
-                    gateway_response: charge.last_transaction.gateway_response
-                } : null
-            })));
-        }
 
         if (response.ok) {
-            console.log('✅ Pedido criado com sucesso:', result);
+            console.log('✅ Cobrança criada com sucesso:', result);
             
             // Verificar se o pagamento foi aprovado
             let paymentApproved = false;
-            if (result.charges && result.charges.length > 0) {
-                const charge = result.charges[0];
-                paymentApproved = charge.status === 'paid' || 
-                                 (charge.last_transaction && charge.last_transaction.status === 'paid');
+            if (result.status === 'CONFIRMED' || result.status === 'RECEIVED') {
+                paymentApproved = true;
             }
             
             // Preparar resposta para o frontend
@@ -171,33 +169,39 @@ export default async function handler(req, res) {
                 success: true,
                 order_id: result.id,
                 status: result.status,
-                amount: result.amount,
-                currency: result.currency,
+                amount: result.value,
+                currency: 'BRL',
                 customer: result.customer,
-                charges: result.charges || [],
-                payment_approved: paymentApproved
+                payment_approved: paymentApproved,
+                dueDate: result.dueDate,
+                description: result.description
             };
 
             // Se for PIX, adicionar dados do PIX
-            if (paymentMethod === 'pix' && result.charges && result.charges[0]) {
-                const charge = result.charges[0];
-                const pixTransaction = charge.last_transaction;
-                
-                if (pixTransaction && pixTransaction.pix) {
-                    paymentResponse.pix = {
-                        qr_code: pixTransaction.pix.qr_code,
-                        qr_code_url: pixTransaction.pix.qr_code_url,
-                        expires_at: pixTransaction.pix.expires_at
-                    };
-                }
+            if (paymentMethod === 'PIX' && result.pixTransaction) {
+                paymentResponse.pix = {
+                    qr_code: result.pixTransaction.encodedImage,
+                    qr_code_url: result.pixTransaction.payload,
+                    expires_at: result.pixTransaction.expirationDate
+                };
+            }
+
+            // Se for cartão de crédito, adicionar informações da transação
+            if (paymentMethod === 'CREDIT_CARD' && result.transactions) {
+                const transaction = result.transactions[0];
+                paymentResponse.transaction = {
+                    id: transaction.id,
+                    status: transaction.status,
+                    authorizationCode: transaction.authorizationCode
+                };
             }
 
             return res.status(200).json(paymentResponse);
         } else {
-            console.error('❌ Erro ao criar pedido:', result);
+            console.error('❌ Erro ao criar cobrança:', result);
             return res.status(400).json({
                 success: false,
-                error: 'Erro ao criar pedido no Pagar.me',
+                error: 'Erro ao criar cobrança no Asaas',
                 details: result
             });
         }
