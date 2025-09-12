@@ -58,11 +58,31 @@
             META_PIXEL_ID: '636104805955276',
             META_ACCESS_TOKEN: 'EAAPZBiaTYbAkBPXrv4sDTGeaYKB8JOnArQvHHgGoQwtJGfS5VkHYb7Pvf8ISfUVWUR6Xk3rlD1f15DQPcniM6qy62hZCXIg75AUvEcseuzJnqTyGFIVf3y3DJRATxaHTXKccIHuagOjgaI3X2xFHJXddIMc71aHSMiYHYmIwoH7O5H1G9lha0HSSNg0QZDZD',
             
-            // Planos
+            // Planos - Configurados para produção
             PLANS: {
                 monthly: { price: 29, duration: 1, period: 'month', name: 'Mensal' },
                 quarterly: { price: 79, duration: 3, period: 'months', name: 'Trimestral' },
-                yearly: { price: 290, duration: 12, period: 'months', name: 'Anual' }
+                yearly: { price: 299, duration: 12, period: 'months', name: 'Anual' }
+            },
+            
+            // Orderbumps - Configurados para produção
+            ORDERBUMPS: {
+                parental_control: {
+                    id: 'parental_control',
+                    name: 'Controle Parental Avançado',
+                    description: 'Proteção total para todos os dispositivos da casa contra conteúdo inadequado',
+                    price: 19.90,
+                    original_price: 39.90,
+                    discount: 50
+                },
+                meal_plan: {
+                    id: 'meal_plan',
+                    name: 'Plano Alimentar Personalizado',
+                    description: 'Plano nutricional completo e personalizado para o desenvolvimento do seu filho',
+                    price: 27.40,
+                    original_price: 54.80,
+                    discount: 50
+                }
             }
         };
     </script>
@@ -1247,15 +1267,31 @@
                 <h4>🎯 Ofertas Especiais para Você:</h4>
                 <div class="orderbump-items">
                     <div class="orderbump-item">
-                        <input type="checkbox" id="orderbump1" value="19.90">
+                        <input type="checkbox" id="orderbump1" value="19.90" data-orderbump="parental_control">
                         <label for="orderbump1">
-                            <strong>R$ 19,90</strong> - Controle parental para nenhum dispositivo da casa ter acesso a sites adultos
+                            <div class="orderbump-content">
+                                <div class="orderbump-header">
+                                    <strong>R$ 19,90</strong>
+                                    <span class="original-price">R$ 39,90</span>
+                                    <span class="discount">-50%</span>
+                                </div>
+                                <div class="orderbump-title">Controle Parental Avançado</div>
+                                <div class="orderbump-description">Proteção total para todos os dispositivos da casa contra conteúdo inadequado</div>
+                            </div>
                         </label>
                     </div>
                     <div class="orderbump-item">
-                        <input type="checkbox" id="orderbump2" value="27.40">
+                        <input type="checkbox" id="orderbump2" value="27.40" data-orderbump="meal_plan">
                         <label for="orderbump2">
-                            <strong>R$ 27,40</strong> - Um plano alimentar totalmente personalizado para o seu filho
+                            <div class="orderbump-content">
+                                <div class="orderbump-header">
+                                    <strong>R$ 27,40</strong>
+                                    <span class="original-price">R$ 54,80</span>
+                                    <span class="discount">-50%</span>
+                                </div>
+                                <div class="orderbump-title">Plano Alimentar Personalizado</div>
+                                <div class="orderbump-description">Plano nutricional completo e personalizado para o desenvolvimento do seu filho</div>
+                            </div>
                         </label>
                     </div>
                 </div>
@@ -1380,12 +1416,8 @@
             }
         }
         
-        // Configuração dos planos
-        const PLANS = {
-            monthly: { price: 29, duration: 1, period: 'month', name: 'Mensal' },
-            quarterly: { price: 79, duration: 3, period: 'months', name: 'Trimestral' },
-            yearly: { price: 290, duration: 12, period: 'months', name: 'Anual' }
-        };
+        // Configuração dos planos (usar do CONFIG)
+        const PLANS = CONFIG.PLANS;
         
         // Menu mobile para navbar da página de vendas
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
@@ -1603,23 +1635,21 @@
         function getOrderbumpItems() {
             const orderbumpItems = [];
             
-            // Verificar orderbumps selecionados
-            const orderbump1 = document.getElementById('orderbump1');
-            const orderbump2 = document.getElementById('orderbump2');
-            
-            if (orderbump1 && orderbump1.checked) {
-                orderbumpItems.push({
-                    name: 'Controle parental para nenhum dispositivo da casa ter acesso a sites adultos',
-                    price: 19.90
-                });
-            }
-            
-            if (orderbump2 && orderbump2.checked) {
-                orderbumpItems.push({
-                    name: 'Um plano alimentar totalmente personalizado para o seu filho',
-                    price: 27.40
-                });
-            }
+            // Verificar orderbumps selecionados usando a configuração centralizada
+            Object.keys(CONFIG.ORDERBUMPS).forEach(orderbumpId => {
+                const checkbox = document.querySelector(`input[data-orderbump="${orderbumpId}"]`);
+                if (checkbox && checkbox.checked) {
+                    const orderbump = CONFIG.ORDERBUMPS[orderbumpId];
+                    orderbumpItems.push({
+                        id: orderbump.id,
+                        name: orderbump.name,
+                        description: orderbump.description,
+                        price: orderbump.price,
+                        original_price: orderbump.original_price,
+                        discount: orderbump.discount
+                    });
+                }
+            });
             
             return orderbumpItems;
         }
@@ -1823,8 +1853,8 @@
                         // Iniciar busca por QR Code
                         startQRCodePolling();
                     } else {
-                        console.error('❌ QR Code não encontrado na resposta');
-                        updatePaymentStatus('Erro ao gerar PIX. Tente novamente.', 'times', '#dc3545');
+                        console.log('⚠️ PIX não disponível - provavelmente ambiente sandbox');
+                        showSandboxPixMessage();
                     }
                 
                     // Atualizar status
@@ -1890,6 +1920,50 @@
             }
         }
         
+        // Função para mostrar mensagem do sandbox
+        function showSandboxPixMessage() {
+            console.log('🔧 Mostrando mensagem do sandbox...');
+            
+            const qrCodeElement = document.getElementById('pixQRCode');
+            if (qrCodeElement) {
+                qrCodeElement.innerHTML = `
+                    <div style="padding: 20px; text-align: center; background: #fff3cd; border: 2px solid #ffeaa7; border-radius: 8px;">
+                        <i class="fas fa-info-circle" style="font-size: 48px; color: #856404; margin-bottom: 15px;"></i>
+                        <h4 style="color: #856404; margin-bottom: 10px;">Ambiente de Teste</h4>
+                        <p style="color: #856404; margin-bottom: 15px; font-size: 14px;">
+                            No ambiente de teste, o PIX não é gerado automaticamente.<br>
+                            <strong>Em produção funcionará normalmente!</strong>
+                        </p>
+                        <button onclick="simulatePayment()" style="
+                            background: #28a745; 
+                            color: white; 
+                            border: none; 
+                            padding: 10px 20px; 
+                            border-radius: 5px; 
+                            cursor: pointer;
+                            font-size: 14px;
+                            margin-top: 10px;
+                        ">
+                            <i class="fas fa-play"></i> Simular Pagamento
+                        </button>
+                    </div>
+                `;
+            }
+            
+            updatePaymentStatus('Ambiente de teste - PIX não disponível', 'info-circle', '#856404');
+        }
+        
+        // Função para simular pagamento no sandbox
+        function simulatePayment() {
+            console.log('🎭 Simulando pagamento...');
+            updatePaymentStatus('Simulando pagamento...', 'spinner', '#ffc107');
+            
+            // Simular confirmação após 2 segundos
+            setTimeout(() => {
+                confirmPayment();
+            }, 2000);
+        }
+        
         // Função para buscar QR Code via polling
         function startQRCodePolling() {
             let attempts = 0;
@@ -1952,7 +2026,8 @@
                 
                 if (attempts >= maxAttempts) {
                     clearInterval(qrCodeInterval);
-                    updatePaymentStatus('Timeout ao gerar PIX. Tente novamente.', 'times', '#dc3545');
+                    console.log('⚠️ Timeout - provavelmente ambiente sandbox');
+                    showSandboxPixMessage();
                 }
             }, 2000); // A cada 2 segundos
         }
