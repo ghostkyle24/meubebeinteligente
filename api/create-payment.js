@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
         // Configurações do Asaas
         const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmNmNjUzNjFiLTEyMjUtNGMzMy04ZDhjLWUwMzQ3ZjdjOTYxODo6JGFhY2hfNTI2ZWJjMDAtZTQ3YS00ZWM3LTg1MzktMTg2OGM3YTZlZTZm';
-        const ASAAS_BASE_URL = 'https://www.asaas.com/api/v3';
+        const ASAAS_BASE_URL = 'https://sandbox.asaas.com/api/v3';
         
         // Verificar se a chave API é válida
         if (!ASAAS_API_KEY || !ASAAS_API_KEY.startsWith('$aact_')) {
@@ -38,9 +38,10 @@ export default async function handler(req, res) {
         }
         
         console.log('🔑 Ambiente detectado:', ASAAS_API_KEY.startsWith('$aact_hmlg_') ? 'SANDBOX' : 'PRODUÇÃO');
+        console.log('🔑 Chave API completa:', ASAAS_API_KEY);
 
         // Parse do telefone para extrair código de área e número
-        const phone = customer.phone || '11999999999';
+        const phone = customer.phone || '4738010919';
         const areaCode = phone.substring(0, 2);
         const phoneNumber = phone.substring(2);
 
@@ -54,7 +55,7 @@ export default async function handler(req, res) {
         const customerData = {
             name: customer.name && customer.name.length > 2 ? customer.name : 'Cliente Teste',
             email: customer.email,
-            cpfCnpj: customer.document || '00000000000',
+            cpfCnpj: customer.document || '12345678909',
             phone: phone,
             mobilePhone: phone,
             address: 'Rua das Flores',
@@ -134,7 +135,7 @@ export default async function handler(req, res) {
         const cpfDigits = customer.document.replace(/\D/g, '');
         if (cpfDigits.length !== 11) {
             console.log('⚠️ CPF inválido, usando CPF padrão');
-            customerData.cpfCnpj = '00000000000';
+            customerData.cpfCnpj = '12345678909';
         } else {
             // Validar CPF usando algoritmo de validação
             if (isValidCPF(cpfDigits)) {
@@ -142,7 +143,7 @@ export default async function handler(req, res) {
                 console.log('✅ CPF válido');
             } else {
                 console.log('⚠️ CPF inválido (algoritmo), usando CPF padrão');
-                customerData.cpfCnpj = '00000000000';
+                customerData.cpfCnpj = '12345678909';
             }
         }
         
@@ -160,7 +161,8 @@ export default async function handler(req, res) {
             method: 'POST',
             headers: {
                 'access_token': ASAAS_API_KEY,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify(customerData)
         });
@@ -182,7 +184,8 @@ export default async function handler(req, res) {
                     method: 'GET',
                     headers: {
                         'access_token': ASAAS_API_KEY,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     }
                 });
                 
@@ -227,7 +230,8 @@ export default async function handler(req, res) {
             method: 'POST',
             headers: {
                 'access_token': ASAAS_API_KEY,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify(paymentData)
         });

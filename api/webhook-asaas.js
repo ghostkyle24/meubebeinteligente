@@ -131,11 +131,13 @@ function getPlanDuration(planName) {
 // Função para hash de email
 function hashEmail(email) {
     if (!email) return null;
-    return btoa(email.toLowerCase().trim());
+    const crypto = require('crypto');
+    return crypto.createHash('sha256').update(email.toLowerCase().trim()).digest('hex');
 }
 
 // Função para hash de strings
 function hashString(str) {
     if (!str) return null;
-    return btoa(str.toLowerCase().trim());
+    const crypto = require('crypto');
+    return crypto.createHash('sha256').update(str.toLowerCase().trim()).digest('hex');
 }
