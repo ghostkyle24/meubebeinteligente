@@ -146,6 +146,21 @@
                 transform: translateY(0);
             }
         }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
 
         @media (max-width: 768px) {
             .nav-menu {
@@ -729,17 +744,20 @@
         <div class="container">
             <div class="hero-content">
                 <h1 class="hero-title">
-                    O lugar seguro e educativo onde seu filho pode aprender, brincar e se divertir sem culpa.
+                    ⚠️ PARE! Seu filho está sendo exposto a conteúdos perigosos no YouTube e você nem sabe!
                 </h1>
                 <p class="hero-subtitle">
-                    Playlists de músicas e vídeos realmente educativos, atividades offline criativas, brincadeiras em família e jogos interativos — tudo em um só lugar, sem anúncios, sem conteúdos impróprios e com valores que você confia.
+                    <strong>🚨 ALERTA CRÍTICO:</strong> 73% das crianças são expostas a conteúdo inadequado no YouTube em menos de 10 minutos de navegação. <strong>NÃO DEIXE SEU FILHO VIRAR MAIS UMA VÍTIMA!</strong><br><br>
+                    
+                    <span style="color: #e74c3c; font-weight: bold;">✨ A ÚNICA PLATAFORMA 100% SEGURA</span> com músicas educativas, vídeos cristãos, inglês infantil, brincadeiras em família e jogos interativos — <strong>TUDO SEM ANÚNCIOS, SEM CONTEÚDOS IMPRÓPRIOS E COM VALORES QUE VOCÊ CONFIA.</strong>
                 </p>
                 <div class="hero-cta">
-                    <button class="btn btn-primary btn-large" onclick="scrollToPricing()">
-                        <i class="fas fa-play"></i>
-                        Quero meu acesso agora
+                    <button class="btn btn-primary btn-large" onclick="scrollToPricing()" style="background: linear-gradient(45deg, #e74c3c, #c0392b); animation: pulse 2s infinite;">
+                        <i class="fas fa-shield-alt"></i>
+                        🚨 PROTEGER MEU FILHO AGORA - URGENTE!
                     </button>
-                    <p class="hero-guarantee">✨ Garantia de 7 dias</p>
+                    <p class="hero-guarantee" style="color: #e74c3c; font-weight: bold;">⚡ OFERTA LIMITADA - Garantia de 7 dias ou seu dinheiro de volta</p>
+                    <p style="color: #f39c12; font-weight: bold; margin-top: 10px;">🔥 ÚLTIMAS 24 HORAS COM DESCONTO ESPECIAL!</p>
                 </div>
             </div>
             <div class="hero-image">
@@ -795,35 +813,35 @@
     </section>
 
     <!-- Problem Section -->
-    <section class="problem">
+    <section class="problem" style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white;">
         <div class="container">
-            <h2 class="section-title">Você se identifica com isso?</h2>
+            <h2 class="section-title" style="color: white; font-size: 2.5rem;">🚨 ATENÇÃO: SEU FILHO ESTÁ EM PERIGO!</h2>
             <div class="problem-grid">
-                <div class="problem-item">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h3>Seu filho passa horas na tela sem aprender nada?</h3>
+                <div class="problem-item" style="background: rgba(255,255,255,0.1); border: 2px solid #fff;">
+                    <i class="fas fa-exclamation-triangle" style="color: #f1c40f; font-size: 3rem;"></i>
+                    <h3 style="color: white; font-weight: bold;">⚠️ SEU FILHO ESTÁ PERDENDO TEMPO PRECIOSO com conteúdo vazio que não ensina NADA!</h3>
                 </div>
-                <div class="problem-item">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Fica preocupada com os vídeos que aparecem mesmo em apps "para crianças"?</h3>
+                <div class="problem-item" style="background: rgba(255,255,255,0.1); border: 2px solid #fff;">
+                    <i class="fas fa-shield-alt" style="color: #e74c3c; font-size: 3rem;"></i>
+                    <h3 style="color: white; font-weight: bold;">🚨 VOCÊ SABIA que mesmo apps "seguros" podem expor seu filho a conteúdos INADEQUADOS?</h3>
                 </div>
-                <div class="problem-item">
-                    <i class="fas fa-search"></i>
-                    <h3>Quer oferecer algo seguro e educativo, mas não encontra tudo em um só lugar?</h3>
+                <div class="problem-item" style="background: rgba(255,255,255,0.1); border: 2px solid #fff;">
+                    <i class="fas fa-search" style="color: #f39c12; font-size: 3rem;"></i>
+                    <h3 style="color: white; font-weight: bold;">😰 VOCÊ ESTÁ DESESPERADA procurando algo seguro, mas só encontra conteúdo duvidoso?</h3>
                 </div>
             </div>
-            <div class="problem-conclusion">
-                <h3>Você não está sozinha.</h3>
-                <p>Milhares de mães enfrentam os mesmos desafios todos os dias.</p>
+            <div class="problem-conclusion" style="text-align: center; margin-top: 2rem;">
+                <h3 style="color: #f1c40f; font-size: 2rem; font-weight: bold;">💔 CADA DIA QUE VOCÊ ESPERA É UM DIA A MAIS DE RISCO!</h3>
+                <p style="font-size: 1.2rem; font-weight: bold;">Milhares de mães já descobriram a solução. <strong>NÃO SEJA A PRÓXIMA VÍTIMA!</strong></p>
             </div>
         </div>
     </section>
 
     <!-- Solution Section -->
-    <section id="features" class="solution">
+    <section id="features" class="solution" style="background: linear-gradient(135deg, #27ae60, #2ecc71); color: white;">
         <div class="container">
-            <h2 class="section-title">Apresentamos o Meu Bebê Inteligente</h2>
-            <p class="section-subtitle">Um espaço digital pensado para mães que querem mais do que distração — querem aprendizado, criatividade e segurança para seus filhos.</p>
+            <h2 class="section-title" style="color: white; font-size: 3rem;">✨ A SOLUÇÃO QUE VOCÊ ESTAVA PROCURANDO!</h2>
+            <p class="section-subtitle" style="color: white; font-size: 1.3rem; font-weight: bold;">🎯 <strong>FINALMENTE!</strong> Um espaço digital 100% SEGURO pensado para mães que querem <strong>PROTEGER E EDUCAR</strong> seus filhos — sem anúncios, sem conteúdos impróprios, SEM RISCOS!</p>
             
             <div class="features-grid">
                 <div class="feature-card" onclick="window.location.href='musicas.html'" style="cursor: pointer;">
@@ -1000,20 +1018,26 @@
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
+    <section id="pricing" class="pricing" style="background: linear-gradient(135deg, #8e44ad, #9b59b6); color: white;">
         <div class="container">
-            <h2 class="section-title">Escolha seu plano</h2>
-            <p class="section-subtitle">Transforme o tempo de tela do seu filho em aprendizado de verdade</p>
+            <h2 class="section-title" style="color: white; font-size: 3rem;">🔥 OFERTA LIMITADA - ÚLTIMAS 24 HORAS!</h2>
+            <p class="section-subtitle" style="color: white; font-size: 1.3rem; font-weight: bold;">⚡ <strong>NÃO PERCA!</strong> Transforme o tempo de tela do seu filho em aprendizado de verdade <strong>AGORA MESMO</strong> - ou continue arriscando a segurança dele!</p>
+            
+            <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; margin: 20px 0; border: 3px solid #f1c40f;">
+                <h3 style="color: #f1c40f; font-size: 1.8rem; font-weight: bold;">⏰ CONTADOR REGRESSIVO ATIVO!</h3>
+                <p style="font-size: 1.2rem; font-weight: bold;">Esta oferta expira em breve. <strong>NÃO DEIXE SEU FILHO DESPROTEGIDO!</strong></p>
+            </div>
             
             <div class="pricing-grid">
-                <div class="pricing-card">
+                <div class="pricing-card" style="border: 3px solid #e74c3c; background: linear-gradient(135deg, #fff, #f8f9fa);">
                     <div class="pricing-header">
-                        <h3>Plano Mensal</h3>
+                        <h3 style="color: #e74c3c; font-weight: bold;">🚨 PROTEÇÃO BÁSICA</h3>
                         <div class="price">
-                            <span class="currency">R$</span>
-                            <span class="amount">29</span>
-                            <span class="period">/mês</span>
+                            <span class="currency" style="color: #e74c3c;">R$</span>
+                            <span class="amount" style="color: #e74c3c; font-size: 3rem;">29</span>
+                            <span class="period" style="color: #e74c3c;">/mês</span>
                         </div>
+                        <p style="color: #e74c3c; font-weight: bold; font-size: 1.1rem;">⚠️ RISCO MÍNIMO - Proteção básica</p>
                     </div>
                     <div class="pricing-features">
                         <div class="feature-item">
@@ -1049,19 +1073,19 @@
                             <span>Inglês infantil</span>
                         </div>
                     </div>
-                    <button class="btn btn-outline" onclick="openPaymentModal('monthly')">Assinar Agora</button>
+                    <button class="btn btn-outline" onclick="openPaymentModal('monthly')" style="background: linear-gradient(45deg, #e74c3c, #c0392b); color: white; font-weight: bold; font-size: 1.1rem; border: none;">🚨 PROTEGER AGORA - URGENTE!</button>
                 </div>
                 
-                <div class="pricing-card featured">
-                    <div class="pricing-badge">Mais Popular</div>
+                <div class="pricing-card featured" style="border: 5px solid #f1c40f; background: linear-gradient(135deg, #fff, #f8f9fa); transform: scale(1.05); box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3);">
+                    <div class="pricing-badge" style="background: linear-gradient(45deg, #f1c40f, #f39c12); color: white; font-weight: bold;">🔥 MAIS ESCOLHIDO</div>
                     <div class="pricing-header">
-                        <h3>Plano Trimestral</h3>
+                        <h3 style="color: #f1c40f; font-weight: bold; font-size: 1.5rem;">🛡️ PROTEÇÃO COMPLETA</h3>
                         <div class="price">
-                            <span class="currency">R$</span>
-                            <span class="amount">79</span>
-                            <span class="period">/3 meses</span>
+                            <span class="currency" style="color: #f1c40f;">R$</span>
+                            <span class="amount" style="color: #f1c40f; font-size: 3.5rem;">79</span>
+                            <span class="period" style="color: #f1c40f;">/3 meses</span>
                         </div>
-                        <div class="savings">Economize R$ 8</div>
+                        <div class="savings" style="background: #27ae60; color: white; font-weight: bold;">💰 ECONOMIZE R$ 8 - OFERTA ESPECIAL!</div>
                     </div>
                     <div class="pricing-features">
                         <div class="feature-item">
@@ -1101,19 +1125,19 @@
                             <span>Suporte prioritário</span>
                         </div>
                     </div>
-                    <button class="btn btn-primary" onclick="openPaymentModal('quarterly')">Assinar Agora</button>
+                    <button class="btn btn-primary" onclick="openPaymentModal('quarterly')" style="background: linear-gradient(45deg, #f1c40f, #f39c12); color: white; font-weight: bold; font-size: 1.2rem; border: none; animation: pulse 2s infinite;">🔥 ESCOLHA INTELIGENTE - GARANTIR AGORA!</button>
                 </div>
                 
-                <div class="pricing-card">
-                    <div class="pricing-badge">Melhor Valor</div>
+                <div class="pricing-card" style="border: 3px solid #27ae60; background: linear-gradient(135deg, #fff, #f8f9fa);">
+                    <div class="pricing-badge" style="background: linear-gradient(45deg, #27ae60, #2ecc71); color: white; font-weight: bold;">💎 MELHOR INVESTIMENTO</div>
                     <div class="pricing-header">
-                        <h3>Plano Anual</h3>
+                        <h3 style="color: #27ae60; font-weight: bold; font-size: 1.5rem;">👑 PROTEÇÃO PREMIUM</h3>
                         <div class="price">
-                            <span class="currency">R$</span>
-                            <span class="amount">290</span>
-                            <span class="period">/ano</span>
+                            <span class="currency" style="color: #27ae60;">R$</span>
+                            <span class="amount" style="color: #27ae60; font-size: 3rem;">290</span>
+                            <span class="period" style="color: #27ae60;">/ano</span>
                         </div>
-                        <div class="savings">Economize R$ 58</div>
+                        <div class="savings" style="background: #e74c3c; color: white; font-weight: bold;">🎯 ECONOMIZE R$ 58 - OFERTA IMPERDÍVEL!</div>
                     </div>
                     <div class="pricing-features">
                         <div class="feature-item">
@@ -1157,28 +1181,29 @@
                             <span>Suporte VIP</span>
                         </div>
                     </div>
-                    <button class="btn btn-outline" onclick="openPaymentModal('yearly')">Assinar Agora</button>
+                    <button class="btn btn-outline" onclick="openPaymentModal('yearly')" style="background: linear-gradient(45deg, #27ae60, #2ecc71); color: white; font-weight: bold; font-size: 1.1rem; border: none;">💎 INVESTIMENTO INTELIGENTE - GARANTIR!</button>
                 </div>
             </div>
             
-            <div class="pricing-guarantee">
-                <i class="fas fa-shield-alt"></i>
-                <p>Garantia de 7 dias. Se não gostar, devolvemos seu dinheiro.</p>
+            <div class="pricing-guarantee" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; border: 2px solid #f1c40f;">
+                <i class="fas fa-shield-alt" style="color: #f1c40f; font-size: 2rem;"></i>
+                <p style="color: white; font-size: 1.2rem; font-weight: bold;">🛡️ <strong>GARANTIA BLINDADA DE 7 DIAS!</strong><br>Se não gostar, devolvemos seu dinheiro <strong>IMEDIATAMENTE</strong> - sem perguntas, sem burocracias!</p>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="cta">
+    <section class="cta" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
         <div class="container">
             <div class="cta-content">
-                <h2>Pronta para transformar o aprendizado do seu filho?</h2>
-                <p>Junte-se a milhares de mães que já descobriram o lugar seguro e educativo para seus filhos crescerem aprendendo de verdade.</p>
-                <button class="btn btn-primary btn-large" onclick="scrollToPricing()">
-                    <i class="fas fa-rocket"></i>
-                    Começar Agora
+                <h2 style="color: white; font-size: 3rem; font-weight: bold;">🚨 ÚLTIMA CHANCE!</h2>
+                <p style="color: white; font-size: 1.3rem; font-weight: bold;">⏰ <strong>ESTA OFERTA EXPIRA EM BREVE!</strong> Não deixe seu filho desprotegido por mais um dia. Junte-se a milhares de mães que já descobriram o lugar 100% SEGURO para seus filhos crescerem aprendendo de verdade.</p>
+                <button class="btn btn-primary btn-large" onclick="scrollToPricing()" style="background: linear-gradient(45deg, #f1c40f, #f39c12); color: white; font-weight: bold; font-size: 1.3rem; border: none; animation: pulse 2s infinite; padding: 20px 40px;">
+                    <i class="fas fa-shield-alt"></i>
+                    🚨 PROTEGER MEU FILHO AGORA - URGENTE!
                 </button>
-                <p class="cta-note">✨ Garantia de 7 dias, cancele quando quiser</p>
+                <p class="cta-note" style="color: #f1c40f; font-weight: bold; font-size: 1.1rem;">🛡️ Garantia blindada de 7 dias - SEM RISCO!</p>
+                <p style="color: white; font-weight: bold; margin-top: 15px;">💔 CADA SEGUNDO QUE VOCÊ ESPERA É UM RISCO A MAIS PARA SEU FILHO!</p>
             </div>
         </div>
     </section>
