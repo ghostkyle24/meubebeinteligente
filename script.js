@@ -97,35 +97,36 @@ document.addEventListener('DOMContentLoaded', function() {
             // Garantir que o menu esteja fechado inicialmente
             navMenu.classList.remove('mobile-open');
             
-            // Flag para controlar se o click foi no botão
-            let isButtonClick = false;
-            
             // Função para toggle do menu
             function toggleMobileMenu() {
                 console.log('🔄 Toggle menu mobile');
+                const isOpen = navMenu.classList.contains('mobile-open');
                 navMenu.classList.toggle('mobile-open');
-                console.log('📱 Menu aberto:', navMenu.classList.contains('mobile-open'));
+                console.log('📱 Menu aberto:', !isOpen);
             }
             
+            // Remover todos os event listeners existentes
+            const newToggle = mobileMenuToggle.cloneNode(true);
+            mobileMenuToggle.parentNode.replaceChild(newToggle, mobileMenuToggle);
+            
             // Adicionar event listener no botão
-            mobileMenuToggle.addEventListener('click', function(e) {
+            newToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                isButtonClick = true;
+                console.log('🎯 Click no botão mobile detectado');
                 toggleMobileMenu();
-                
-                // Reset da flag após um pequeno delay
-                setTimeout(() => {
-                    isButtonClick = false;
-                }, 100);
             });
             
-            // Fechar menu ao clicar fora
+            // Fechar menu ao clicar fora (com delay)
+            let clickTimeout;
             document.addEventListener('click', function(e) {
-                // Só fechar se não foi click no botão
-                if (!isButtonClick && !navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-                    navMenu.classList.remove('mobile-open');
-                }
+                clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(() => {
+                    if (!navMenu.contains(e.target) && !newToggle.contains(e.target)) {
+                        console.log('🌍 Click fora do menu - fechando');
+                        navMenu.classList.remove('mobile-open');
+                    }
+                }, 50);
             });
             
             // Fechar menu ao redimensionar para desktop
