@@ -111,6 +111,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 const newState = navMenu.classList.contains('mobile-open');
                 console.log('📱 Menu após toggle:', newState ? 'ABERTO' : 'FECHADO');
                 console.log('🎨 Classes do menu:', navMenu.className);
+                
+                // Verificar estilos computados
+                if (newState) {
+                    const computedStyle = window.getComputedStyle(navMenu);
+                    console.log('🎨 Estilos computados do menu:');
+                    console.log('  - display:', computedStyle.display);
+                    console.log('  - visibility:', computedStyle.visibility);
+                    console.log('  - opacity:', computedStyle.opacity);
+                    console.log('  - position:', computedStyle.position);
+                    console.log('  - z-index:', computedStyle.zIndex);
+                    console.log('  - width:', computedStyle.width);
+                    console.log('  - height:', computedStyle.height);
+                }
             }
             
             // Remover todos os event listeners existentes
