@@ -131,6 +131,18 @@
             box-shadow: var(--shadow-lg);
             border-top: 1px solid var(--color-gray-light);
             z-index: 1001;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1425,46 +1437,7 @@
         // Configuração dos planos (usar do CONFIG)
         const PLANS = CONFIG.PLANS;
         
-        // Menu mobile para navbar da página de vendas
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const navMenu = document.getElementById('navMenu');
-        
-        if (mobileMenuToggle && navMenu) {
-            // Garantir que o menu esteja fechado inicialmente
-            navMenu.classList.remove('mobile-open');
-            
-            // Remover event listeners existentes para evitar duplicação
-            const newToggle = mobileMenuToggle.cloneNode(true);
-            mobileMenuToggle.parentNode.replaceChild(newToggle, mobileMenuToggle);
-            
-            newToggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                navMenu.classList.toggle('mobile-open');
-            });
-            
-            // Fechar menu ao clicar fora
-            document.addEventListener('click', function(e) {
-                if (!navMenu.contains(e.target) && !newToggle.contains(e.target)) {
-                    navMenu.classList.remove('mobile-open');
-                }
-            });
-            
-            // Fechar menu ao redimensionar para desktop
-            window.addEventListener('resize', function() {
-                if (window.innerWidth > 768) {
-                    navMenu.classList.remove('mobile-open');
-                }
-            });
-            
-            // Fechar menu ao clicar em um link
-            const navLinks = navMenu.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    navMenu.classList.remove('mobile-open');
-                });
-            });
-        }
+        // Menu mobile inicializado via script.js
         
         // Funções do modal de pagamento
         function openPaymentModal(plan) {

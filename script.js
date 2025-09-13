@@ -87,19 +87,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Menu mobile (removido - usando apenas o botão do HTML)
 
     // Menu mobile para navbar (apenas na página principal)
-    if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+    function initMobileMenu() {
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const navMenu = document.getElementById('navMenu');
         
         if (mobileMenuToggle && navMenu) {
-            // Remover event listeners existentes para evitar duplicação
-            mobileMenuToggle.removeEventListener('click', handleMobileMenuClick);
+            console.log('📱 Inicializando menu mobile...');
             
-            function handleMobileMenuClick() {
+            // Garantir que o menu esteja fechado inicialmente
+            navMenu.classList.remove('mobile-open');
+            
+            // Função para toggle do menu
+            function toggleMobileMenu() {
+                console.log('🔄 Toggle menu mobile');
                 navMenu.classList.toggle('mobile-open');
+                console.log('📱 Menu aberto:', navMenu.classList.contains('mobile-open'));
             }
             
-            mobileMenuToggle.addEventListener('click', handleMobileMenuClick);
+            // Adicionar event listener
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMobileMenu();
+            });
             
             // Fechar menu ao clicar fora
             document.addEventListener('click', function(e) {
@@ -114,7 +124,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     navMenu.classList.remove('mobile-open');
                 }
             });
+            
+            // Fechar menu ao clicar em um link
+            const navLinks = navMenu.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('mobile-open');
+                });
+            });
+            
+            console.log('✅ Menu mobile inicializado com sucesso');
+        } else {
+            console.log('❌ Elementos do menu mobile não encontrados');
         }
+    }
+    
+    // Inicializar menu mobile apenas na página principal
+    if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+        initMobileMenu();
     }
     
     // Menu mobile inicializado via HTML
