@@ -130,12 +130,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Fechar menu ao clicar fora (com delay maior)
             let clickTimeout;
             document.addEventListener('click', function(e) {
+                console.log('🌍 Click detectado no documento:', e.target);
                 clearTimeout(clickTimeout);
                 clickTimeout = setTimeout(() => {
                     if (!navMenu.contains(e.target) && !newToggle.contains(e.target)) {
                         console.log('🌍 Click fora do menu - fechando');
                         console.log('🌍 Target do click:', e.target);
+                        console.log('🌍 Menu contém target?', navMenu.contains(e.target));
+                        console.log('🌍 Botão contém target?', newToggle.contains(e.target));
                         navMenu.classList.remove('mobile-open');
+                        console.log('🌍 Menu fechado por click fora');
+                    } else {
+                        console.log('🌍 Click dentro do menu - mantendo aberto');
                     }
                 }, 200);
             });
@@ -155,6 +161,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('🔗 Click em link - fechando menu');
                     navMenu.classList.remove('mobile-open');
                 });
+            });
+            
+            // Observer para detectar mudanças no menu
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        console.log('🔍 Mudança detectada no menu:');
+                        console.log('  - Classes antigas:', mutation.oldValue);
+                        console.log('  - Classes novas:', navMenu.className);
+                        console.log('  - Menu aberto?', navMenu.classList.contains('mobile-open'));
+                    }
+                });
+            });
+            
+            observer.observe(navMenu, {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['class']
             });
             
             console.log('✅ Menu mobile inicializado com sucesso');

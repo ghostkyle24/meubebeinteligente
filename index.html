@@ -149,7 +149,25 @@
 
         @media (max-width: 768px) {
             .nav-menu {
-                display: none;
+                display: none !important;
+            }
+            
+            .nav-menu.mobile-open {
+                display: flex !important;
+                position: absolute !important;
+                top: 100% !important;
+                left: 0 !important;
+                right: 0 !important;
+                background: rgba(255, 255, 255, 0.98) !important;
+                backdrop-filter: blur(10px) !important;
+                flex-direction: column !important;
+                padding: var(--spacing-lg) !important;
+                box-shadow: var(--shadow-lg) !important;
+                border-top: 1px solid var(--color-gray-light) !important;
+                z-index: 1001 !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                animation: slideDown 0.3s ease !important;
             }
             
             .mobile-menu-toggle {
