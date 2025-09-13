@@ -97,6 +97,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Garantir que o menu esteja fechado inicialmente
             navMenu.classList.remove('mobile-open');
             
+            // Flag para controlar se o click foi no botão
+            let isButtonClick = false;
+            
             // Função para toggle do menu
             function toggleMobileMenu() {
                 console.log('🔄 Toggle menu mobile');
@@ -104,16 +107,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('📱 Menu aberto:', navMenu.classList.contains('mobile-open'));
             }
             
-            // Adicionar event listener
+            // Adicionar event listener no botão
             mobileMenuToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                isButtonClick = true;
                 toggleMobileMenu();
+                
+                // Reset da flag após um pequeno delay
+                setTimeout(() => {
+                    isButtonClick = false;
+                }, 100);
             });
             
             // Fechar menu ao clicar fora
             document.addEventListener('click', function(e) {
-                if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                // Só fechar se não foi click no botão
+                if (!isButtonClick && !navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
                     navMenu.classList.remove('mobile-open');
                 }
             });
