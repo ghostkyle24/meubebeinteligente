@@ -110,11 +110,21 @@ async function sendToMetaAPI(eventData) {
 
 // Função para identificar o plano baseado no valor
 function getPlanName(amount) {
-    switch (amount) {
-        case 29: return 'Mensal';
-        case 79: return 'Trimestral';
-        case 299: return 'Anual';
-        default: return 'Mensal';
+    // Identificar o plano baseado no valor (considerando orderbumps)
+    if (amount >= 29 && amount < 50) {
+        return 'Mensal';
+    } else if (amount >= 79 && amount < 100) {
+        return 'Trimestral';
+    } else if (amount >= 299 && amount < 350) {
+        return 'Anual';
+    } else if (amount >= 50 && amount < 79) {
+        return 'Mensal'; // Mensal + orderbump
+    } else if (amount >= 100 && amount < 299) {
+        return 'Trimestral'; // Trimestral + orderbump
+    } else if (amount >= 350) {
+        return 'Anual'; // Anual + orderbump
+    } else {
+        return 'Mensal'; // Fallback
     }
 }
 
