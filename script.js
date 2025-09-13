@@ -84,59 +84,40 @@ document.addEventListener('DOMContentLoaded', function() {
         counterObserver.observe(counterSection);
     }
 
-    // Menu mobile (se necessário)
-    function createMobileMenu() {
-        const nav = document.querySelector('.nav');
-        const navMenu = document.querySelector('.nav-menu');
+    // Menu mobile (removido - usando apenas o botão do HTML)
+
+    // Menu mobile para navbar (apenas na página principal)
+    if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
         
-        if (window.innerWidth <= 768) {
-            const mobileMenuButton = document.createElement('button');
-            mobileMenuButton.className = 'mobile-menu-btn';
-            mobileMenuButton.innerHTML = '<i class="fas fa-bars"></i>';
-            mobileMenuButton.style.cssText = `
-                display: block;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: var(--color-blue);
-                cursor: pointer;
-            `;
+        if (mobileMenuToggle && navMenu) {
+            // Remover event listeners existentes para evitar duplicação
+            mobileMenuToggle.removeEventListener('click', handleMobileMenuClick);
             
-            nav.appendChild(mobileMenuButton);
+            function handleMobileMenuClick() {
+                navMenu.classList.toggle('mobile-open');
+            }
             
-            mobileMenuButton.addEventListener('click', function() {
-                navMenu.classList.toggle('active');
+            mobileMenuToggle.addEventListener('click', handleMobileMenuClick);
+            
+            // Fechar menu ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    navMenu.classList.remove('mobile-open');
+                }
+            });
+            
+            // Fechar menu ao redimensionar para desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    navMenu.classList.remove('mobile-open');
+                }
             });
         }
     }
-
-    // Menu mobile para navbar
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const navMenu = document.getElementById('navMenu');
     
-    if (mobileMenuToggle && navMenu) {
-        mobileMenuToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('mobile-open');
-        });
-        
-        // Fechar menu ao clicar fora
-        document.addEventListener('click', function(e) {
-            if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-                navMenu.classList.remove('mobile-open');
-            }
-        });
-        
-        // Fechar menu ao redimensionar para desktop
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                navMenu.classList.remove('mobile-open');
-            }
-        });
-    }
-    
-    // Inicializar menu mobile
-    createMobileMenu();
-    window.addEventListener('resize', createMobileMenu);
+    // Menu mobile inicializado via HTML
 
     // Adicionar efeito de hover nos cards
     const cards = document.querySelectorAll('.feature-card, .testimonial-card, .pricing-card');
