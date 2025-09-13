@@ -93,45 +93,57 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (mobileMenuToggle && navMenu) {
             console.log('📱 Inicializando menu mobile...');
+            console.log('🔍 Elementos encontrados:');
+            console.log('  - mobileMenuToggle:', mobileMenuToggle);
+            console.log('  - navMenu:', navMenu);
             
             // Garantir que o menu esteja fechado inicialmente
             navMenu.classList.remove('mobile-open');
+            console.log('📱 Menu fechado inicialmente');
             
             // Função para toggle do menu
             function toggleMobileMenu() {
-                console.log('🔄 Toggle menu mobile');
                 const isOpen = navMenu.classList.contains('mobile-open');
+                console.log('🔄 Toggle menu mobile - Estado atual:', isOpen ? 'ABERTO' : 'FECHADO');
+                
                 navMenu.classList.toggle('mobile-open');
-                console.log('📱 Menu aberto:', !isOpen);
+                
+                const newState = navMenu.classList.contains('mobile-open');
+                console.log('📱 Menu após toggle:', newState ? 'ABERTO' : 'FECHADO');
+                console.log('🎨 Classes do menu:', navMenu.className);
             }
             
             // Remover todos os event listeners existentes
             const newToggle = mobileMenuToggle.cloneNode(true);
             mobileMenuToggle.parentNode.replaceChild(newToggle, mobileMenuToggle);
+            console.log('🔄 Botão clonado e substituído');
             
             // Adicionar event listener no botão
             newToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 console.log('🎯 Click no botão mobile detectado');
+                console.log('🎯 Evento:', e);
                 toggleMobileMenu();
             });
             
-            // Fechar menu ao clicar fora (com delay)
+            // Fechar menu ao clicar fora (com delay maior)
             let clickTimeout;
             document.addEventListener('click', function(e) {
                 clearTimeout(clickTimeout);
                 clickTimeout = setTimeout(() => {
                     if (!navMenu.contains(e.target) && !newToggle.contains(e.target)) {
                         console.log('🌍 Click fora do menu - fechando');
+                        console.log('🌍 Target do click:', e.target);
                         navMenu.classList.remove('mobile-open');
                     }
-                }, 50);
+                }, 200);
             });
             
             // Fechar menu ao redimensionar para desktop
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 768) {
+                    console.log('🖥️ Redimensionado para desktop - fechando menu');
                     navMenu.classList.remove('mobile-open');
                 }
             });
@@ -140,6 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const navLinks = navMenu.querySelectorAll('.nav-link');
             navLinks.forEach(link => {
                 link.addEventListener('click', function() {
+                    console.log('🔗 Click em link - fechando menu');
                     navMenu.classList.remove('mobile-open');
                 });
             });
@@ -147,6 +160,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('✅ Menu mobile inicializado com sucesso');
         } else {
             console.log('❌ Elementos do menu mobile não encontrados');
+            console.log('🔍 mobileMenuToggle:', mobileMenuToggle);
+            console.log('🔍 navMenu:', navMenu);
         }
     }
     
