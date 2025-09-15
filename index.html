@@ -1081,8 +1081,11 @@
             <h2 class="section-title" style="color: white; font-size: 2rem;">🔥 OFERTA LIMITADA - ÚLTIMAS 24 HORAS!</h2>
             <p class="section-subtitle" style="color: white; font-size: 1.3rem; font-weight: bold;">⚡ <strong>NÃO PERCA!</strong> Transforme o tempo de tela do seu filho em aprendizado de verdade <strong>AGORA MESMO</strong> - ou continue arriscando a segurança dele!</p>
             
-            <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; margin: 20px 0; border: 3px solid #f1c40f;">
-                <h3 style="color: #f1c40f; font-size: 1.8rem; font-weight: bold;">⏰ CONTADOR REGRESSIVO ATIVO!</h3>
+            <div id="countdown-container" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; margin: 20px 0; border: 3px solid #f1c40f;">
+                <h3 style="color: #f1c40f; font-size: 1.8rem; font-weight: bold;">⏰ OFERTA LIMITADA - ÚLTIMAS 10 MINUTOS!</h3>
+                <div id="countdown-timer" style="font-size: 2.5rem; font-weight: bold; color: #e74c3c; margin: 15px 0; font-family: 'Courier New', monospace;">
+                    <span id="minutes">10</span>:<span id="seconds">00</span>
+                </div>
                 <p style="font-size: 1.2rem; font-weight: bold;">Esta oferta expira em breve. <strong>NÃO DEIXE SEU FILHO DESPROTEGIDO!</strong></p>
             </div>
             
@@ -2897,6 +2900,55 @@
                     }
                 });
             }
+        });
+
+        // Cronômetro de 10 minutos
+        function startCountdown() {
+            let timeLeft = 10 * 60; // 10 minutos em segundos
+            
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+            const countdownContainer = document.getElementById('countdown-container');
+            
+            const countdown = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                // Atualizar display
+                minutesElement.textContent = minutes.toString().padStart(2, '0');
+                secondsElement.textContent = seconds.toString().padStart(2, '0');
+                
+                // Mudar cor quando restam menos de 2 minutos
+                if (timeLeft <= 120) {
+                    countdownContainer.style.borderColor = '#e74c3c';
+                    countdownContainer.style.background = 'rgba(231, 76, 60, 0.1)';
+                }
+                
+                // Mudar cor quando restam menos de 30 segundos
+                if (timeLeft <= 30) {
+                    countdownContainer.style.borderColor = '#c0392b';
+                    countdownContainer.style.background = 'rgba(192, 57, 43, 0.2)';
+                    countdownContainer.style.animation = 'pulse 1s infinite';
+                }
+                
+                timeLeft--;
+                
+                // Quando o tempo acabar
+                if (timeLeft < 0) {
+                    clearInterval(countdown);
+                    countdownContainer.innerHTML = `
+                        <h3 style="color: #e74c3c; font-size: 1.8rem; font-weight: bold;">⏰ OFERTA EXPIRADA!</h3>
+                        <p style="font-size: 1.2rem; font-weight: bold; color: #e74c3c;">A oferta especial acabou. Entre em contato para saber sobre nossas condições atuais.</p>
+                    `;
+                    countdownContainer.style.borderColor = '#e74c3c';
+                    countdownContainer.style.background = 'rgba(231, 76, 60, 0.1)';
+                }
+            }, 1000);
+        }
+        
+        // Iniciar cronômetro quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            startCountdown();
         });
     </script>
 </body>

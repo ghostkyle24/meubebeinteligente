@@ -211,17 +211,17 @@ body {
 
 /* Hero Section Moderno */
 .hero {
-    padding: calc(80px + var(--spacing-2xl)) 0 var(--spacing-3xl);
+    padding: calc(100px + var(--spacing-3xl)) 0 var(--spacing-3xl);
     background: var(--gradient-hero);
     margin-top: 0;
     position: relative;
     overflow: hidden;
 }
 
-/* Ajuste para desktop - mais espaço do header */
+/* Ajuste para desktop - ainda mais espaço do header */
 @media (min-width: 769px) {
     .hero {
-        padding: calc(100px + var(--spacing-3xl)) 0 var(--spacing-3xl);
+        padding: calc(120px + var(--spacing-4xl)) 0 var(--spacing-3xl);
     }
 }
 
@@ -1456,7 +1456,7 @@ body {
     }
     
     .hero-title {
-        font-size: var(--font-size-xl);
+        font-size: var(--font-size-2xl);
         line-height: 1.3;
         margin-bottom: var(--spacing-md);
     }
