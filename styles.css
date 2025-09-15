@@ -369,39 +369,69 @@ body {
 
 .benefits-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-xl);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
     margin-top: var(--spacing-2xl);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .benefit-item {
     text-align: center;
     padding: var(--spacing-xl);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-white);
     border-radius: var(--border-radius-xl);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--color-gray-light);
     transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
 }
 
 .benefit-item:hover {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-cyan);
 }
 
 .benefit-icon {
-    font-size: 3rem;
-    margin-bottom: var(--spacing-md);
+    width: 60px;
+    height: 60px;
+    margin: 0 auto var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-gray-light);
+    border-radius: var(--border-radius-lg);
+    transition: all 0.3s ease;
+}
+
+.benefit-icon i {
+    width: 24px;
+    height: 24px;
+    color: var(--color-gray-dark);
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover .benefit-icon {
+    background: var(--color-cyan);
+    transform: scale(1.1);
+}
+
+.benefit-item:hover .benefit-icon i {
+    color: var(--color-white);
 }
 
 .benefit-item h3 {
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-sm);
-    color: var(--color-white);
+    color: var(--color-gray-dark);
+    font-weight: 600;
 }
 
 .benefit-item p {
     font-size: var(--font-size-sm);
-    color: var(--color-gray-light);
+    color: var(--color-gray-medium);
     line-height: 1.5;
 }
 
@@ -839,7 +869,7 @@ body {
 /* Benefits Section */
 .benefits {
     padding: var(--spacing-3xl) 0;
-    background: var(--gradient-subtle);
+    background: var(--color-white);
 }
 
 .benefits-list {
@@ -1504,7 +1534,13 @@ body {
     }
     
     .benefit-icon {
-        font-size: 2rem;
+        width: 50px;
+        height: 50px;
+    }
+    
+    .benefit-icon i {
+        width: 20px;
+        height: 20px;
     }
     
     .comparison-item {
