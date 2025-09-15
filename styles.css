@@ -216,18 +216,20 @@ body {
 /* Layout hero otimizado para desktop */
 @media (min-width: 1200px) {
     .hero .container {
-        grid-template-columns: 1.3fr 1fr;
-        gap: var(--spacing-3xl);
-        min-height: 85vh;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-2xl);
+        min-height: 70vh;
+        text-align: center;
     }
     
     .hero-content {
-        padding-right: var(--spacing-xl);
+        max-width: 800px;
+        margin: 0 auto;
     }
     
     .hero-illustration {
-        padding-left: var(--spacing-lg);
-        max-width: 500px;
+        max-width: 400px;
+        margin: 0 auto;
     }
 }
 
@@ -261,77 +263,30 @@ body {
     text-align: center;
 }
 
-/* Hero Illustration */
+/* Hero Illustration - agora vazio */
 .hero-illustration {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-lg);
-    max-width: 400px;
-    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-xl);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
 }
 
 /* Grid de ilustrações otimizado para desktop */
 @media (min-width: 1200px) {
     .hero-illustration {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--spacing-xl);
-        max-width: 500px;
-    }
-    
-    .illustration-card {
-        padding: var(--spacing-xl);
-        border-radius: var(--border-radius-2xl);
-    }
-    
-    .illustration-card i {
-        font-size: var(--font-size-4xl);
-        margin-bottom: var(--spacing-lg);
-    }
-    
-    .illustration-card span {
-        font-size: var(--font-size-lg);
-        margin-bottom: var(--spacing-md);
-    }
-    
-    .illustration-card p {
-        font-size: var(--font-size-base);
-        line-height: 1.6;
+        min-height: 300px;
+        background: rgba(255, 255, 255, 0.08);
     }
 }
 
-.illustration-card {
-    background: white;
-    padding: var(--spacing-xl);
-    border-radius: var(--border-radius-2xl);
-    box-shadow: var(--shadow-lg);
-    text-align: center;
-    transition: transform 0.3s ease;
-}
+/* Illustration cards removidos - CSS não mais necessário */
 
-.illustration-card:hover {
-    transform: translateY(-5px);
-}
+/* CSS dos illustration-cards removido */
 
-.illustration-card i {
-    font-size: var(--font-size-3xl);
-    margin-bottom: var(--spacing-md);
-    display: block;
-}
-
-.illustration-card.music i { color: var(--color-blue); }
-.illustration-card.video i { color: var(--color-slate); }
-.illustration-card.color i { color: var(--color-emerald); }
-.illustration-card.game i { color: var(--color-slate-dark); }
-.illustration-card.english i { color: var(--color-blue-soft); }
-.illustration-card.family i { color: var(--color-amber); }
-.illustration-card.diy i { color: var(--color-blue-dark); }
-.illustration-card.devocional i { color: var(--color-emerald); }
-.illustration-card.shield i { color: var(--color-rose); }
-
-.illustration-card span {
-    font-weight: 600;
-    color: var(--color-gray-dark);
-}
+/* CSS dos illustration-cards completamente removido */
 
 /* Problem Section */
 .problem {
@@ -1173,9 +1128,7 @@ body {
         gap: var(--spacing-md);
     }
     
-    .illustration-card {
-        padding: var(--spacing-lg);
-    }
+    /* Illustration cards removidos */
     
     .section-title {
         font-size: var(--font-size-3xl);
