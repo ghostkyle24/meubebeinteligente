@@ -396,6 +396,16 @@
                     if (phoneDigits.length < 10) {
                         isValid = false;
                         errorMessage = 'Telefone inválido';
+                    } else {
+                        // Verificar se o telefone não é igual ao CPF
+                        const cpfField = document.getElementById('userCPF');
+                        if (cpfField && cpfField.value) {
+                            const cpfDigits = cpfField.value.replace(/\D/g, '');
+                            if (phoneDigits === cpfDigits) {
+                                isValid = false;
+                                errorMessage = 'Telefone não pode ser igual ao CPF';
+                            }
+                        }
                     }
                     break;
                     
@@ -434,6 +444,24 @@
                     isValid = false;
                 }
             });
+            
+            // Validação adicional: verificar se telefone e CPF são diferentes
+            const cpfField = document.getElementById('userCPF');
+            const phoneField = document.getElementById('userPhone');
+            
+            if (cpfField && phoneField) {
+                const cpfDigits = cpfField.value.replace(/\D/g, '');
+                const phoneDigits = phoneField.value.replace(/\D/g, '');
+                
+                if (cpfDigits && phoneDigits && cpfDigits === phoneDigits) {
+                    // Mostrar erro no campo de telefone
+                    phoneField.classList.add('error');
+                    const phoneError = document.getElementById('phoneError');
+                    phoneError.textContent = 'Telefone não pode ser igual ao CPF';
+                    phoneError.style.display = 'block';
+                    isValid = false;
+                }
+            }
             
             return isValid;
         }

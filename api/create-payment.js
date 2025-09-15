@@ -41,9 +41,25 @@ export default async function handler(req, res) {
         console.log('🔑 Chave API completa:', ASAAS_API_KEY);
 
         // Parse do telefone para extrair código de área e número
-        const phone = customer.phone || '4738010919';
-        const areaCode = phone.substring(0, 2);
-        const phoneNumber = phone.substring(2);
+        let phone = customer.phone || '4738010919';
+        
+        // Limpar telefone (remover caracteres não numéricos)
+        phone = phone.replace(/\D/g, '');
+        
+        // Validar se o telefone tem pelo menos 10 dígitos
+        if (phone.length < 10) {
+            return res.status(400).json({
+                success: false,
+                error: 'Telefone inválido - deve ter pelo menos 10 dígitos'
+            });
+        }
+        
+        // Se o telefone tem 11 dígitos e começa com 0, remover o 0
+        if (phone.length === 11 && phone.startsWith('0')) {
+            phone = phone.substring(1);
+        }
+        
+        console.log('📞 Telefone processado:', phone);
 
         // Calcular valor total (plano + orderbumps)
         let totalAmount = plan.price;
@@ -112,6 +128,14 @@ export default async function handler(req, res) {
             return res.status(400).json({
                 success: false,
                 error: 'Email e CPF são obrigatórios'
+            });
+        }
+        
+        // Validar se o telefone não é igual ao CPF (erro comum)
+        if (phone === customer.document.replace(/\D/g, '')) {
+            return res.status(400).json({
+                success: false,
+                error: 'Telefone não pode ser igual ao CPF. Verifique os dados informados.'
             });
         }
         
