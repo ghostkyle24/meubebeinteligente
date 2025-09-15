@@ -257,7 +257,7 @@ body {
     font-size: var(--font-size-2xl);
     font-weight: 700;
     line-height: 1.2;
-    margin-top: var(--spacing-2xl);
+    margin-top: var(--spacing-4xl);
     margin-bottom: var(--spacing-lg);
     color: var(--color-white);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -266,7 +266,7 @@ body {
 /* Espaçamento extra para desktop */
 @media (min-width: 769px) {
     .hero-title {
-        margin-top: var(--spacing-3xl);
+        margin-top: var(--spacing-5xl);
     }
 }
 
