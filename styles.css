@@ -1269,8 +1269,13 @@ body {
 }
 
 .feature-item i {
-    color: #22c55e;
+    color: #22c55e !important;
     font-size: var(--font-size-sm);
+}
+
+/* Garantir que todos os ícones de check dos planos sejam verde claro */
+.pricing-card .feature-item i {
+    color: #22c55e !important;
 }
 
 .feature-item span {
