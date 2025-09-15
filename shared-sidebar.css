@@ -2,7 +2,7 @@
 
 /* Botão da Navbar */
 .navbar-sidebar-toggle {
-    background: #0C4A6E;
+    background: #1a1a1a;
     color: white;
     border: none;
     padding: 0.75rem;
@@ -18,7 +18,7 @@
 }
 
 .navbar-sidebar-toggle:hover {
-    background: #075985;
+    background: #333333;
     transform: translateY(-1px);
 }
 
