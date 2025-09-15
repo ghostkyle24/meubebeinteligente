@@ -32,9 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </ul>
             </div>
             
-            <button class="sidebar-mobile-btn" id="sidebarMobileBtn">
-                <i class="fas fa-bars"></i>
-            </button>
             
             <div class="sidebar-overlay" id="sidebarOverlay"></div>
         `;
@@ -47,18 +44,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Verificar se os elementos foram criados
         const globalSidebar = document.getElementById('globalSidebar');
-        const sidebarMobileBtn = document.getElementById('sidebarMobileBtn');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         
         console.log('🔍 Verificando elementos criados:');
         console.log('  - globalSidebar:', globalSidebar);
-        console.log('  - sidebarMobileBtn:', sidebarMobileBtn);
         console.log('  - sidebarOverlay:', sidebarOverlay);
         
         // Envolver o conteúdo existente (exceto a sidebar) em content-with-sidebar
         const existingContent = document.body.innerHTML;
         const sidebarElements = document.getElementById('globalSidebar').outerHTML + 
-                               document.getElementById('sidebarMobileBtn').outerHTML + 
                                document.getElementById('sidebarOverlay').outerHTML;
         
         const contentWithoutSidebar = existingContent.replace(sidebarElements, '');
@@ -75,47 +69,20 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             console.log('⏰ Timeout executado, procurando elementos...');
             
-            const sidebarMobileBtn = document.getElementById('sidebarMobileBtn');
             const globalSidebar = document.getElementById('globalSidebar');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
             
-            console.log('🔧 Inicializando sidebar mobile...');
-            console.log('📱 Botão mobile encontrado:', !!sidebarMobileBtn);
-            console.log('📱 Botão mobile elemento:', sidebarMobileBtn);
+            console.log('🔧 Inicializando sidebar...');
             console.log('📋 Sidebar encontrada:', !!globalSidebar);
             console.log('📋 Sidebar elemento:', globalSidebar);
             console.log('🌫️ Overlay encontrado:', !!sidebarOverlay);
             console.log('🌫️ Overlay elemento:', sidebarOverlay);
             
-            // Verificar se o botão está visível
-            if (sidebarMobileBtn) {
-                const computedStyle = window.getComputedStyle(sidebarMobileBtn);
-                console.log('📱 Estilo do botão mobile:');
-                console.log('  - display:', computedStyle.display);
-                console.log('  - visibility:', computedStyle.visibility);
-                console.log('  - opacity:', computedStyle.opacity);
-                console.log('  - position:', computedStyle.position);
-                console.log('  - z-index:', computedStyle.zIndex);
-                console.log('  - top:', computedStyle.top);
-                console.log('  - left:', computedStyle.left);
-                console.log('  - width:', computedStyle.width);
-                console.log('  - height:', computedStyle.height);
-                console.log('  - offsetParent:', sidebarMobileBtn.offsetParent);
-                console.log('  - offsetWidth:', sidebarMobileBtn.offsetWidth);
-                console.log('  - offsetHeight:', sidebarMobileBtn.offsetHeight);
-                
-                // Verificar se está em mobile
-                const isMobile = window.innerWidth <= 768;
-                console.log('📱 É mobile?', isMobile);
-                console.log('📱 Largura da tela:', window.innerWidth);
-            }
-            
-            if (sidebarMobileBtn && globalSidebar && sidebarOverlay) {
+            if (globalSidebar && sidebarOverlay) {
                 console.log('✅ Todos os elementos encontrados!');
                 
                 // Remover event listeners existentes para evitar duplicação
                 try {
-                    sidebarMobileBtn.removeEventListener('click', handleMobileToggle);
                     sidebarOverlay.removeEventListener('click', handleOverlayClick);
                     console.log('🧹 Event listeners antigos removidos');
                 } catch (e) {
@@ -124,19 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Adicionar novos event listeners
                 try {
-                    sidebarMobileBtn.addEventListener('click', handleMobileToggle);
                     sidebarOverlay.addEventListener('click', handleOverlayClick);
                     console.log('✅ Event listeners adicionados com sucesso');
-                    
-                    // Teste adicional - adicionar onclick direto como backup
-                    sidebarMobileBtn.onclick = function(e) {
-                        console.log('🎯 ONCLICK DIRETO ATIVADO!');
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleMobileToggle();
-                    };
-                    console.log('🔄 Onclick direto adicionado como backup');
-                    
                 } catch (e) {
                     console.error('❌ Erro ao adicionar event listeners:', e);
                 }
@@ -214,39 +170,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('📱 Inicializando funcionalidade mobile...');
         initSidebarMobile();
         
-        // Fallback adicional para garantir que a funcionalidade mobile funcione
-        setTimeout(() => {
-            console.log('🔄 Verificando fallback mobile...');
-            const sidebarMobileBtn = document.getElementById('sidebarMobileBtn');
-            console.log('📱 Botão encontrado para fallback:', !!sidebarMobileBtn);
-            
-            if (sidebarMobileBtn && !sidebarMobileBtn.hasAttribute('data-initialized')) {
-                console.log('🔄 Aplicando fallback para funcionalidade mobile...');
-                sidebarMobileBtn.setAttribute('data-initialized', 'true');
-                sidebarMobileBtn.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('🎯 FALLBACK MOBILE BUTTON CLICKED!');
-                    const globalSidebar = document.getElementById('globalSidebar');
-                    const sidebarOverlay = document.getElementById('sidebarOverlay');
-                    
-                    console.log('🔍 Elementos no fallback:');
-                    console.log('  - globalSidebar:', globalSidebar);
-                    console.log('  - sidebarOverlay:', sidebarOverlay);
-                    
-                    if (globalSidebar && sidebarOverlay) {
-                        globalSidebar.classList.toggle('open');
-                        sidebarOverlay.classList.toggle('active');
-                        console.log('✅ Fallback sidebar toggle executado');
-                    } else {
-                        console.error('❌ Elementos não encontrados no fallback!');
-                    }
-                };
-                console.log('✅ Fallback onclick aplicado');
-            } else {
-                console.log('⚠️ Fallback não aplicado - botão já inicializado ou não encontrado');
-            }
-        }, 500);
         
         // Debug: verificar se o Devocional Kids foi criado
         setTimeout(() => {
@@ -268,28 +191,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Log final de verificação
         setTimeout(() => {
             console.log('🔍 VERIFICAÇÃO FINAL:');
-            const finalBtn = document.getElementById('sidebarMobileBtn');
             const finalSidebar = document.getElementById('globalSidebar');
             const finalOverlay = document.getElementById('sidebarOverlay');
             
-            console.log('📱 Botão final:', finalBtn);
             console.log('📋 Sidebar final:', finalSidebar);
             console.log('🌫️ Overlay final:', finalOverlay);
             
-            if (finalBtn) {
-                const finalStyle = window.getComputedStyle(finalBtn);
-                console.log('📱 Botão está visível:', finalBtn.offsetParent !== null);
-                console.log('📱 Botão tem onclick:', !!finalBtn.onclick);
-                console.log('📱 Botão tem event listeners:', finalBtn.addEventListener ? 'Sim' : 'Não');
-                console.log('📱 Estilo final do botão:');
-                console.log('  - display:', finalStyle.display);
-                console.log('  - visibility:', finalStyle.visibility);
-                console.log('  - opacity:', finalStyle.opacity);
-                console.log('  - offsetWidth:', finalBtn.offsetWidth);
-                console.log('  - offsetHeight:', finalBtn.offsetHeight);
-                console.log('📱 Largura da tela final:', window.innerWidth);
-                console.log('📱 É mobile final?', window.innerWidth <= 768);
-            }
         }, 1000);
         
                 } else {
