@@ -525,7 +525,30 @@
         
         async function loadUserData() {
             try {
-                // Obter usuário atual
+                // Primeiro, tentar obter dados do localStorage (dados temporários)
+                const tempData = localStorage.getItem('tempUserData');
+                if (tempData) {
+                    const tempUserData = JSON.parse(tempData);
+                    
+                    // Verificar se os dados não são muito antigos (máximo 1 hora)
+                    const maxAge = 60 * 60 * 1000; // 1 hora em millisegundos
+                    if (Date.now() - tempUserData.timestamp < maxAge) {
+                        userData = {
+                            name: tempUserData.name,
+                            email: tempUserData.email,
+                            cpf: tempUserData.cpf,
+                            phone: tempUserData.phone
+                        };
+                        
+                        console.log('✅ Dados do usuário carregados do localStorage:', userData);
+                        return;
+                    } else {
+                        // Dados muito antigos, remover
+                        localStorage.removeItem('tempUserData');
+                    }
+                }
+                
+                // Se não há dados temporários, tentar obter do Supabase
                 const { data: { user }, error: userError } = await supabase.auth.getUser();
                 
                 if (userError) {
@@ -544,11 +567,23 @@
                     phone: user.user_metadata?.phone || ''
                 };
                 
-                console.log('✅ Dados do usuário carregados:', userData);
+                console.log('✅ Dados do usuário carregados do Supabase:', userData);
                 
             } catch (error) {
                 console.error('❌ Erro ao carregar dados do usuário:', error);
-                showError(`Erro ao carregar dados: ${error.message}`);
+                
+                // Se falhou, tentar usar dados da URL como último recurso
+                if (userEmail) {
+                    userData = {
+                        name: 'Cliente',
+                        email: userEmail,
+                        cpf: '',
+                        phone: ''
+                    };
+                    console.log('⚠️ Usando dados básicos da URL:', userData);
+                } else {
+                    showError(`Erro ao carregar dados: ${error.message}`);
+                }
             }
         }
         
@@ -745,6 +780,9 @@
         }
         
         function showCardPayment(result) {
+            // Limpar dados temporários
+            localStorage.removeItem('tempUserData');
+            
             const loading = document.getElementById('loading');
             loading.innerHTML = `
                 <div style="text-align: center; padding: var(--spacing-2xl);">
@@ -783,6 +821,9 @@
         }
         
         function showPaymentSuccess() {
+            // Limpar dados temporários
+            localStorage.removeItem('tempUserData');
+            
             const loading = document.getElementById('loading');
             loading.innerHTML = `
                 <div style="text-align: center; padding: var(--spacing-2xl);">

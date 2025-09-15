@@ -509,6 +509,18 @@
                 
                 console.log('✅ Conta criada com sucesso:', authData);
                 
+                // Armazenar dados temporariamente no localStorage
+                const tempUserData = {
+                    name: formData.name,
+                    email: formData.email,
+                    cpf: formData.cpf,
+                    phone: formData.phone,
+                    userId: authData.user?.id,
+                    timestamp: Date.now()
+                };
+                
+                localStorage.setItem('tempUserData', JSON.stringify(tempUserData));
+                
                 // Redirecionar para página de pagamento
                 const paymentUrl = `pagamento.html?plan=${selectedPlan}&email=${encodeURIComponent(formData.email)}`;
                 window.location.href = paymentUrl;
