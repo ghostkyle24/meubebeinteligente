@@ -6,6 +6,7 @@
     <title>Dashboard - Meu Bebê Inteligente</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="member-area.css">
+    <link rel="stylesheet" href="shared-sidebar.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -70,21 +71,6 @@
             font-weight: 500;
         }
 
-        .logout-btn {
-            background: #EF4444;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: #DC2626;
-            transform: translateY(-1px);
-        }
 
         /* Conteúdo Principal */
         .dashboard-main {
@@ -305,137 +291,7 @@
             margin-top: 3rem;
         }
 
-        /* Sidebar Styles */
-        .dashboard-sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(14, 165, 233, 0.1);
-            z-index: 1000;
-            transition: left 0.3s ease;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-        }
 
-        .dashboard-sidebar.active {
-            left: 0;
-        }
-
-        .sidebar-header {
-            background: #0C4A6E;
-            color: white;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .sidebar-header h3 i {
-            color: #FEF3C7;
-            margin-right: 0.5rem;
-        }
-
-        .sidebar-toggle {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: background 0.3s ease;
-        }
-
-        .sidebar-toggle:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-menu li {
-            border-bottom: 1px solid rgba(14, 165, 233, 0.1);
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            color: #0C4A6E;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .sidebar-link:hover {
-            background: rgba(14, 165, 233, 0.1);
-            color: #075985;
-            transform: translateX(5px);
-        }
-
-        .sidebar-link i {
-            width: 20px;
-            margin-right: 0.75rem;
-            text-align: center;
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .sidebar-open-btn {
-            position: fixed;
-            top: 50%;
-            left: 20px;
-            transform: translateY(-50%);
-            background: #0C4A6E;
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 4px 15px rgba(12, 74, 110, 0.3);
-            transition: all 0.3s ease;
-            display: none;
-        }
-
-        .sidebar-open-btn:hover {
-            background: #075985;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .sidebar-open-btn i {
-            font-size: 1.2rem;
-        }
 
         /* Responsividade */
         @media (max-width: 768px) {
@@ -462,10 +318,6 @@
 
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-
-            .sidebar-open-btn {
-                display: block;
             }
         }
 
@@ -510,9 +362,8 @@
                         <i class="fas fa-user-circle"></i>
                         <span>Área do Membro</span>
                     </div>
-                    <button class="logout-btn" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Sair
+                    <button class="navbar-sidebar-toggle" id="navbarSidebarToggle">
+                        <i class="fas fa-bars"></i>
                     </button>
                 </div>
             </div>
@@ -572,11 +423,6 @@
 
         <!-- Overlay para mobile -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-        <!-- Botão para abrir sidebar -->
-        <button class="sidebar-open-btn" id="sidebarOpenBtn">
-            <i class="fas fa-bars"></i>
-        </button>
 
         <!-- Conteúdo Principal -->
         <main class="dashboard-main">
@@ -818,40 +664,7 @@
             });
         });
 
-        // Controle do Sidebar
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('dashboardSidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebarOpenBtn = document.getElementById('sidebarOpenBtn');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-            // Abrir sidebar
-            sidebarOpenBtn.addEventListener('click', function() {
-                sidebar.classList.add('active');
-                sidebarOverlay.classList.add('active');
-            });
-
-            // Fechar sidebar
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-            });
-
-            // Fechar sidebar ao clicar no overlay
-            sidebarOverlay.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                sidebarOverlay.classList.remove('active');
-            });
-
-            // Fechar sidebar ao clicar em um link
-            const sidebarLinks = document.querySelectorAll('.sidebar-link');
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    sidebar.classList.remove('active');
-                    sidebarOverlay.classList.remove('active');
-                });
-            });
-        });
     </script>
+    <script src="shared-sidebar.js"></script>
 </body>
 </html>
