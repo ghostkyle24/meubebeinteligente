@@ -25,9 +25,9 @@ export default async function handler(req, res) {
         console.log('🔍 Payment method original:', paymentMethod);
         console.log('🔍 Payment method normalizado:', normalizedPaymentMethod);
 
-        // Configurações do Asaas
-        const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmNmNjUzNjFiLTEyMjUtNGMzMy04ZDhjLWUwMzQ3ZjdjOTYxODo6JGFhY2hfNTI2ZWJjMDAtZTQ3YS00ZWM3LTg1MzktMTg2OGM3YTZlZTZm';
-        const ASAAS_BASE_URL = 'https://sandbox.asaas.com/api/v3';
+        // Configurações do Asaas (PRODUÇÃO)
+        const ASAAS_API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojg4ODJiMjZkLWI3ZDItNDA5Zi04ZDhhLTkwMzYwMDc4NjA5ODo6JGFhY2hfZmM0NTgyZDctZTVhMi00YTkwLTg0MTktYmZhYjIwZmEwYTE5';
+        const ASAAS_BASE_URL = 'https://www.asaas.com/api/v3';
         
         // Verificar se a chave API é válida
         if (!ASAAS_API_KEY || !ASAAS_API_KEY.startsWith('$aact_')) {
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
             });
         }
         
-        console.log('🔑 Ambiente detectado:', ASAAS_API_KEY.startsWith('$aact_hmlg_') ? 'SANDBOX' : 'PRODUÇÃO');
+        console.log('🔑 Ambiente detectado:', ASAAS_API_KEY.startsWith('$aact_prod_') ? 'PRODUÇÃO' : 'SANDBOX');
         console.log('🔑 Chave API completa:', ASAAS_API_KEY);
 
         // Parse do telefone para extrair código de área e número
@@ -53,9 +53,9 @@ export default async function handler(req, res) {
 
         // Preparar dados do cliente para o Asaas (conforme documentação oficial)
         const customerData = {
-            name: customer.name && customer.name.length > 2 ? customer.name : 'Cliente Teste',
+            name: customer.name && customer.name.length > 2 ? customer.name : 'Cliente',
             email: customer.email,
-            cpfCnpj: customer.document || '12345678909',
+            cpfCnpj: customer.document,
             phone: phone,
             mobilePhone: phone,
             address: 'Rua das Flores',
@@ -134,16 +134,20 @@ export default async function handler(req, res) {
         // Validar e processar CPF
         const cpfDigits = customer.document.replace(/\D/g, '');
         if (cpfDigits.length !== 11) {
-            console.log('⚠️ CPF inválido, usando CPF padrão');
-            customerData.cpfCnpj = '12345678909';
+            return res.status(400).json({
+                success: false,
+                error: 'CPF deve ter 11 dígitos'
+            });
         } else {
             // Validar CPF usando algoritmo de validação
             if (isValidCPF(cpfDigits)) {
                 customerData.cpfCnpj = cpfDigits;
                 console.log('✅ CPF válido');
             } else {
-                console.log('⚠️ CPF inválido (algoritmo), usando CPF padrão');
-                customerData.cpfCnpj = '12345678909';
+                return res.status(400).json({
+                    success: false,
+                    error: 'CPF inválido'
+                });
             }
         }
         

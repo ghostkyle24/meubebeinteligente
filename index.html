@@ -1234,8 +1234,8 @@
                         <h4>Suporte</h4>
                         <a href="#">Central de Ajuda</a>
                         <a href="#">Contato</a>
-                        <a href="#">Política de Privacidade</a>
-                        <a href="#">Termos de Uso</a>
+                        <a href="politicas.html">Políticas e Termos</a>
+                        <a href="politicas.html#politica-privacidade">Privacidade</a>
                     </div>
                 </div>
             </div>
@@ -1877,8 +1877,11 @@
                         // Iniciar busca por QR Code
                         startQRCodePolling();
                     } else {
-                        console.log('⚠️ PIX não disponível - provavelmente ambiente sandbox');
-                        showSandboxPixMessage();
+                        console.log('⚠️ PIX não disponível - tentando novamente...');
+                        // Tentar buscar novamente após um delay
+                        setTimeout(() => {
+                            startQRCodePolling();
+                        }, 3000);
                     }
                 
                     // Atualizar status
@@ -1944,22 +1947,22 @@
             }
         }
         
-        // Função para mostrar mensagem do sandbox
-        function showSandboxPixMessage() {
-            console.log('🔧 Mostrando mensagem do sandbox...');
+        // Função para mostrar erro de PIX
+        function showPixErrorMessage() {
+            console.log('⚠️ Erro ao gerar PIX...');
             
             const qrCodeElement = document.getElementById('pixQRCode');
             if (qrCodeElement) {
                 qrCodeElement.innerHTML = `
-                    <div style="padding: 20px; text-align: center; background: #fff3cd; border: 2px solid #ffeaa7; border-radius: 8px;">
-                        <i class="fas fa-info-circle" style="font-size: 48px; color: #856404; margin-bottom: 15px;"></i>
-                        <h4 style="color: #856404; margin-bottom: 10px;">Ambiente de Teste</h4>
-                        <p style="color: #856404; margin-bottom: 15px; font-size: 14px;">
-                            No ambiente de teste, o PIX não é gerado automaticamente.<br>
-                            <strong>Em produção funcionará normalmente!</strong>
+                    <div style="padding: 20px; text-align: center; background: #f8d7da; border: 2px solid #f5c6cb; border-radius: 8px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #721c24; margin-bottom: 15px;"></i>
+                        <h4 style="color: #721c24; margin-bottom: 10px;">Erro ao Gerar PIX</h4>
+                        <p style="color: #721c24; margin-bottom: 15px; font-size: 14px;">
+                            Não foi possível gerar o QR Code PIX.<br>
+                            Tente novamente ou escolha outra forma de pagamento.
                         </p>
-                        <button onclick="simulatePayment()" style="
-                            background: #28a745; 
+                        <button onclick="location.reload()" style="
+                            background: #721c24; 
                             color: white; 
                             border: none; 
                             padding: 10px 20px; 
@@ -1968,25 +1971,15 @@
                             font-size: 14px;
                             margin-top: 10px;
                         ">
-                            <i class="fas fa-play"></i> Simular Pagamento
+                            <i class="fas fa-refresh"></i> Tentar Novamente
                         </button>
                     </div>
                 `;
             }
             
-            updatePaymentStatus('Ambiente de teste - PIX não disponível', 'info-circle', '#856404');
+            updatePaymentStatus('Erro ao gerar PIX', 'exclamation-triangle', '#721c24');
         }
         
-        // Função para simular pagamento no sandbox
-        function simulatePayment() {
-            console.log('🎭 Simulando pagamento...');
-            updatePaymentStatus('Simulando pagamento...', 'spinner', '#ffc107');
-            
-            // Simular confirmação após 2 segundos
-            setTimeout(() => {
-                confirmPayment();
-            }, 2000);
-        }
         
         // Função para buscar QR Code via polling
         function startQRCodePolling() {
@@ -2050,8 +2043,8 @@
                 
                 if (attempts >= maxAttempts) {
                     clearInterval(qrCodeInterval);
-                    console.log('⚠️ Timeout - provavelmente ambiente sandbox');
-                    showSandboxPixMessage();
+                    console.log('⚠️ Timeout - não foi possível gerar PIX');
+                    showPixErrorMessage();
                 }
             }, 2000); // A cada 2 segundos
         }
@@ -2308,21 +2301,18 @@
                 return false;
             }
             
-            // Validar se é um cartão de teste válido
-            const testCards = [
-                '4111111111111111', // Visa
-                '5555555555554444', // Mastercard
-                '378282246310005',  // American Express
-                '6011111111111117'  // Discover
-            ];
-            
+            // Validar formato do cartão
             const cleanNumber = cardNumber.replace(/\s/g, '');
-            if (!testCards.includes(cleanNumber)) {
-                alert('Por favor, use um cartão de teste válido:\n\n' +
-                      'Visa: 4111 1111 1111 1111\n' +
-                      'Mastercard: 5555 5555 5555 4444\n' +
-                      'American Express: 3782 822463 10005\n' +
-                      'Discover: 6011 1111 1111 1117');
+            
+            // Verificar se é um número válido (apenas dígitos)
+            if (!/^\d+$/.test(cleanNumber)) {
+                alert('Por favor, insira apenas números no cartão.');
+                return false;
+            }
+            
+            // Verificar se tem pelo menos 13 dígitos (cartões válidos)
+            if (cleanNumber.length < 13 || cleanNumber.length > 19) {
+                alert('Número do cartão inválido. Verifique os dados.');
                 return false;
             }
             
