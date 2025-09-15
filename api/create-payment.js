@@ -83,6 +83,10 @@ export default async function handler(req, res) {
             state: 'SP',
             country: 'BRA'
         };
+        
+        // Log dos dados que serão enviados
+        console.log('📤 Dados que serão enviados para o Asaas:');
+        console.log('📤 customerData:', JSON.stringify(customerData, null, 2));
 
         console.log('👤 Dados do cliente preparados:', JSON.stringify(customerData, null, 2));
 
@@ -200,9 +204,11 @@ export default async function handler(req, res) {
         console.log('👤 Cliente criado:', JSON.stringify(customerResult, null, 2));
 
         if (!customerResponse.ok) {
-            console.error('❌ Erro ao criar cliente:', customerResult);
+            console.error('❌ ERRO DETALHADO ao criar cliente:');
             console.error('❌ Status HTTP:', customerResponse.status);
+            console.error('❌ Response Body:', JSON.stringify(customerResult, null, 2));
             console.error('❌ Headers da resposta:', Object.fromEntries(customerResponse.headers.entries()));
+            console.error('❌ Dados enviados:', JSON.stringify(customerData, null, 2));
             
             // Se o cliente já existe, tentar buscar pelo CPF
             if (customerResponse.status === 400 && customerResult.errors) {
@@ -229,7 +235,8 @@ export default async function handler(req, res) {
                             success: false,
                             error: 'Erro ao criar cliente no Asaas',
                             details: customerResult,
-                            status: customerResponse.status
+                            status: customerResponse.status,
+                            asaas_errors: customerResult.errors || customerResult.error || 'Erro desconhecido'
                         });
                     }
                 } else {
@@ -237,7 +244,8 @@ export default async function handler(req, res) {
                         success: false,
                         error: 'Erro ao criar cliente no Asaas',
                         details: customerResult,
-                        status: customerResponse.status
+                        status: customerResponse.status,
+                        asaas_errors: customerResult.errors || customerResult.error || 'Erro desconhecido'
                     });
                 }
             } else {
@@ -245,7 +253,8 @@ export default async function handler(req, res) {
                     success: false,
                     error: 'Erro ao criar cliente no Asaas',
                     details: customerResult,
-                    status: customerResponse.status
+                    status: customerResponse.status,
+                    asaas_errors: customerResult.errors || customerResult.error || 'Erro desconhecido'
                 });
             }
         }

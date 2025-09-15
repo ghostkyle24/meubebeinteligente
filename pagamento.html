@@ -709,7 +709,20 @@
                 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error || 'Erro ao processar pagamento');
+                    console.error('❌ Erro detalhado da API:', errorData);
+                    
+                    let errorMessage = errorData.error || 'Erro ao processar pagamento';
+                    
+                    // Se tiver erros específicos do Asaas, mostrar
+                    if (errorData.asaas_errors) {
+                        if (Array.isArray(errorData.asaas_errors)) {
+                            errorMessage += '\n\nDetalhes: ' + errorData.asaas_errors.map(err => err.description || err.message || err).join(', ');
+                        } else {
+                            errorMessage += '\n\nDetalhes: ' + errorData.asaas_errors;
+                        }
+                    }
+                    
+                    throw new Error(errorMessage);
                 }
                 
                 const result = await response.json();
