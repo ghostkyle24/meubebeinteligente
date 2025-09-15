@@ -1,6 +1,6 @@
 // Teste específico para criar cliente no Asaas
-const ASAAS_API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojg4ODJiMjZkLWI3ZDItNDA5Zi04ZDhhLTkwMzYwMDc4NjA5ODo6JGFhY2hfZmM0NTgyZDctZTVhMi00YTkwLTg0MTktYmZhYjIwZmEwYTE5';
-const ASAAS_BASE_URL = 'https://www.asaas.com/api/v3';
+const ASAAS_API_KEY = '$aact_YTU5YTE0M2M2NDUxYjlkZmM2MTJkNDkxNTUzMDMxM2M6OjAwMDAwMDAwMDAwMDAwNzI2NDI6OiRhYWN0XzE1NDU5YTE0M2M2NDUxYjlkZmM2MTJkNDkxNTUzMDMxM2M=';
+const ASAAS_BASE_URL = 'https://sandbox.asaas.com/api/v3';
 
 // Dados do cliente para teste
 const customerData = {

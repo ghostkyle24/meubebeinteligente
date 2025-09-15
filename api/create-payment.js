@@ -25,9 +25,9 @@ export default async function handler(req, res) {
         console.log('🔍 Payment method original:', paymentMethod);
         console.log('🔍 Payment method normalizado:', normalizedPaymentMethod);
 
-        // Configurações do Asaas (PRODUÇÃO)
-        const ASAAS_API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojg4ODJiMjZkLWI3ZDItNDA5Zi04ZDhhLTkwMzYwMDc4NjA5ODo6JGFhY2hfZmM0NTgyZDctZTVhMi00YTkwLTg0MTktYmZhYjIwZmEwYTE5';
-        const ASAAS_BASE_URL = 'https://www.asaas.com/api/v3';
+        // Configurações do Asaas (SANDBOX)
+        const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmNmNjUzNjFiLTEyMjUtNGMzMy04ZDhjLWUwMzQ3ZjdjOTYxODo6JGFhY2hfNTI2ZWJjMDAtZTQ3YS00ZWM3LTg1MzktMTg2OGM3YTZlZTZm';
+        const ASAAS_BASE_URL = 'https://sandbox.asaas.com/api/v3';
         
         // Verificar se a chave API é válida
         if (!ASAAS_API_KEY || !ASAAS_API_KEY.startsWith('$aact_')) {
