@@ -50,11 +50,12 @@
 }
 
 .global-sidebar-header {
-    background: var(--sidebar-header);
+    background: #0C4A6E !important; /* Azul mais escuro para melhor legibilidade */
     margin: -var(--spacing-xl) -var(--spacing-xl) var(--spacing-xl) -var(--spacing-xl);
     padding: var(--spacing-xl);
     border-radius: 0 0 20px 0;
     text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .global-sidebar-header h2 {

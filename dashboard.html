@@ -5,184 +5,622 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Meu Bebê Inteligente</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="member-area.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Dashboard Moderno */
+        .dashboard-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #FFFFFF 100%);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Navbar Moderna */
+        .dashboard-navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0C4A6E;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            color: #F472B6;
+            font-size: 1.75rem;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 50px;
+            color: #0C4A6E;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: #EF4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #DC2626;
+            transform: translateY(-1px);
+        }
+
+        /* Conteúdo Principal */
+        .dashboard-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .dashboard-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0C4A6E;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #0C4A6E, #F472B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #64748B;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Grid de Recursos */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--card-color), var(--card-color-light));
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--card-color);
+        }
+
+        .resource-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            background: var(--card-bg);
+            color: var(--card-color);
+            font-size: 1.5rem;
+        }
+
+        .resource-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0C4A6E;
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-description {
+            color: #64748B;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .resource-btn {
+            background: var(--card-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .resource-btn:hover {
+            background: var(--card-color-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Cores específicas para cada card */
+        .resource-card[data-type="music"] {
+            --card-color: #F472B6;
+            --card-color-light: #F9A8D4;
+            --card-color-dark: #EC4899;
+            --card-bg: rgba(244, 114, 182, 0.1);
+        }
+
+        .resource-card[data-type="video"] {
+            --card-color: #A78BFA;
+            --card-color-light: #C4B5FD;
+            --card-color-dark: #8B5CF6;
+            --card-bg: rgba(167, 139, 250, 0.1);
+        }
+
+        .resource-card[data-type="english"] {
+            --card-color: #34D399;
+            --card-color-light: #6EE7B7;
+            --card-color-dark: #10B981;
+            --card-bg: rgba(52, 211, 153, 0.1);
+        }
+
+        .resource-card[data-type="games"] {
+            --card-color: #FBBF24;
+            --card-color-light: #FCD34D;
+            --card-color-dark: #F59E0B;
+            --card-bg: rgba(251, 191, 36, 0.1);
+        }
+
+        .resource-card[data-type="drawings"] {
+            --card-color: #FB7185;
+            --card-color-light: #FDA4AF;
+            --card-color-dark: #F43F5E;
+            --card-bg: rgba(251, 113, 133, 0.1);
+        }
+
+        .resource-card[data-type="activities"] {
+            --card-color: #60A5FA;
+            --card-color-light: #93C5FD;
+            --card-color-dark: #3B82F6;
+            --card-bg: rgba(96, 165, 250, 0.1);
+        }
+
+        .resource-card[data-type="toys"] {
+            --card-color: #F59E0B;
+            --card-color-light: #FBBF24;
+            --card-color-dark: #D97706;
+            --card-bg: rgba(245, 158, 11, 0.1);
+        }
+
+        .resource-card[data-type="devocional"] {
+            --card-color: #8B5CF6;
+            --card-color-light: #A78BFA;
+            --card-color-dark: #7C3AED;
+            --card-bg: rgba(139, 92, 246, 0.1);
+        }
+
+        .resource-card[data-type="control"] {
+            --card-color: #06B6D4;
+            --card-color-light: #67E8F9;
+            --card-color-dark: #0891B2;
+            --card-bg: rgba(6, 182, 212, 0.1);
+        }
+
+        /* Estatísticas */
+        .stats-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0C4A6E;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748B;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748B;
+            border-top: 1px solid rgba(14, 165, 233, 0.1);
+            margin-top: 3rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .navbar-content {
+                padding: 0 1rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+
+            .dashboard-main {
+                padding: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .resource-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .resource-card:nth-child(1) { animation-delay: 0.1s; }
+        .resource-card:nth-child(2) { animation-delay: 0.2s; }
+        .resource-card:nth-child(3) { animation-delay: 0.3s; }
+        .resource-card:nth-child(4) { animation-delay: 0.4s; }
+        .resource-card:nth-child(5) { animation-delay: 0.5s; }
+        .resource-card:nth-child(6) { animation-delay: 0.6s; }
+        .resource-card:nth-child(7) { animation-delay: 0.7s; }
+        .resource-card:nth-child(8) { animation-delay: 0.8s; }
+        .resource-card:nth-child(9) { animation-delay: 0.9s; }
+    </style>
 </head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <div class="navbar-brand">
+<body class="member-area">
+    <div class="dashboard-container">
+        <!-- Navbar -->
+        <nav class="dashboard-navbar">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
                     <i class="fas fa-heart"></i>
-                    <span>Meu Bebê Inteligente</span>
-                </div>
-                
-                <button class="navbar-toggle" id="navbarToggle" aria-label="Menu">
-                    <span class="navbar-toggle-line"></span>
-                    <span class="navbar-toggle-line"></span>
-                    <span class="navbar-toggle-line"></span>
-                </button>
-                
-                <div class="navbar-menu" id="navbarMenu">
-                    <a href="index.html" class="navbar-link">Início</a>
-                    <a href="index.html#features" class="navbar-link">Recursos</a>
-                    <a href="index.html#pricing" class="navbar-link">Preços</a>
-                    <a href="index.html#testimonials" class="navbar-link">Depoimentos</a>
-                    <button class="navbar-login" onclick="logout()" title="Sair">
+                    Meu Bebê Inteligente
+                </a>
+                <div class="navbar-actions">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Área do Membro</span>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i>
+                        Sair
                     </button>
                 </div>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Dashboard Hero -->
-    <section class="hero">
-        <div class="container">
-            <h1 class="hero-title">
-                🎉 Bem-vinda à sua área exclusiva!
-            </h1>
-            <p class="hero-subtitle">
-                Acesse todos os recursos educativos e proteja seu filho com conteúdo seguro e de qualidade
-            </p>
-        </div>
-    </section>
-
-    <!-- Dashboard Content -->
-    <section class="benefits">
-        <div class="container">
-            <h2 class="section-title">Seus Recursos Disponíveis</h2>
-            <div class="benefits-grid">
-                <div class="benefit-item" onclick="window.location.href='musicas.html'">
-                    <div class="benefit-icon">
-                        <i data-lucide="music"></i>
-                    </div>
-                    <h3>Músicas Educativas</h3>
-                    <p>Cores, números e valores cristãos através da música</p>
-                </div>
-                <div class="benefit-item" onclick="window.location.href='videos.html'">
-                    <div class="benefit-icon">
-                        <i data-lucide="play-circle"></i>
-                    </div>
-                    <h3>Vídeos Seguros</h3>
-                    <p>Conteúdo educativo sem anúncios ou distrações</p>
-                </div>
-                <div class="benefit-item" onclick="window.location.href='ingles.html'">
-                    <div class="benefit-icon">
-                        <i data-lucide="globe"></i>
-                    </div>
-                    <h3>Inglês Infantil</h3>
-                    <p>30 aulas para aprender inglês brincando</p>
-                </div>
-                <div class="benefit-item" onclick="window.location.href='jogos.html'">
-                    <div class="benefit-icon">
-                        <i data-lucide="gamepad-2"></i>
-                    </div>
-                    <h3>Jogos Interativos</h3>
-                    <p>Memória, associação e quebra-cabeças educativos</p>
-                </div>
-                <div class="benefit-item" onclick="window.location.href='desenhos.html'">
-                    <div class="benefit-icon">
-                        <i data-lucide="palette"></i>
-                    </div>
-                    <h3>Desenhos Cristãos</h3>
-                    <p>PDFs imprimíveis com valores bíblicos</p>
-                </div>
-                <div class="benefit-item" onclick="window.location.href='brincadeiras.html'">
-                    <div class="benefit-icon">
-                        <i data-lucide="heart"></i>
-                    </div>
-                    <h3>Brincadeiras em Família</h3>
-                    <p>Atividades offline para fortalecer vínculos familiares</p>
-                </div>
-                <div class="benefit-item" onclick="window.location.href='brinquedos.html'">
-                    <div class="benefit-icon">
-                        <i data-lucide="hammer"></i>
-                    </div>
-                    <h3>Brinquedos DIY</h3>
-                    <p>Ideias para a criança criar seus próprios brinquedos</p>
-                </div>
-                <div class="benefit-item" onclick="window.location.href='videos.html?filter=devocional'">
-                    <div class="benefit-icon">
-                        <i data-lucide="book-open"></i>
-                    </div>
-                    <h3>Devocional Kids</h3>
-                    <p>Momentos especiais com Deus para crianças</p>
-                </div>
-                <div class="benefit-item" onclick="window.location.href='censura.html'">
-                    <div class="benefit-icon">
-                        <i data-lucide="shield-check"></i>
-                    </div>
-                    <h3>Controle Parental</h3>
-                    <p>Ferramentas para proteger seu filho online</p>
-                </div>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <div class="navbar-brand">
+        <!-- Conteúdo Principal -->
+        <main class="dashboard-main">
+            <!-- Hero Section -->
+            <section class="dashboard-hero">
+                <h1 class="hero-title">🎉 Bem-vinda à sua área exclusiva!</h1>
+                <p class="hero-subtitle">
+                    Acesse todos os recursos educativos e proteja seu filho com conteúdo seguro e de qualidade. 
+                    Explore nossa plataforma completa e descubra novas formas de aprender brincando.
+                </p>
+            </section>
+
+            <!-- Estatísticas -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">73+</div>
+                        <div class="stat-label">Vídeos Educativos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">9</div>
+                        <div class="stat-label">Categorias</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Seguro</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Disponível</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grid de Recursos -->
+            <section class="resources-grid">
+                <div class="resource-card" data-type="music" onclick="window.location.href='musicas.html'">
+                    <div class="resource-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3 class="resource-title">Músicas Educativas</h3>
+                    <p class="resource-description">
+                        Playlists curadas especialmente para ensinar cores, números, valores cristãos e muito mais através da música!
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-play"></i>
+                        Acessar Músicas
+                    </button>
+                </div>
+
+                <div class="resource-card" data-type="video" onclick="window.location.href='videos.html'">
+                    <div class="resource-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <h3 class="resource-title">Vídeos Seguros</h3>
+                    <p class="resource-description">
+                        Conteúdo educativo selecionado e livre de anúncios, sem distrações ou conteúdos impróprios.
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-play"></i>
+                        Assistir Vídeos
+                    </button>
+                </div>
+
+                <div class="resource-card" data-type="english" onclick="window.location.href='ingles.html'">
+                    <div class="resource-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="resource-title">Inglês Infantil</h3>
+                    <p class="resource-description">
+                        30 aulas para aprender inglês brincando. Método divertido e eficaz para crianças.
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-graduation-cap"></i>
+                        Começar Aulas
+                    </button>
+                </div>
+
+                <div class="resource-card" data-type="games" onclick="window.location.href='jogos.html'">
+                    <div class="resource-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3 class="resource-title">Jogos Interativos</h3>
+                    <p class="resource-description">
+                        Memória, associação e quebra-cabeças educativos que desenvolvem habilidades cognitivas.
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-puzzle-piece"></i>
+                        Jogar Agora
+                    </button>
+                </div>
+
+                <div class="resource-card" data-type="drawings" onclick="window.location.href='desenhos.html'">
+                    <div class="resource-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="resource-title">Desenhos Cristãos</h3>
+                    <p class="resource-description">
+                        PDFs imprimíveis com desenhos que ensinam valores bíblicos enquanto a criança se diverte colorindo.
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-download"></i>
+                        Baixar Desenhos
+                    </button>
+                </div>
+
+                <div class="resource-card" data-type="activities" onclick="window.location.href='brincadeiras.html'">
+                    <div class="resource-icon">
                         <i class="fas fa-heart"></i>
-                        <span>Meu Bebê Inteligente</span>
                     </div>
-                    <p>O lugar seguro e educativo para seu filho crescer aprendendo de verdade.</p>
+                    <h3 class="resource-title">Brincadeiras em Família</h3>
+                    <p class="resource-description">
+                        Atividades offline que fortalecem o vínculo entre mãe e filho, com jogos educativos e criativos.
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-users"></i>
+                        Ver Atividades
+                    </button>
                 </div>
-                <div class="footer-links">
-                    <a href="politicas.html">Políticas de Privacidade</a>
-                    <a href="index.html">Voltar ao Início</a>
+
+                <div class="resource-card" data-type="toys" onclick="window.location.href='brinquedos.html'">
+                    <div class="resource-icon">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <h3 class="resource-title">Brinquedos DIY</h3>
+                    <p class="resource-description">
+                        Ideias criativas de brinquedos que a própria criança pode fazer, estimulando criatividade e independência.
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-tools"></i>
+                        Criar Brinquedos
+                    </button>
+                </div>
+
+                <div class="resource-card" data-type="devocional" onclick="window.location.href='videos.html?filter=devocional'">
+                    <div class="resource-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 class="resource-title">Devocional Kids</h3>
+                    <p class="resource-description">
+                        Momentos especiais com Deus para crianças. Desenvolva a espiritualidade do seu filho de forma lúdica.
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-pray"></i>
+                        Ver Devocionais
+                    </button>
+                </div>
+
+                <div class="resource-card" data-type="control" onclick="window.location.href='censura.html'">
+                    <div class="resource-icon">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <h3 class="resource-title">Controle Parental</h3>
+                    <p class="resource-description">
+                        Ferramentas para proteger seu filho online. Tutoriais e dicas de segurança digital.
+                    </p>
+                    <button class="resource-btn">
+                        <i class="fas fa-lock"></i>
+                        Acessar Controles
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <div class="navbar-brand">
+                            <i class="fas fa-heart"></i>
+                            <span>Meu Bebê Inteligente</span>
+                        </div>
+                        <p>O lugar seguro e educativo para seu filho crescer aprendendo de verdade.</p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="politicas.html">Políticas de Privacidade</a>
+                        <a href="index.html">Voltar ao Início</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Meu Bebê Inteligente. Todos os direitos reservados.</p>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Meu Bebê Inteligente. Todos os direitos reservados.</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <script>
         // Inicializar ícones Lucide
         lucide.createIcons();
 
-        // Navbar Mobile Toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const navbarToggle = document.getElementById('navbarToggle');
-            const navbarMenu = document.getElementById('navbarMenu');
-            
-            if (navbarToggle && navbarMenu) {
-                navbarToggle.addEventListener('click', function() {
-                    navbarToggle.classList.toggle('active');
-                    navbarMenu.classList.toggle('active');
-                });
-                
-                // Fechar menu ao clicar em um link
-                const navbarLinks = document.querySelectorAll('.navbar-link');
-                navbarLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        navbarToggle.classList.remove('active');
-                        navbarMenu.classList.remove('active');
-                    });
-                });
-                
-                // Fechar menu ao clicar fora
-                document.addEventListener('click', function(event) {
-                    if (!navbarToggle.contains(event.target) && !navbarMenu.contains(event.target)) {
-                        navbarToggle.classList.remove('active');
-                        navbarMenu.classList.remove('active');
-                    }
-                });
-            }
-        });
-
         // Função de logout
         function logout() {
-            localStorage.clear();
-            window.location.href = 'index.html';
+            if (confirm('Tem certeza que deseja sair?')) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
         }
+
+        // Adicionar efeitos de hover nos cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.resource-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+
+        // Animação de contagem nas estatísticas
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current) + (target === 100 ? '%' : target === 24 ? '/7' : '+');
+            }, 30);
+        }
+
+        // Iniciar animações quando a página carregar
+        window.addEventListener('load', function() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const text = stat.textContent;
+                const number = parseInt(text.replace(/\D/g, ''));
+                if (number) {
+                    stat.textContent = '0';
+                    animateCounter(stat, number);
+                }
+            });
+        });
     </script>
 </body>
 </html>
