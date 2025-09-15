@@ -37,11 +37,13 @@ export default async function handler(req, res) {
         console.log('📡 Response status:', response.status);
         
         if (!response.ok) {
-            throw new Error(`Erro na API Asaas: ${response.status}`);
+            const errorText = await response.text();
+            console.error('❌ Erro na API Asaas:', response.status, errorText);
+            throw new Error(`Erro na API Asaas: ${response.status} - ${errorText}`);
         }
         
         const payment = await response.json();
-        console.log('📡 Payment status:', payment.status);
+        console.log('📡 Payment data:', JSON.stringify(payment, null, 2));
         
         // Se for PIX e ainda não tem pixTransaction, tentar buscar novamente
         if (payment.billingType === 'PIX' && !payment.pixTransaction && payment.status === 'PENDING') {
@@ -67,8 +69,13 @@ export default async function handler(req, res) {
             responseData.pix = {
                 qr_code: payment.pixTransaction.encodedImage,
                 qr_code_url: payment.pixTransaction.payload,
+                pixCopiaECola: payment.pixTransaction.payload,
+                pix_copia_e_cola: payment.pixTransaction.payload,
                 expires_at: payment.pixTransaction.expirationDate
             };
+            console.log('📱 Dados do PIX adicionados:', responseData.pix);
+        } else if (payment.billingType === 'PIX') {
+            console.log('⚠️ PIX sem pixTransaction, status:', payment.status);
         }
         
         return res.status(200).json(responseData);
