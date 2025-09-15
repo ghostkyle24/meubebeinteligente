@@ -264,6 +264,67 @@
     padding: var(--spacing-xl) !important;
 }
 
+/* Corrigir seções que ainda estão escuras */
+.solution {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+.solution .container {
+    background: transparent !important;
+}
+
+/* Corrigir seções específicas que podem estar escuras */
+.section {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+.problem {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+.features {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+.pricing {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+.testimonials {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+/* Garantir que todos os elementos tenham fundo correto */
+* {
+    background-color: transparent !important;
+}
+
+body, html {
+    background: var(--member-bg-gradient) !important;
+}
+
+/* Elementos específicos que precisam de fundo branco */
+.playlist-card,
+.video-card,
+.activity-card,
+.toy-card,
+.drawing-card,
+.game-card,
+.category-filter,
+.section-title,
+.video-counter,
+.learning-objectives,
+.video-meta,
+.video-stats {
+    background: var(--card-bg) !important;
+}
+
 /* Badges e elementos especiais */
 .badge {
     background: var(--color-music) !important;
