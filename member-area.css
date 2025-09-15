@@ -1,0 +1,287 @@
+/* Design Educativo Infantil para Área de Membros */
+
+/* Variáveis de cores suaves e educativas */
+:root {
+    /* Cores principais suaves */
+    --member-bg-primary: #F0F9FF; /* Azul muito claro */
+    --member-bg-secondary: #FFFFFF; /* Branco puro */
+    --member-bg-gradient: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #FFFFFF 100%);
+    
+    /* Cores do sidebar */
+    --sidebar-bg: #E0F2FE; /* Azul claro */
+    --sidebar-header: #0EA5E9; /* Azul médio */
+    --sidebar-text: #0C4A6E; /* Azul escuro */
+    --sidebar-hover: #BAE6FD; /* Azul muito claro */
+    --sidebar-active: #0EA5E9; /* Azul médio */
+    
+    /* Cores dos cards */
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    /* Cores temáticas por seção */
+    --color-music: #F472B6; /* Rosa suave */
+    --color-video: #A78BFA; /* Roxo suave */
+    --color-english: #34D399; /* Verde suave */
+    --color-games: #FBBF24; /* Amarelo suave */
+    --color-drawings: #FB7185; /* Rosa coral */
+    --color-activities: #60A5FA; /* Azul suave */
+    --color-toys: #F59E0B; /* Laranja suave */
+    --color-control: #8B5CF6; /* Roxo médio */
+    
+    /* Textos */
+    --text-primary: #1E293B; /* Cinza escuro */
+    --text-secondary: #64748B; /* Cinza médio */
+    --text-light: #94A3B8; /* Cinza claro */
+}
+
+/* Fundo geral da área de membros */
+.member-area {
+    background: var(--member-bg-gradient);
+    min-height: 100vh;
+    color: var(--text-primary);
+}
+
+/* Sidebar redesenhado */
+.global-sidebar {
+    background: var(--sidebar-bg) !important;
+    border-right: 3px solid var(--sidebar-header);
+    box-shadow: 4px 0 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.global-sidebar-header {
+    background: var(--sidebar-header);
+    margin: -var(--spacing-xl) -var(--spacing-xl) var(--spacing-xl) -var(--spacing-xl);
+    padding: var(--spacing-xl);
+    border-radius: 0 0 20px 0;
+    text-align: center;
+}
+
+.global-sidebar-header h2 {
+    color: white !important;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+}
+
+.global-sidebar-header h2 i {
+    color: #FEF3C7 !important; /* Amarelo claro */
+    margin-right: var(--spacing-sm);
+}
+
+.global-sidebar-header p {
+    color: #BAE6FD !important; /* Azul muito claro */
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.global-sidebar-menu a {
+    color: var(--sidebar-text) !important;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 12px;
+    margin-bottom: var(--spacing-xs);
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.global-sidebar-menu a:hover {
+    background: var(--sidebar-hover) !important;
+    transform: translateX(5px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.global-sidebar-menu a.active {
+    background: var(--sidebar-active) !important;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(14, 165, 233, 0.3);
+}
+
+.global-sidebar-menu a i {
+    margin-right: var(--spacing-md);
+    width: 20px;
+    text-align: center;
+}
+
+/* Cards redesenhados */
+.playlist-card,
+.video-card,
+.activity-card,
+.toy-card,
+.drawing-card,
+.game-card {
+    background: var(--card-bg) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--card-shadow) !important;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.playlist-card:hover,
+.video-card:hover,
+.activity-card:hover,
+.toy-card:hover,
+.drawing-card:hover,
+.game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-hover-shadow) !important;
+    border-color: var(--sidebar-header);
+}
+
+/* Cores temáticas para cada tipo de card */
+.playlist-card {
+    border-left: 4px solid var(--color-music);
+}
+
+.video-card {
+    border-left: 4px solid var(--color-video);
+}
+
+.activity-card {
+    border-left: 4px solid var(--color-activities);
+}
+
+.toy-card {
+    border-left: 4px solid var(--color-toys);
+}
+
+.drawing-card {
+    border-left: 4px solid var(--color-drawings);
+}
+
+.game-card {
+    border-left: 4px solid var(--color-games);
+}
+
+/* Títulos das seções */
+.section-title {
+    color: var(--text-primary) !important;
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--sidebar-header);
+    border-radius: 2px;
+}
+
+/* Botões redesenhados */
+.btn {
+    background: var(--sidebar-header) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: var(--spacing-md) var(--spacing-xl) !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2) !important;
+}
+
+.btn:hover {
+    background: #0284C7 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3) !important;
+}
+
+/* Filtros redesenhados */
+.category-filter {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--card-shadow);
+    border: 2px solid var(--sidebar-hover);
+}
+
+.filter-btn {
+    background: var(--sidebar-hover) !important;
+    color: var(--sidebar-text) !important;
+    border: 2px solid transparent !important;
+    border-radius: 10px !important;
+    padding: var(--spacing-sm) var(--spacing-lg) !important;
+    margin: var(--spacing-xs) !important;
+    transition: all 0.3s ease !important;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--sidebar-active) !important;
+    color: white !important;
+    border-color: var(--sidebar-active) !important;
+    transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .global-sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .global-sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .content-with-sidebar {
+        margin-left: 0 !important;
+        padding: var(--spacing-md) !important;
+    }
+}
+
+/* Animações suaves */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.playlist-card,
+.video-card,
+.activity-card,
+.toy-card,
+.drawing-card,
+.game-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Melhorias no conteúdo principal */
+.content-with-sidebar {
+    background: transparent !important;
+    padding: var(--spacing-xl) !important;
+}
+
+/* Badges e elementos especiais */
+.badge {
+    background: var(--color-music) !important;
+    color: white !important;
+    border-radius: 20px !important;
+    padding: var(--spacing-xs) var(--spacing-md) !important;
+    font-size: var(--font-size-sm) !important;
+    font-weight: 600 !important;
+}
+
+.safety-badge {
+    background: var(--color-english) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    padding: var(--spacing-sm) var(--spacing-lg) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: var(--spacing-sm) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 4px rgba(52, 211, 153, 0.2) !important;
+}
