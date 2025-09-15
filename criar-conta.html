@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Meu Bebê Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // Configurações inline para evitar problemas de carregamento
+        const CONFIG = {
+            // Supabase - Configurações diretas
+            SUPABASE_URL: 'https://htmofgizynztknpekfbu.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0bW9mZ2l6eW56dGtucGVrZmJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzYwMTYsImV4cCI6MjA3MzExMjAxNn0.a_3_-ncgdXkY2At0ougpZWsXuCrYe-T60RhezGPiE-w',
+            
+            // Configurações do Site
+            SITE_NAME: 'Meu Bebê Inteligente',
+            SITE_URL: 'https://meubebeinteligente.vercel.app',
+            
+            // Planos - Configurados para produção
+            PLANS: {
+                monthly: { price: 29, duration: 1, period: 'month', name: 'Mensal' },
+                quarterly: { price: 79, duration: 3, period: 'months', name: 'Trimestral' },
+                yearly: { price: 299, duration: 12, period: 'months', name: 'Anual' }
+            }
+        };
+    </script>
+    <style>
+        body {
+            background: var(--gradient-subtle);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+        }
+        
+        .account-container {
+            background: white;
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-xl);
+            padding: var(--spacing-3xl);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .account-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .account-header h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .account-header p {
+            color: var(--color-gray-medium);
+            font-size: var(--font-size-lg);
+        }
+        
+        .plan-info {
+            background: var(--color-blue-light);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+        
+        .plan-info h3 {
+            color: var(--color-blue);
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .plan-info .price {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--color-blue-dark);
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: var(--spacing-lg);
+            border: 2px solid var(--color-gray-light);
+            border-radius: var(--border-radius-lg);
+            font-size: var(--font-size-base);
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-blue);
+        }
+        
+        .form-group input.error {
+            border-color: var(--color-rose);
+        }
+        
+        .error-message {
+            color: var(--color-rose);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-xs);
+            display: none;
+        }
+        
+        .btn-create-account {
+            width: 100%;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: var(--spacing-lg);
+        }
+        
+        .btn-create-account:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-create-account:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: var(--spacing-lg);
+        }
+        
+        .loading i {
+            font-size: var(--font-size-2xl);
+            color: var(--color-blue);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: var(--spacing-xl);
+        }
+        
+        .back-link a {
+            color: var(--color-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .account-container {
+                padding: var(--spacing-xl);
+                margin: var(--spacing-md);
+            }
+            
+            .account-header h1 {
+                font-size: var(--font-size-2xl);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="account-container">
+        <div class="account-header">
+            <h1>🚀 Criar Sua Conta</h1>
+            <p>Quase lá! Crie sua conta para proteger seu filho</p>
+        </div>
+        
+        <div class="plan-info">
+            <h3 id="selectedPlanName">Plano Selecionado</h3>
+            <div class="price" id="selectedPlanPrice">R$ 0,00</div>
+        </div>
+        
+        <form id="accountForm">
+            <div class="form-group">
+                <label for="userName">Nome Completo:</label>
+                <input type="text" id="userName" name="name" required>
+                <div class="error-message" id="nameError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="userEmail">Email:</label>
+                <input type="email" id="userEmail" name="email" required>
+                <div class="error-message" id="emailError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="userCPF">CPF:</label>
+                <input type="text" id="userCPF" name="cpf" required placeholder="000.000.000-00">
+                <div class="error-message" id="cpfError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="userPhone">Telefone:</label>
+                <input type="tel" id="userPhone" name="phone" required placeholder="(00) 00000-0000">
+                <div class="error-message" id="phoneError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="userPassword">Senha:</label>
+                <input type="password" id="userPassword" name="password" required minlength="6">
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Senha:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+            
+            <button type="submit" class="btn-create-account" id="createAccountBtn">
+                <i class="fas fa-user-plus"></i> Criar Conta e Continuar
+            </button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Criando sua conta...</p>
+        </div>
+        
+        <div class="back-link">
+            <a href="index.html">← Voltar para escolher outro plano</a>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let selectedPlan = 'quarterly';
+        let supabase = null;
+        
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter plano selecionado da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            selectedPlan = urlParams.get('plan') || 'quarterly';
+            
+            // Atualizar informações do plano
+            updatePlanInfo();
+            
+            // Inicializar Supabase
+            initSupabase();
+            
+            // Configurar formulário
+            setupForm();
+        });
+        
+        function updatePlanInfo() {
+            const plan = CONFIG.PLANS[selectedPlan];
+            if (plan) {
+                document.getElementById('selectedPlanName').textContent = `Plano ${plan.name}`;
+                document.getElementById('selectedPlanPrice').textContent = `R$ ${plan.price.toFixed(2)}`;
+            }
+        }
+        
+        async function initSupabase() {
+            try {
+                if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+                    console.log('📦 Aguardando biblioteca Supabase carregar...');
+                    
+                    let attempts = 0;
+                    const maxAttempts = 10;
+                    
+                    while (attempts < maxAttempts) {
+                        if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+                            console.log('✅ Biblioteca Supabase encontrada');
+                            break;
+                        }
+                        console.log(`⏳ Tentativa ${attempts + 1}/${maxAttempts} - Aguardando Supabase...`);
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        attempts++;
+                    }
+                }
+                
+                console.log('🔄 Criando cliente Supabase...');
+                supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                console.log('✅ Supabase inicializado com sucesso');
+                
+            } catch (error) {
+                console.error('❌ Erro ao inicializar Supabase:', error);
+                showError('Erro ao inicializar sistema. Tente novamente.');
+            }
+        }
+        
+        function setupForm() {
+            const form = document.getElementById('accountForm');
+            const createBtn = document.getElementById('createAccountBtn');
+            
+            // Máscara para CPF
+            const cpfInput = document.getElementById('userCPF');
+            cpfInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                e.target.value = value;
+            });
+            
+            // Máscara para telefone
+            const phoneInput = document.getElementById('userPhone');
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                e.target.value = value;
+            });
+            
+            // Validação em tempo real
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+            });
+            
+            // Submissão do formulário
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    await createAccount();
+                }
+            });
+        }
+        
+        function validateField(field) {
+            const value = field.value.trim();
+            const fieldName = field.name;
+            const errorElement = document.getElementById(fieldName + 'Error');
+            
+            // Limpar erro anterior
+            field.classList.remove('error');
+            errorElement.style.display = 'none';
+            
+            let isValid = true;
+            let errorMessage = '';
+            
+            switch (fieldName) {
+                case 'name':
+                    if (value.length < 2) {
+                        isValid = false;
+                        errorMessage = 'Nome deve ter pelo menos 2 caracteres';
+                    }
+                    break;
+                    
+                case 'email':
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Email inválido';
+                    }
+                    break;
+                    
+                case 'cpf':
+                    const cpfDigits = value.replace(/\D/g, '');
+                    if (cpfDigits.length !== 11) {
+                        isValid = false;
+                        errorMessage = 'CPF deve ter 11 dígitos';
+                    } else if (!isValidCPF(cpfDigits)) {
+                        isValid = false;
+                        errorMessage = 'CPF inválido';
+                    }
+                    break;
+                    
+                case 'phone':
+                    const phoneDigits = value.replace(/\D/g, '');
+                    if (phoneDigits.length < 10) {
+                        isValid = false;
+                        errorMessage = 'Telefone inválido';
+                    }
+                    break;
+                    
+                case 'password':
+                    if (value.length < 6) {
+                        isValid = false;
+                        errorMessage = 'Senha deve ter pelo menos 6 caracteres';
+                    }
+                    break;
+                    
+                case 'confirmPassword':
+                    const password = document.getElementById('userPassword').value;
+                    if (value !== password) {
+                        isValid = false;
+                        errorMessage = 'Senhas não coincidem';
+                    }
+                    break;
+            }
+            
+            if (!isValid) {
+                field.classList.add('error');
+                errorElement.textContent = errorMessage;
+                errorElement.style.display = 'block';
+            }
+            
+            return isValid;
+        }
+        
+        function validateForm() {
+            const form = document.getElementById('accountForm');
+            const inputs = form.querySelectorAll('input[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+        
+        function isValidCPF(cpf) {
+            // Remove caracteres não numéricos
+            cpf = cpf.replace(/\D/g, '');
+            
+            // Verifica se tem 11 dígitos
+            if (cpf.length !== 11) return false;
+            
+            // Verifica se todos os dígitos são iguais
+            if (/^(\d)\1{10}$/.test(cpf)) return false;
+            
+            // Validação do primeiro dígito verificador
+            let sum = 0;
+            for (let i = 0; i < 9; i++) {
+                sum += parseInt(cpf.charAt(i)) * (10 - i);
+            }
+            let remainder = (sum * 10) % 11;
+            if (remainder === 10 || remainder === 11) remainder = 0;
+            if (remainder !== parseInt(cpf.charAt(9))) return false;
+            
+            // Validação do segundo dígito verificador
+            sum = 0;
+            for (let i = 0; i < 10; i++) {
+                sum += parseInt(cpf.charAt(i)) * (11 - i);
+            }
+            remainder = (sum * 10) % 11;
+            if (remainder === 10 || remainder === 11) remainder = 0;
+            if (remainder !== parseInt(cpf.charAt(10))) return false;
+            
+            return true;
+        }
+        
+        async function createAccount() {
+            const createBtn = document.getElementById('createAccountBtn');
+            const loading = document.getElementById('loading');
+            
+            // Mostrar loading
+            createBtn.disabled = true;
+            createBtn.style.display = 'none';
+            loading.style.display = 'block';
+            
+            try {
+                const formData = {
+                    name: document.getElementById('userName').value.trim(),
+                    email: document.getElementById('userEmail').value.trim(),
+                    cpf: document.getElementById('userCPF').value.replace(/\D/g, ''),
+                    phone: document.getElementById('userPhone').value.replace(/\D/g, ''),
+                    password: document.getElementById('userPassword').value,
+                    plan: selectedPlan
+                };
+                
+                console.log('🔄 Criando conta...', formData);
+                
+                // Criar usuário no Supabase Auth
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: formData.email,
+                    password: formData.password,
+                    options: {
+                        data: {
+                            name: formData.name,
+                            cpf: formData.cpf,
+                            phone: formData.phone
+                        }
+                    }
+                });
+                
+                if (authError) {
+                    throw new Error(authError.message);
+                }
+                
+                console.log('✅ Conta criada com sucesso:', authData);
+                
+                // Redirecionar para página de pagamento
+                const paymentUrl = `pagamento.html?plan=${selectedPlan}&email=${encodeURIComponent(formData.email)}`;
+                window.location.href = paymentUrl;
+                
+            } catch (error) {
+                console.error('❌ Erro ao criar conta:', error);
+                showError(`Erro ao criar conta: ${error.message}`);
+                
+                // Restaurar botão
+                createBtn.disabled = false;
+                createBtn.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        }
+        
+        function showError(message) {
+            alert(message);
+        }
+    </script>
+</body>
+</html>

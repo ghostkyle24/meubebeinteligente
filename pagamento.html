@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento - Meu Bebê Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // Configurações inline para evitar problemas de carregamento
+        const CONFIG = {
+            // Supabase - Configurações diretas
+            SUPABASE_URL: 'https://htmofgizynztknpekfbu.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0bW9mZ2l6eW56dGtucGVrZmJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzYwMTYsImV4cCI6MjA3MzExMjAxNn0.a_3_-ncgdXkY2At0ougpZWsXuCrYe-T60RhezGPiE-w',
+            
+            // Configurações do Site
+            SITE_NAME: 'Meu Bebê Inteligente',
+            SITE_URL: 'https://meubebeinteligente.vercel.app',
+            
+            // Planos - Configurados para produção
+            PLANS: {
+                monthly: { price: 29, duration: 1, period: 'month', name: 'Mensal' },
+                quarterly: { price: 79, duration: 3, period: 'months', name: 'Trimestral' },
+                yearly: { price: 299, duration: 12, period: 'months', name: 'Anual' }
+            },
+            
+            // Orderbumps - Configurados para produção
+            ORDERBUMPS: {
+                parental_control: {
+                    id: 'parental_control',
+                    name: 'Controle Parental Avançado',
+                    description: 'Proteção total para todos os dispositivos da casa contra conteúdo inadequado',
+                    price: 19.90,
+                    original_price: 39.90,
+                    discount: 50
+                },
+                meal_plan: {
+                    id: 'meal_plan',
+                    name: 'Plano Alimentar Personalizado',
+                    description: 'Plano nutricional completo e personalizado para o desenvolvimento do seu filho',
+                    price: 27.40,
+                    original_price: 54.80,
+                    discount: 50
+                }
+            }
+        };
+    </script>
+    <style>
+        body {
+            background: var(--gradient-subtle);
+            min-height: 100vh;
+            padding: var(--spacing-lg);
+        }
+        
+        .payment-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .payment-header {
+            background: white;
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+        
+        .payment-header h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .payment-header p {
+            color: var(--color-gray-medium);
+            font-size: var(--font-size-lg);
+        }
+        
+        .plan-summary {
+            background: var(--color-blue-light);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .plan-summary h3 {
+            color: var(--color-blue);
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .plan-summary .price {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--color-blue-dark);
+        }
+        
+        .payment-methods {
+            background: white;
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .payment-methods h3 {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .payment-btn {
+            padding: var(--spacing-lg);
+            border: 2px solid var(--color-gray-light);
+            border-radius: var(--border-radius-lg);
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .payment-btn:hover {
+            border-color: var(--color-blue);
+            background: var(--color-blue-light);
+            color: var(--color-blue);
+        }
+        
+        .payment-btn.active {
+            border-color: var(--color-blue);
+            background: var(--color-blue);
+            color: white;
+        }
+        
+        .payment-btn i {
+            font-size: var(--font-size-2xl);
+        }
+        
+        .payment-btn span {
+            font-weight: 600;
+        }
+        
+        .orderbump {
+            background: white;
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .orderbump h3 {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .orderbump-items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+        
+        .orderbump-item {
+            border: 2px solid var(--color-gray-light);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .orderbump-item:hover {
+            border-color: var(--color-blue);
+        }
+        
+        .orderbump-item.selected {
+            border-color: var(--color-blue);
+            background: var(--color-blue-light);
+        }
+        
+        .orderbump-item input[type="checkbox"] {
+            display: none;
+        }
+        
+        .orderbump-content {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .orderbump-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-gray-medium);
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .orderbump-item.selected .orderbump-checkbox {
+            background: var(--color-blue);
+            border-color: var(--color-blue);
+        }
+        
+        .orderbump-item.selected .orderbump-checkbox::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+        }
+        
+        .orderbump-info {
+            flex: 1;
+        }
+        
+        .orderbump-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .orderbump-price {
+            font-weight: 700;
+            color: var(--color-blue);
+            font-size: var(--font-size-lg);
+        }
+        
+        .orderbump-original-price {
+            text-decoration: line-through;
+            color: var(--color-gray-medium);
+            font-size: var(--font-size-sm);
+        }
+        
+        .orderbump-discount {
+            background: var(--color-rose);
+            color: white;
+            padding: 2px 6px;
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+        
+        .orderbump-title {
+            font-weight: 600;
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .orderbump-description {
+            color: var(--color-gray-medium);
+            font-size: var(--font-size-sm);
+        }
+        
+        .total-summary {
+            background: white;
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .total-summary h3 {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--color-gray-dark);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--color-gray-light);
+        }
+        
+        .total-line:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: var(--font-size-lg);
+            color: var(--color-blue);
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 2px solid var(--color-blue);
+        }
+        
+        .btn-process-payment {
+            width: 100%;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-process-payment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-process-payment:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: var(--spacing-lg);
+        }
+        
+        .loading i {
+            font-size: var(--font-size-2xl);
+            color: var(--color-blue);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: var(--spacing-xl);
+        }
+        
+        .back-link a {
+            color: var(--color-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-container {
+                padding: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>💳 Finalizar Pagamento</h1>
+            <p>Complete seu pedido e proteja seu filho agora mesmo</p>
+        </div>
+        
+        <div class="plan-summary">
+            <h3 id="selectedPlanName">Plano Selecionado</h3>
+            <div class="price" id="selectedPlanPrice">R$ 0,00</div>
+        </div>
+        
+        <div class="orderbump">
+            <h3>🎯 Ofertas Especiais para Você:</h3>
+            <div class="orderbump-items">
+                <div class="orderbump-item" data-orderbump="parental_control">
+                    <div class="orderbump-content">
+                        <div class="orderbump-checkbox"></div>
+                        <div class="orderbump-info">
+                            <div class="orderbump-header">
+                                <span class="orderbump-price">R$ 19,90</span>
+                                <span class="orderbump-original-price">R$ 39,90</span>
+                                <span class="orderbump-discount">-50%</span>
+                            </div>
+                            <div class="orderbump-title">Controle Parental Avançado</div>
+                            <div class="orderbump-description">Proteção total para todos os dispositivos da casa contra conteúdo inadequado</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="orderbump-item" data-orderbump="meal_plan">
+                    <div class="orderbump-content">
+                        <div class="orderbump-checkbox"></div>
+                        <div class="orderbump-info">
+                            <div class="orderbump-header">
+                                <span class="orderbump-price">R$ 27,40</span>
+                                <span class="orderbump-original-price">R$ 54,80</span>
+                                <span class="orderbump-discount">-50%</span>
+                            </div>
+                            <div class="orderbump-title">Plano Alimentar Personalizado</div>
+                            <div class="orderbump-description">Plano nutricional completo e personalizado para o desenvolvimento do seu filho</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="total-summary">
+            <h3>💰 Resumo do Pedido</h3>
+            <div class="total-line">
+                <span>Plano selecionado:</span>
+                <span id="planPrice">R$ 0,00</span>
+            </div>
+            <div class="total-line" id="orderbumpLines" style="display: none;">
+                <!-- Orderbumps serão inseridos aqui -->
+            </div>
+            <div class="total-line">
+                <span>Total:</span>
+                <span id="totalPrice">R$ 0,00</span>
+            </div>
+        </div>
+        
+        <div class="payment-methods">
+            <h3>💳 Forma de Pagamento:</h3>
+            <div class="payment-options">
+                <button class="payment-btn active" data-method="pix">
+                    <i class="fas fa-qrcode"></i>
+                    <span>PIX</span>
+                </button>
+                <button class="payment-btn" data-method="card">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Cartão de Crédito</span>
+                </button>
+            </div>
+            
+            <button class="btn-process-payment" id="processPaymentBtn">
+                <i class="fas fa-lock"></i> Finalizar Pagamento
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Processando pagamento...</p>
+        </div>
+        
+        <div class="back-link">
+            <a href="criar-conta.html">← Voltar para dados da conta</a>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let selectedPlan = 'quarterly';
+        let userEmail = '';
+        let selectedPaymentMethod = 'pix';
+        let selectedOrderbumps = [];
+        let orderbumpTotal = 0;
+        let paymentSessionId = null;
+        
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter dados da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            selectedPlan = urlParams.get('plan') || 'quarterly';
+            userEmail = urlParams.get('email') || '';
+            
+            // Atualizar informações do plano
+            updatePlanInfo();
+            
+            // Configurar eventos
+            setupEventListeners();
+            
+            // Atualizar total
+            updateTotal();
+        });
+        
+        function updatePlanInfo() {
+            const plan = CONFIG.PLANS[selectedPlan];
+            if (plan) {
+                document.getElementById('selectedPlanName').textContent = `Plano ${plan.name}`;
+                document.getElementById('selectedPlanPrice').textContent = `R$ ${plan.price.toFixed(2)}`;
+                document.getElementById('planPrice').textContent = `R$ ${plan.price.toFixed(2)}`;
+            }
+        }
+        
+        function setupEventListeners() {
+            // Seleção de método de pagamento
+            const paymentBtns = document.querySelectorAll('.payment-btn[data-method]');
+            paymentBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    paymentBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedPaymentMethod = this.dataset.method;
+                });
+            });
+            
+            // Seleção de orderbumps
+            const orderbumpItems = document.querySelectorAll('.orderbump-item');
+            orderbumpItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    updateOrderbumps();
+                });
+            });
+            
+            // Botão de processar pagamento
+            document.getElementById('processPaymentBtn').addEventListener('click', processPayment);
+        }
+        
+        function updateOrderbumps() {
+            selectedOrderbumps = [];
+            const selectedItems = document.querySelectorAll('.orderbump-item.selected');
+            
+            selectedItems.forEach(item => {
+                const orderbumpId = item.dataset.orderbump;
+                const orderbump = CONFIG.ORDERBUMPS[orderbumpId];
+                if (orderbump) {
+                    selectedOrderbumps.push(orderbump);
+                }
+            });
+            
+            orderbumpTotal = selectedOrderbumps.reduce((sum, item) => sum + item.price, 0);
+            updateTotal();
+        }
+        
+        function updateTotal() {
+            const plan = CONFIG.PLANS[selectedPlan];
+            const total = plan.price + orderbumpTotal;
+            
+            // Atualizar total principal
+            document.getElementById('totalPrice').textContent = `R$ ${total.toFixed(2)}`;
+            
+            // Atualizar linhas de orderbumps
+            const orderbumpLines = document.getElementById('orderbumpLines');
+            if (selectedOrderbumps.length > 0) {
+                orderbumpLines.style.display = 'block';
+                orderbumpLines.innerHTML = selectedOrderbumps.map(orderbump => 
+                    `<div class="total-line">
+                        <span>${orderbump.name}:</span>
+                        <span>R$ ${orderbump.price.toFixed(2)}</span>
+                    </div>`
+                ).join('');
+            } else {
+                orderbumpLines.style.display = 'none';
+            }
+        }
+        
+        async function processPayment() {
+            const processBtn = document.getElementById('processPaymentBtn');
+            const loading = document.getElementById('loading');
+            
+            // Mostrar loading
+            processBtn.disabled = true;
+            processBtn.style.display = 'none';
+            loading.style.display = 'block';
+            
+            try {
+                const plan = CONFIG.PLANS[selectedPlan];
+                const totalAmount = plan.price + orderbumpTotal;
+                
+                const paymentData = {
+                    amount: totalAmount,
+                    customer: {
+                        name: 'Cliente', // Será obtido do Supabase
+                        email: userEmail,
+                        document: '00000000000', // Será obtido do Supabase
+                        phone: '0000000000' // Será obtido do Supabase
+                    },
+                    plan: plan,
+                    orderbumpItems: selectedOrderbumps,
+                    paymentMethod: selectedPaymentMethod
+                };
+                
+                console.log('🔄 Processando pagamento...', paymentData);
+                
+                // Fazer requisição para API de pagamento
+                const response = await fetch('/api/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(paymentData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Erro ao processar pagamento');
+                }
+                
+                const result = await response.json();
+                console.log('✅ Pagamento processado:', result);
+                
+                if (result.success) {
+                    paymentSessionId = result.order_id;
+                    
+                    if (selectedPaymentMethod === 'pix') {
+                        showPixPayment(result);
+                    } else {
+                        showCardPayment(result);
+                    }
+                } else {
+                    throw new Error(result.error || 'Erro ao processar pagamento');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao processar pagamento:', error);
+                showError(`Erro ao processar pagamento: ${error.message}`);
+                
+                // Restaurar botão
+                processBtn.disabled = false;
+                processBtn.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        }
+        
+        function showPixPayment(result) {
+            const loading = document.getElementById('loading');
+            loading.innerHTML = `
+                <div style="text-align: center; padding: var(--spacing-2xl);">
+                    <h3 style="color: var(--color-blue); margin-bottom: var(--spacing-lg);">📱 PIX Gerado!</h3>
+                    <div id="pixQRCode" style="margin: var(--spacing-lg) 0;"></div>
+                    <p style="color: var(--color-gray-medium); margin-bottom: var(--spacing-lg);">
+                        Escaneie o QR Code com seu app de pagamento ou copie o código PIX
+                    </p>
+                    <div id="pixCode" style="background: var(--color-gray-light); padding: var(--spacing-md); border-radius: var(--border-radius-lg); font-family: monospace; word-break: break-all; margin-bottom: var(--spacing-lg);"></div>
+                    <button onclick="copyPixCode()" style="background: var(--color-blue); color: white; border: none; padding: var(--spacing-md) var(--spacing-lg); border-radius: var(--border-radius-lg); cursor: pointer; margin-bottom: var(--spacing-lg);">
+                        📋 Copiar Código PIX
+                    </button>
+                    <p style="color: var(--color-amber); font-weight: 600;">
+                        ⏰ O PIX expira em 1 hora. Após o pagamento, você receberá acesso imediatamente!
+                    </p>
+                </div>
+            `;
+            
+            // Se tiver QR Code, mostrar
+            if (result.pix && result.pix.qr_code) {
+                const qrCodeElement = document.getElementById('pixQRCode');
+                QRCode.toCanvas(qrCodeElement, result.pix.qr_code_url, {
+                    width: 200,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                });
+            }
+            
+            // Mostrar código PIX
+            if (result.pix && result.pix.qr_code_url) {
+                document.getElementById('pixCode').textContent = result.pix.qr_code_url;
+            }
+            
+            // Iniciar verificação de pagamento
+            startPaymentVerification();
+        }
+        
+        function showCardPayment(result) {
+            const loading = document.getElementById('loading');
+            loading.innerHTML = `
+                <div style="text-align: center; padding: var(--spacing-2xl);">
+                    <h3 style="color: var(--color-emerald); margin-bottom: var(--spacing-lg);">✅ Pagamento Aprovado!</h3>
+                    <p style="color: var(--color-gray-medium); margin-bottom: var(--spacing-lg);">
+                        Seu pagamento foi processado com sucesso. Você já tem acesso completo à plataforma!
+                    </p>
+                    <button onclick="goToDashboard()" style="background: var(--gradient-primary); color: white; border: none; padding: var(--spacing-lg) var(--spacing-2xl); border-radius: var(--border-radius-lg); cursor: pointer; font-size: var(--font-size-lg); font-weight: 600;">
+                        🚀 Acessar Plataforma
+                    </button>
+                </div>
+            `;
+        }
+        
+        function copyPixCode() {
+            const pixCode = document.getElementById('pixCode').textContent;
+            navigator.clipboard.writeText(pixCode).then(() => {
+                alert('Código PIX copiado!');
+            });
+        }
+        
+        function startPaymentVerification() {
+            const checkInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/api/check-payment?orderId=${paymentSessionId}`);
+                    const result = await response.json();
+                    
+                    if (result.success && result.status === 'CONFIRMED') {
+                        clearInterval(checkInterval);
+                        showPaymentSuccess();
+                    }
+                } catch (error) {
+                    console.error('Erro ao verificar pagamento:', error);
+                }
+            }, 5000); // Verificar a cada 5 segundos
+        }
+        
+        function showPaymentSuccess() {
+            const loading = document.getElementById('loading');
+            loading.innerHTML = `
+                <div style="text-align: center; padding: var(--spacing-2xl);">
+                    <h3 style="color: var(--color-emerald); margin-bottom: var(--spacing-lg);">🎉 Pagamento Confirmado!</h3>
+                    <p style="color: var(--color-gray-medium); margin-bottom: var(--spacing-lg);">
+                        Seu pagamento foi confirmado! Você já tem acesso completo à plataforma.
+                    </p>
+                    <button onclick="goToDashboard()" style="background: var(--gradient-primary); color: white; border: none; padding: var(--spacing-lg) var(--spacing-2xl); border-radius: var(--border-radius-lg); cursor: pointer; font-size: var(--font-size-lg); font-weight: 600;">
+                        🚀 Acessar Plataforma
+                    </button>
+                </div>
+            `;
+        }
+        
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+        
+        function showError(message) {
+            alert(message);
+        }
+    </script>
+</body>
+</html>
