@@ -306,12 +306,12 @@ export default async function handler(req, res) {
                 description: result.description
             };
 
-            // Se for PIX, tentar buscar dados do PIX (pode não estar disponível imediatamente)
+            // Se for PIX, buscar dados do PIX usando endpoint específico
             if (normalizedPaymentMethod === 'PIX') {
-                console.log('🔄 Verificando dados do PIX...');
+                console.log('🔄 Buscando dados do PIX via endpoint específico...');
                 
-                // Tentar buscar dados do PIX imediatamente
-                const pixResponse = await fetch(`${ASAAS_BASE_URL}/payments/${result.id}`, {
+                // Usar endpoint específico para PIX conforme documentação oficial
+                const pixResponse = await fetch(`${ASAAS_BASE_URL}/payments/${result.id}/pixQrCode`, {
                     method: 'GET',
                     headers: {
                         'access_token': ASAAS_API_KEY,
@@ -319,22 +319,31 @@ export default async function handler(req, res) {
                     }
                 });
                 
+                console.log('📡 Status da resposta PIX:', pixResponse.status);
+                
                 if (pixResponse.ok) {
-                    const pixPayment = await pixResponse.json();
-                    console.log('📡 Dados do PIX:', pixPayment.pixTransaction);
+                    const pixData = await pixResponse.json();
+                    console.log('📡 Dados do PIX obtidos:', JSON.stringify(pixData, null, 2));
                     
-                    if (pixPayment.pixTransaction) {
+                    if (pixData.encodedImage && pixData.payload) {
                         paymentResponse.pix = {
-                            qr_code: pixPayment.pixTransaction.encodedImage,
-                            qr_code_url: pixPayment.pixTransaction.payload,
-                            expires_at: pixPayment.pixTransaction.expirationDate
+                            qr_code: pixData.encodedImage,
+                            qr_code_url: pixData.payload,
+                            pixCopiaECola: pixData.payload,
+                            pix_copia_e_cola: pixData.payload,
+                            expires_at: pixData.expirationDate
                         };
-                        console.log('✅ QR Code disponível imediatamente!');
+                        console.log('✅ QR Code obtido com sucesso!');
                     } else {
-                        console.log('⏳ QR Code não disponível ainda - será buscado via polling');
-                        // Adicionar flag para indicar que o frontend deve fazer polling
+                        console.log('⚠️ Dados do PIX incompletos:', pixData);
                         paymentResponse.pix_pending = true;
+                        paymentResponse.payment_id = result.id;
                     }
+                } else {
+                    const errorData = await pixResponse.json();
+                    console.log('❌ Erro ao buscar dados do PIX:', pixResponse.status, errorData);
+                    paymentResponse.pix_pending = true;
+                    paymentResponse.payment_id = result.id;
                 }
             }
 

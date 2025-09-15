@@ -65,17 +65,38 @@ export default async function handler(req, res) {
         };
         
         // Adicionar dados do PIX se disponível
-        if (payment.billingType === 'PIX' && payment.pixTransaction) {
-            responseData.pix = {
-                qr_code: payment.pixTransaction.encodedImage,
-                qr_code_url: payment.pixTransaction.payload,
-                pixCopiaECola: payment.pixTransaction.payload,
-                pix_copia_e_cola: payment.pixTransaction.payload,
-                expires_at: payment.pixTransaction.expirationDate
-            };
-            console.log('📱 Dados do PIX adicionados:', responseData.pix);
-        } else if (payment.billingType === 'PIX') {
-            console.log('⚠️ PIX sem pixTransaction, status:', payment.status);
+        if (payment.billingType === 'PIX') {
+            console.log('🔄 Buscando dados do PIX via endpoint específico...');
+            
+            // Usar endpoint específico para PIX conforme documentação oficial
+            const pixResponse = await fetch(`${ASAAS_BASE_URL}/payments/${orderId}/pixQrCode`, {
+                method: 'GET',
+                headers: {
+                    'access_token': ASAAS_API_KEY,
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (pixResponse.ok) {
+                const pixData = await pixResponse.json();
+                console.log('📡 Dados do PIX obtidos:', JSON.stringify(pixData, null, 2));
+                
+                if (pixData.encodedImage && pixData.payload) {
+                    responseData.pix = {
+                        qr_code: pixData.encodedImage,
+                        qr_code_url: pixData.payload,
+                        pixCopiaECola: pixData.payload,
+                        pix_copia_e_cola: pixData.payload,
+                        expires_at: pixData.expirationDate
+                    };
+                    console.log('📱 Dados do PIX adicionados:', responseData.pix);
+                } else {
+                    console.log('⚠️ Dados do PIX incompletos:', pixData);
+                }
+            } else {
+                const errorData = await pixResponse.json();
+                console.log('❌ Erro ao buscar dados do PIX:', pixResponse.status, errorData);
+            }
         }
         
         return res.status(200).json(responseData);

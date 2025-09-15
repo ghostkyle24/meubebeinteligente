@@ -753,6 +753,7 @@
         
         function showPixPayment(result) {
             console.log('🔍 Dados completos do PIX:', result);
+            console.log('🔍 Estrutura da resposta:', JSON.stringify(result, null, 2));
             
             const loading = document.getElementById('loading');
             loading.innerHTML = `
@@ -832,6 +833,12 @@
                 }
             } else {
                 console.log('⚠️ QRCode library não carregada ou dados não encontrados');
+                
+                // Se o PIX está pendente, iniciar polling
+                if (result.pix_pending && result.payment_id) {
+                    console.log('🔄 Iniciando polling para buscar dados do PIX...');
+                    startPixPolling(result.payment_id);
+                }
             }
             
             // Iniciar verificação de pagamento
@@ -861,6 +868,58 @@
             navigator.clipboard.writeText(pixCode).then(() => {
                 alert('Código PIX copiado!');
             });
+        }
+        
+        function startPixPolling(paymentId) {
+            const pixInterval = setInterval(async () => {
+                try {
+                    console.log('🔄 Buscando dados do PIX...');
+                    const response = await fetch(`/api/check-payment?orderId=${paymentId}`);
+                    const result = await response.json();
+                    
+                    if (result.success && result.pix) {
+                        console.log('✅ PIX encontrado via polling!', result.pix);
+                        clearInterval(pixInterval);
+                        
+                        // Atualizar a interface com os dados do PIX
+                        updatePixInterface(result.pix);
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar PIX:', error);
+                }
+            }, 3000); // Verificar a cada 3 segundos
+            
+            // Parar o polling após 2 minutos
+            setTimeout(() => {
+                clearInterval(pixInterval);
+                console.log('⏰ Polling do PIX finalizado após 2 minutos');
+            }, 120000);
+        }
+        
+        function updatePixInterface(pixData) {
+            // Atualizar código PIX
+            if (pixData.pixCopiaECola || pixData.pix_copia_e_cola || pixData.qr_code_url) {
+                const pixCode = pixData.pixCopiaECola || pixData.pix_copia_e_cola || pixData.qr_code_url;
+                document.getElementById('pixCode').textContent = pixCode;
+                
+                // Gerar QR Code
+                if (typeof QRCode !== 'undefined') {
+                    try {
+                        const qrCodeElement = document.getElementById('pixQRCode');
+                        QRCode.toCanvas(qrCodeElement, pixCode, {
+                            width: 200,
+                            margin: 2,
+                            color: {
+                                dark: '#000000',
+                                light: '#FFFFFF'
+                            }
+                        });
+                        console.log('✅ QR Code gerado via polling!');
+                    } catch (error) {
+                        console.error('❌ Erro ao gerar QR Code via polling:', error);
+                    }
+                }
+            }
         }
         
         function startPaymentVerification() {
