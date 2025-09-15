@@ -308,6 +308,7 @@ body {
     display: flex;
     gap: var(--spacing-lg);
     overflow-x: auto;
+    overflow-y: hidden;
     padding: var(--spacing-lg) 0;
     scroll-snap-type: x mandatory;
     scrollbar-width: thin;

@@ -1003,7 +1003,7 @@
             </div>
             
             <div class="pricing-grid">
-                <div class="pricing-card" style="border: 3px solid #3498db; background: linear-gradient(135deg, #fff, #f8f9fa);">
+                <div id="plano-starter" class="pricing-card" style="border: 3px solid #3498db; background: linear-gradient(135deg, #fff, #f8f9fa);">
                     <div class="pricing-header">
                         <h3 style="color: #3498db; font-weight: bold;">🚀 PLANO STARTER</h3>
                         <div class="price">
@@ -1461,7 +1461,7 @@
         const ADMIN_EMAIL = CONFIG.ADMIN_EMAIL;
         const ADMIN_EMAIL_ALT = CONFIG.ADMIN_EMAIL_ALT;
         
-        // Função para scroll suave para a seção de preços
+        // Função para scroll suave para o plano starter
         function scrollToPricing() {
             // Evento de Lead para Meta Pixel
             if (typeof fbq !== 'undefined') {
@@ -1471,12 +1471,21 @@
                 });
             }
             
-            const pricingSection = document.getElementById('pricing');
-            if (pricingSection) {
-                pricingSection.scrollIntoView({
+            const planoStarter = document.getElementById('plano-starter');
+            if (planoStarter) {
+                planoStarter.scrollIntoView({
                     behavior: 'smooth',
-                    block: 'start'
+                    block: 'center'
                 });
+            } else {
+                // Fallback para a seção de preços se o plano starter não for encontrado
+                const pricingSection = document.getElementById('pricing');
+                if (pricingSection) {
+                    pricingSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
             }
         }
         
