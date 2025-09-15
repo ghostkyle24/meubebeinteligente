@@ -437,6 +437,32 @@ body {
     margin-right: auto;
 }
 
+/* Container principal das features */
+.features-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3xl);
+    margin-top: var(--spacing-3xl);
+}
+
+/* Seções individuais de features */
+.feature-section {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-2xl);
+    padding: var(--spacing-2xl);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.feature-section-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -445,6 +471,12 @@ body {
 
 /* Grid de features otimizado para desktop */
 @media (min-width: 1200px) {
+    .features-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-3xl);
+    }
+    
     .features-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: var(--spacing-xl);
@@ -504,6 +536,18 @@ body {
 
 /* Layout para tablets (768px a 1199px) */
 @media (min-width: 768px) and (max-width: 1199px) {
+    .features-container {
+        gap: var(--spacing-2xl);
+    }
+    
+    .feature-section {
+        padding: var(--spacing-xl);
+    }
+    
+    .feature-section-title {
+        font-size: var(--font-size-xl);
+    }
+    
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--spacing-lg);
@@ -528,6 +572,18 @@ body {
 
 /* Layout para telas ultra-wide (mais de 1600px) */
 @media (min-width: 1600px) {
+    .features-container {
+        gap: var(--spacing-3xl);
+    }
+    
+    .feature-section {
+        padding: var(--spacing-3xl);
+    }
+    
+    .feature-section-title {
+        font-size: var(--font-size-3xl);
+    }
+    
     .features-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: var(--spacing-2xl);
@@ -1123,6 +1179,18 @@ body {
     
     .section-title {
         font-size: var(--font-size-3xl);
+    }
+    
+    .features-container {
+        gap: var(--spacing-xl);
+    }
+    
+    .feature-section {
+        padding: var(--spacing-lg);
+    }
+    
+    .feature-section-title {
+        font-size: var(--font-size-lg);
     }
     
     .features-grid {
