@@ -60,6 +60,174 @@
             margin: 0 auto;
         }
         
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-sm);
+            }
+            
+            .payment-container {
+                max-width: 100%;
+            }
+            
+            .payment-header {
+                padding: var(--spacing-lg);
+                margin-bottom: var(--spacing-lg);
+            }
+            
+            .payment-header h1 {
+                font-size: var(--font-size-xl);
+            }
+            
+            .payment-header p {
+                font-size: var(--font-size-sm);
+            }
+            
+            .plan-summary {
+                padding: var(--spacing-lg);
+            }
+            
+            .plan-summary h2 {
+                font-size: var(--font-size-lg);
+            }
+            
+            .plan-details {
+                font-size: var(--font-size-sm);
+            }
+            
+            .orderbump-item {
+                padding: var(--spacing-md);
+            }
+            
+            .orderbump-item h3 {
+                font-size: var(--font-size-sm);
+            }
+            
+            .orderbump-item p {
+                font-size: var(--font-size-xs);
+            }
+            
+            .payment-methods {
+                padding: var(--spacing-lg);
+            }
+            
+            .payment-method {
+                padding: var(--spacing-md);
+            }
+            
+            .payment-method h3 {
+                font-size: var(--font-size-base);
+            }
+            
+            .btn-payment {
+                padding: var(--spacing-md);
+                font-size: var(--font-size-sm);
+            }
+            
+            .pix-section {
+                padding: var(--spacing-lg);
+            }
+            
+            .pix-section h3 {
+                font-size: var(--font-size-lg);
+            }
+            
+            .pix-code {
+                font-size: var(--font-size-xs);
+            }
+            
+            .success-message {
+                padding: var(--spacing-lg);
+            }
+            
+            .success-message h2 {
+                font-size: var(--font-size-xl);
+            }
+            
+            .success-message p {
+                font-size: var(--font-size-sm);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .payment-header {
+                padding: var(--spacing-md);
+            }
+            
+            .payment-header h1 {
+                font-size: var(--font-size-lg);
+            }
+            
+            .payment-header p {
+                font-size: var(--font-size-xs);
+            }
+            
+            .plan-summary {
+                padding: var(--spacing-md);
+            }
+            
+            .plan-summary h2 {
+                font-size: var(--font-size-base);
+            }
+            
+            .plan-details {
+                font-size: var(--font-size-xs);
+            }
+            
+            .orderbump-item {
+                padding: var(--spacing-sm);
+            }
+            
+            .orderbump-item h3 {
+                font-size: var(--font-size-xs);
+            }
+            
+            .orderbump-item p {
+                font-size: 0.7rem;
+            }
+            
+            .payment-methods {
+                padding: var(--spacing-md);
+            }
+            
+            .payment-method {
+                padding: var(--spacing-sm);
+            }
+            
+            .payment-method h3 {
+                font-size: var(--font-size-sm);
+            }
+            
+            .btn-payment {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: var(--font-size-xs);
+            }
+            
+            .pix-section {
+                padding: var(--spacing-md);
+            }
+            
+            .pix-section h3 {
+                font-size: var(--font-size-base);
+            }
+            
+            .pix-code {
+                font-size: 0.7rem;
+            }
+            
+            .success-message {
+                padding: var(--spacing-md);
+            }
+            
+            .success-message h2 {
+                font-size: var(--font-size-lg);
+            }
+            
+            .success-message p {
+                font-size: var(--font-size-xs);
+            }
+        }
+        
         .payment-header {
             background: white;
             border-radius: var(--border-radius-2xl);
