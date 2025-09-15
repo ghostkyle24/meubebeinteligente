@@ -211,7 +211,7 @@ body {
 
 /* Hero Section Moderno */
 .hero {
-    padding: calc(150px + var(--spacing-5xl)) 0 var(--spacing-3xl);
+    padding: calc(100px + var(--spacing-3xl)) 0 var(--spacing-3xl);
     background: var(--gradient-hero);
     margin-top: 0;
     position: relative;
@@ -221,7 +221,7 @@ body {
 /* Ajuste para desktop - espaço extra do header */
 @media (min-width: 769px) {
     .hero {
-        padding: calc(180px + var(--spacing-6xl)) 0 var(--spacing-3xl);
+        padding: calc(120px + var(--spacing-4xl)) 0 var(--spacing-3xl);
     }
 }
 
@@ -257,9 +257,17 @@ body {
     font-size: var(--font-size-2xl);
     font-weight: 700;
     line-height: 1.2;
+    margin-top: var(--spacing-2xl);
     margin-bottom: var(--spacing-lg);
     color: var(--color-white);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Espaçamento extra para desktop */
+@media (min-width: 769px) {
+    .hero-title {
+        margin-top: var(--spacing-3xl);
+    }
 }
 
 .hero-subtitle {
