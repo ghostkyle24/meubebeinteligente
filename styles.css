@@ -211,17 +211,17 @@ body {
 
 /* Hero Section Moderno */
 .hero {
-    padding: calc(120px + var(--spacing-4xl)) 0 var(--spacing-3xl);
+    padding: calc(150px + var(--spacing-5xl)) 0 var(--spacing-3xl);
     background: var(--gradient-hero);
     margin-top: 0;
     position: relative;
     overflow: hidden;
 }
 
-/* Ajuste para desktop - muito mais espaço do header */
+/* Ajuste para desktop - espaço extra do header */
 @media (min-width: 769px) {
     .hero {
-        padding: calc(150px + var(--spacing-5xl)) 0 var(--spacing-3xl);
+        padding: calc(180px + var(--spacing-6xl)) 0 var(--spacing-3xl);
     }
 }
 
