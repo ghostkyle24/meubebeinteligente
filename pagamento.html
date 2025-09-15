@@ -464,6 +464,8 @@
         // Variáveis globais
         let selectedPlan = 'quarterly';
         let userEmail = '';
+        let userData = null;
+        let supabase = null;
         let selectedPaymentMethod = 'pix';
         let selectedOrderbumps = [];
         let orderbumpTotal = 0;
@@ -476,6 +478,9 @@
             selectedPlan = urlParams.get('plan') || 'quarterly';
             userEmail = urlParams.get('email') || '';
             
+            // Inicializar Supabase e carregar dados do usuário
+            initSupabase();
+            
             // Atualizar informações do plano
             updatePlanInfo();
             
@@ -485,6 +490,67 @@
             // Atualizar total
             updateTotal();
         });
+        
+        async function initSupabase() {
+            try {
+                if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+                    console.log('📦 Aguardando biblioteca Supabase carregar...');
+                    
+                    let attempts = 0;
+                    const maxAttempts = 10;
+                    
+                    while (attempts < maxAttempts) {
+                        if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+                            console.log('✅ Biblioteca Supabase encontrada');
+                            break;
+                        }
+                        console.log(`⏳ Tentativa ${attempts + 1}/${maxAttempts} - Aguardando Supabase...`);
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        attempts++;
+                    }
+                }
+                
+                console.log('🔄 Criando cliente Supabase...');
+                supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                console.log('✅ Supabase inicializado com sucesso');
+                
+                // Carregar dados do usuário
+                await loadUserData();
+                
+            } catch (error) {
+                console.error('❌ Erro ao inicializar Supabase:', error);
+                showError('Erro ao inicializar sistema. Tente novamente.');
+            }
+        }
+        
+        async function loadUserData() {
+            try {
+                // Obter usuário atual
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                
+                if (userError) {
+                    throw new Error(userError.message);
+                }
+                
+                if (!user) {
+                    throw new Error('Usuário não encontrado. Faça login novamente.');
+                }
+                
+                // Obter dados do usuário
+                userData = {
+                    name: user.user_metadata?.name || 'Cliente',
+                    email: user.email,
+                    cpf: user.user_metadata?.cpf || '',
+                    phone: user.user_metadata?.phone || ''
+                };
+                
+                console.log('✅ Dados do usuário carregados:', userData);
+                
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados do usuário:', error);
+                showError(`Erro ao carregar dados: ${error.message}`);
+            }
+        }
         
         function updatePlanInfo() {
             const plan = CONFIG.PLANS[selectedPlan];
@@ -561,6 +627,18 @@
             const processBtn = document.getElementById('processPaymentBtn');
             const loading = document.getElementById('loading');
             
+            // Verificar se temos os dados do usuário
+            if (!userData) {
+                showError('Dados do usuário não carregados. Tente novamente.');
+                return;
+            }
+            
+            // Verificar se o CPF está presente
+            if (!userData.cpf || userData.cpf === '') {
+                showError('CPF não encontrado. Volte para a página de criação de conta e tente novamente.');
+                return;
+            }
+            
             // Mostrar loading
             processBtn.disabled = true;
             processBtn.style.display = 'none';
@@ -573,10 +651,10 @@
                 const paymentData = {
                     amount: totalAmount,
                     customer: {
-                        name: 'Cliente', // Será obtido do Supabase
-                        email: userEmail,
-                        document: '00000000000', // Será obtido do Supabase
-                        phone: '0000000000' // Será obtido do Supabase
+                        name: userData.name,
+                        email: userData.email,
+                        document: userData.cpf,
+                        phone: userData.phone
                     },
                     plan: plan,
                     orderbumpItems: selectedOrderbumps,
