@@ -209,83 +209,12 @@
             background: linear-gradient(135deg, #E74C3C, #C0392B);
         }
         
-        /* Estilos para os cards de ilustração expandidos */
-        .illustration-card {
-            background: white;
-            padding: var(--spacing-xl);
-            border-radius: var(--border-radius-2xl);
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            transition: transform 0.3s ease;
-            margin-bottom: var(--spacing-lg);
-        }
-        
-        .illustration-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .illustration-card i {
-            font-size: var(--font-size-3xl);
-            margin-bottom: var(--spacing-md);
-            display: block;
-        }
-        
-        .illustration-card span {
-            font-weight: 600;
-            color: var(--color-gray-dark);
-            font-size: 1.1rem;
-            display: block;
-            margin-bottom: var(--spacing-sm);
-        }
-        
-        .illustration-card p {
-            color: var(--color-gray-medium);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin: 0;
-        }
-        
-        /* Cores dos ícones */
-        .illustration-card.music i { color: var(--color-blue); }
-        .illustration-card.video i { color: var(--color-pink); }
-        .illustration-card.english i { color: #4facfe; }
-        .illustration-card.color i { color: var(--color-green); }
-        .illustration-card.family i { color: var(--color-pink); }
-        .illustration-card.diy i { color: var(--color-orange); }
-        .illustration-card.game i { color: var(--color-orange); }
-        .illustration-card.devocional i { color: #8B5CF6; }
-        .illustration-card.shield i { color: #E74C3C; }
-        
-        /* Grid responsivo para os cards */
+        /* Hero illustration - agora vazio */
         .hero-illustration {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--spacing-lg);
-            max-width: 100%;
-            margin: 0 auto;
-        }
-        
-        @media (max-width: 768px) {
-            .hero-illustration {
-                grid-template-columns: 1fr;
-                gap: var(--spacing-md);
-            }
-            
-            .illustration-card {
-                padding: var(--spacing-lg);
-            }
-            
-            .illustration-card i {
-                font-size: var(--font-size-2xl);
-            }
-            
-            .illustration-card span {
-                font-size: 1rem;
-            }
-            
-            .illustration-card p {
-                font-size: 0.85rem;
-            }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
         }
         
         /* Modal de Sucesso */
@@ -762,51 +691,7 @@
             </div>
             <div class="hero-image">
                 <div class="hero-illustration">
-                    <div class="illustration-card music">
-                        <i class="fas fa-music"></i>
-                        <span>Músicas Educativas</span>
-                        <p>Playlists curadas com músicas que realmente ensinam cores, números, valores e princípios cristãos.</p>
-                    </div>
-                    <div class="illustration-card video">
-                        <i class="fas fa-play-circle"></i>
-                        <span>Vídeos Seguros</span>
-                        <p>Conteúdo educativo selecionado e livre de anúncios, sem distrações ou conteúdos impróprios.</p>
-                    </div>
-                    <div class="illustration-card english">
-                        <i class="fas fa-globe"></i>
-                        <span>Inglês Infantil</span>
-                        <p>30 aulas completas para aprender inglês brincando com cores, animais, números e muito mais.</p>
-                    </div>
-                    <div class="illustration-card color">
-                        <i class="fas fa-palette"></i>
-                        <span>Desenhos Cristãos</span>
-                        <p>PDFs imprimíveis com desenhos que ensinam valores bíblicos enquanto a criança se diverte.</p>
-                    </div>
-                    <div class="illustration-card family">
-                        <i class="fas fa-heart"></i>
-                        <span>Brincadeiras em Família</span>
-                        <p>Atividades offline que fortalecem o vínculo entre mãe e filho, com jogos educativos e criativos.</p>
-                    </div>
-                    <div class="illustration-card diy">
-                        <i class="fas fa-tools"></i>
-                        <span>Brinquedos DIY</span>
-                        <p>Ideias de brinquedos que a própria criança pode criar, estimulando criatividade e independência.</p>
-                    </div>
-                    <div class="illustration-card game">
-                        <i class="fas fa-gamepad"></i>
-                        <span>Jogos Interativos</span>
-                        <p>Mini-jogos educativos dentro do próprio site: memória, associação, quebra-cabeças e muito mais.</p>
-                    </div>
-                    <div class="illustration-card devocional">
-                        <i class="fas fa-pray"></i>
-                        <span>Devocional Kids</span>
-                        <p>Momentos especiais com Deus para crianças, ensinando valores cristãos de forma carinhosa e divertida.</p>
-                    </div>
-                    <div class="illustration-card shield">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Controle Parental</span>
-                        <p>Ferramentas para proteger seu filho online e configurar controles parentais de forma segura.</p>
-                    </div>
+                    <!-- Illustration cards removidos - conteúdo duplicado com a seção de features abaixo -->
                 </div>
             </div>
         </div>
