@@ -122,6 +122,8 @@
             .btn-payment {
                 padding: var(--spacing-md);
                 font-size: var(--font-size-sm);
+                background: #3498db;
+                box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
             }
             
             .pix-section {
@@ -201,6 +203,8 @@
             .btn-payment {
                 padding: var(--spacing-sm) var(--spacing-md);
                 font-size: var(--font-size-xs);
+                background: #3498db;
+                box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
             }
             
             .pix-section {
@@ -303,18 +307,22 @@
             flex-direction: column;
             align-items: center;
             gap: var(--spacing-sm);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .payment-btn:hover {
-            border-color: var(--color-blue);
-            background: var(--color-blue-light);
-            color: var(--color-blue);
+            border-color: #3498db;
+            background: #e3f2fd;
+            color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
         
         .payment-btn.active {
-            border-color: var(--color-blue);
-            background: var(--color-blue);
+            border-color: #3498db;
+            background: #3498db;
             color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
         }
         
         .payment-btn i {
@@ -473,7 +481,7 @@
         
         .btn-process-payment {
             width: 100%;
-            background: var(--gradient-primary);
+            background: #3498db;
             color: white;
             border: none;
             padding: var(--spacing-lg);
@@ -482,11 +490,13 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
         }
         
         .btn-process-payment:hover {
+            background: #2980b9;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6);
         }
         
         .btn-process-payment:disabled {
@@ -931,8 +941,8 @@
                         Escaneie o QR Code com seu app de pagamento ou copie o código PIX
                     </p>
                     <div id="pixQRCode" style="margin: var(--spacing-lg) 0;"></div>
-                    <div id="pixCode" style="background: var(--color-gray-light); padding: var(--spacing-md); border-radius: var(--border-radius-lg); font-family: monospace; word-break: break-all; margin-bottom: var(--spacing-lg);"></div>
-                    <button onclick="copyPixCode()" style="background: var(--color-blue); color: white; border: none; padding: var(--spacing-md) var(--spacing-lg); border-radius: var(--border-radius-lg); cursor: pointer; margin-bottom: var(--spacing-lg);">
+                    <div id="pixCode" style="background: #f8f9fa; border: 2px solid #e9ecef; padding: var(--spacing-md); border-radius: var(--border-radius-lg); font-family: monospace; word-break: break-all; margin-bottom: var(--spacing-lg); color: #495057; font-weight: 500;"></div>
+                    <button onclick="copyPixCode()" style="background: #3498db; color: white; border: none; padding: var(--spacing-md) var(--spacing-lg); border-radius: var(--border-radius-lg); cursor: pointer; margin-bottom: var(--spacing-lg); box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);">
                         📋 Copiar Código PIX
                     </button>
                     <p style="color: var(--color-amber); font-weight: 600;">
@@ -1035,7 +1045,7 @@
                     <p style="color: var(--color-gray-medium); margin-bottom: var(--spacing-lg);">
                         Seu pagamento foi processado com sucesso. Você já tem acesso completo à plataforma!
                     </p>
-                    <button onclick="goToDashboard()" style="background: var(--gradient-primary); color: white; border: none; padding: var(--spacing-lg) var(--spacing-2xl); border-radius: var(--border-radius-lg); cursor: pointer; font-size: var(--font-size-lg); font-weight: 600;">
+                    <button onclick="goToDashboard()" style="background: #3498db; color: white; border: none; padding: var(--spacing-lg) var(--spacing-2xl); border-radius: var(--border-radius-lg); cursor: pointer; font-size: var(--font-size-lg); font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);">
                         🚀 Acessar Plataforma
                     </button>
                 </div>
@@ -1173,7 +1183,7 @@
                     <p style="color: var(--color-gray-medium); margin-bottom: var(--spacing-lg);">
                         Seu pagamento foi confirmado! Você já tem acesso completo à plataforma.
                     </p>
-                    <button onclick="goToDashboard()" style="background: var(--gradient-primary); color: white; border: none; padding: var(--spacing-lg) var(--spacing-2xl); border-radius: var(--border-radius-lg); cursor: pointer; font-size: var(--font-size-lg); font-weight: 600;">
+                    <button onclick="goToDashboard()" style="background: #3498db; color: white; border: none; padding: var(--spacing-lg) var(--spacing-2xl); border-radius: var(--border-radius-lg); cursor: pointer; font-size: var(--font-size-lg); font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);">
                         🚀 Acessar Plataforma
                     </button>
                 </div>
