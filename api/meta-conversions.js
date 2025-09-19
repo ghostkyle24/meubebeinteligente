@@ -23,9 +23,19 @@ export default async function handler(req, res) {
             browser_data
         } = req.body;
 
-        // Configurações da Meta (usando variáveis de ambiente)
+        // Configurações da Meta (PRODUÇÃO - obrigatório usar variáveis de ambiente)
         const ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
-        const PIXEL_ID = process.env.META_PIXEL_ID;
+        const PIXEL_ID = process.env.META_PIXEL_ID || '636104805955276'; // ID público, pode ser fallback
+        
+        // Verificar se o token da Meta está configurado
+        if (!ACCESS_TOKEN) {
+            console.log('❌ ERRO: Variável META_ACCESS_TOKEN não configurada!');
+            return res.status(500).json({
+                success: false,
+                error: 'Variável de ambiente META_ACCESS_TOKEN não configurada no Vercel',
+                instructions: 'Configure a variável META_ACCESS_TOKEN no dashboard do Vercel'
+            });
+        }
 
         // Obter IP real do cliente
         const clientIP = req.headers['x-forwarded-for'] || 

@@ -25,15 +25,43 @@ export default async function handler(req, res) {
         console.log('🔍 Payment method original:', paymentMethod);
         console.log('🔍 Payment method normalizado:', normalizedPaymentMethod);
 
-        // Configurações do Asaas (usando variáveis de ambiente)
+        // Configurações do Asaas (PRODUÇÃO - obrigatório usar variáveis de ambiente)
         const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
-        const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL;
+        const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL || 'https://api.asaas.com/v3';
+        
+        // Debug: Verificar variáveis de ambiente
+        console.log('🔍 Debug - process.env.ASAAS_API_KEY:', process.env.ASAAS_API_KEY ? 'EXISTE' : 'NÃO EXISTE');
+        console.log('🔍 Debug - Primeiros 20 chars:', process.env.ASAAS_API_KEY ? process.env.ASAAS_API_KEY.substring(0, 20) : 'UNDEFINED');
+        console.log('🔍 Debug - Todas as env vars relacionadas ao Asaas:', {
+            ASAAS_API_KEY: process.env.ASAAS_API_KEY ? 'DEFINIDA' : 'UNDEFINED',
+            ASAAS_BASE_URL: process.env.ASAAS_BASE_URL || 'UNDEFINED'
+        });
         
         // Verificar se a chave API é válida
-        if (!ASAAS_API_KEY || !ASAAS_API_KEY.startsWith('$aact_')) {
+        if (!ASAAS_API_KEY) {
+            console.log('❌ ERRO CRÍTICO: Variável de ambiente ASAAS_API_KEY não configurada!');
             return res.status(500).json({
                 success: false,
-                error: 'Chave API do Asaas inválida'
+                error: 'Variável de ambiente ASAAS_API_KEY não configurada no Vercel',
+                instructions: 'Configure a variável ASAAS_API_KEY no dashboard do Vercel',
+                debug: {
+                    hasApiKey: false,
+                    environment: process.env.NODE_ENV || 'unknown'
+                }
+            });
+        }
+        
+        if (!ASAAS_API_KEY.startsWith('$aact_')) {
+            console.log('❌ Erro: Chave API com formato inválido');
+            console.log('❌ ASAAS_API_KEY:', ASAAS_API_KEY);
+            return res.status(500).json({
+                success: false,
+                error: 'Chave API do Asaas com formato inválido',
+                debug: {
+                    hasApiKey: !!ASAAS_API_KEY,
+                    apiKeyLength: ASAAS_API_KEY ? ASAAS_API_KEY.length : 0,
+                    apiKeyPrefix: ASAAS_API_KEY ? ASAAS_API_KEY.substring(0, 10) : 'N/A'
+                }
             });
         }
         

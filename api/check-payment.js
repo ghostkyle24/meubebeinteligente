@@ -1,6 +1,6 @@
-// Configurações do Asaas (usando variáveis de ambiente)
+// Configurações do Asaas (PRODUÇÃO - obrigatório usar variáveis de ambiente)
 const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
-const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL;
+const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL || 'https://api.asaas.com/v3';
 
 export default async function handler(req, res) {
     // Configurar CORS

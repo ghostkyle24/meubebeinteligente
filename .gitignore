@@ -26,6 +26,8 @@ index-backup.html
 PRODUCTION-SETUP.md
 DEBUG-ASAAS.md
 META-PIXEL-SETUP.md
+PRODUCTION-DEPLOY.md
+VERCEL-ENV-SETUP.md
 
 # Arquivos SQL com dados sensíveis
 add-admin-column.sql

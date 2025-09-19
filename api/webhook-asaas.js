@@ -77,7 +77,7 @@ export default async function handler(req, res) {
 // Função para enviar dados para Meta Conversions API
 async function sendToMetaAPI(eventData) {
     const ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
-    const PIXEL_ID = process.env.META_PIXEL_ID;
+    const PIXEL_ID = process.env.META_PIXEL_ID || '636104805955276'; // ID público, pode ser fallback
 
     const metaData = {
         data: [eventData],
