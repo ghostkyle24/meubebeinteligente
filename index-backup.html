@@ -114,38 +114,6 @@
             justify-content: space-between;
             align-items: center;
             padding: var(--spacing-md) 0;
-            background: transparent !important;
-        }
-        
-        /* Garantir que o header tenha fundo escuro */
-        .header {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%) !important;
-            backdrop-filter: blur(20px) !important;
-        }
-        
-        .header .container {
-            background: transparent !important;
-        }
-        
-        /* Garantir que elementos específicos do header não tenham background branco */
-        .header .container,
-        .header .navbar, 
-        .header .navbar-brand, 
-        .header .navbar-menu {
-            background: transparent !important;
-        }
-        
-        /* Exceções para botões que devem manter seus backgrounds */
-        .header .navbar-cta {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        }
-        
-        .header .navbar-login {
-            background: rgba(255, 255, 255, 0.1) !important;
-        }
-        
-        .header .navbar-brand i {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         }
 
         .navbar-brand {
@@ -154,51 +122,29 @@
             gap: var(--spacing-sm);
             font-size: var(--font-size-lg);
             font-weight: 700;
-            color: white;
+            color: var(--color-white);
             text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-brand:hover {
-            transform: scale(1.05);
         }
 
         .navbar-brand i {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            color: var(--color-cyan);
+            font-size: var(--font-size-xl);
         }
 
         .navbar-toggle {
             display: none;
             flex-direction: column;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--border-radius-lg);
+            background: none;
+            border: none;
             cursor: pointer;
             padding: var(--spacing-sm);
             gap: 4px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .navbar-toggle:hover {
-            background: rgba(102, 126, 234, 0.2);
-            border-color: #667eea;
-            transform: scale(1.05);
         }
 
         .navbar-toggle-line {
             width: 25px;
             height: 3px;
-            background: white;
+            background: var(--color-white);
             border-radius: 2px;
             transition: all 0.3s ease;
         }
@@ -222,69 +168,50 @@
         }
 
         .navbar-link {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--color-white);
             text-decoration: none;
             font-weight: 500;
             padding: var(--spacing-sm) var(--spacing-md);
             border-radius: var(--border-radius-lg);
             transition: all 0.3s ease;
-            position: relative;
         }
 
         .navbar-link:hover,
         .navbar-link.active {
-            color: white;
-            background: rgba(102, 126, 234, 0.15);
-            transform: translateY(-1px);
-        }
-
-        .navbar-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 2px;
-            background: #667eea;
-            border-radius: 1px;
+            color: var(--color-cyan);
+            background: rgba(6, 182, 212, 0.1);
         }
 
         .navbar-cta {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: var(--gradient-neon);
+            color: var(--color-white);
             border: none;
             padding: var(--spacing-sm) var(--spacing-lg);
             border-radius: var(--border-radius-lg);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
         }
 
         .navbar-cta:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.6);
         }
 
         .navbar-login {
             background: rgba(255, 255, 255, 0.1);
             color: var(--color-white);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: var(--spacing-sm);
             border-radius: var(--border-radius-lg);
             cursor: pointer;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            font-weight: 500;
         }
 
         .navbar-login:hover {
-            background: rgba(102, 126, 234, 0.2);
-            border-color: #667eea;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--color-cyan);
         }
 
         /* Mobile Styles */
@@ -813,7 +740,7 @@
                 </button>
                 
                 <div class="navbar-menu" id="navbarMenu">
-                    <a href="#home" class="navbar-link">Início</a>
+                    <a href="#home" class="navbar-link active">Início</a>
                     <a href="#features" class="navbar-link">Recursos</a>
                     <a href="#pricing" class="navbar-link">Preços</a>
                     <a href="#testimonials" class="navbar-link">Depoimentos</a>
@@ -829,20 +756,20 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="container">
-                <h1 class="hero-title">
+            <h1 class="hero-title">
                 ⚠️ Proteja seu filho em segundos contra conteúdos perigosos
-                </h1>
-                <p class="hero-subtitle">
+            </h1>
+            <p class="hero-subtitle">
                 Músicas, vídeos e jogos educativos SEM anúncios, SEM riscos
-                </p>
-                <div class="hero-cta">
+            </p>
+            <div class="hero-cta">
                 <button class="btn btn-primary" onclick="scrollToPricing()" style="padding: 8px 16px; font-size: 14px;">
-                        <i class="fas fa-shield-alt"></i>
+                    <i class="fas fa-shield-alt"></i>
                     🚨 Proteger meu filho agora
-                    </button>
+                </button>
                 <p class="hero-guarantee">⚡ Garantia de 7 dias ou seu dinheiro de volta</p>
-                </div>
             </div>
+        </div>
     </section>
 
     <!-- Prova Social -->
@@ -856,34 +783,34 @@
                         <div class="testimonial-author">
                             <strong>Maria Silva</strong>
                             <span>Mãe da Ana, 4 anos</span>
+                        </div>
                     </div>
-                    </div>
-                    </div>
+                </div>
                 <div class="testimonial-card">
                     <div class="testimonial-content">
                         <p>"Sem anúncios, sem sustos. Meu filho aprende brincando e eu fico tranquila."</p>
                         <div class="testimonial-author">
                             <strong>Joana Santos</strong>
                             <span>Mãe do Pedro, 5 anos</span>
+                        </div>
                     </div>
-                    </div>
-                    </div>
+                </div>
                 <div class="testimonial-card">
                     <div class="testimonial-content">
                         <p>"Os valores cristãos que ensinam são exatamente o que procurava para minha família."</p>
                         <div class="testimonial-author">
                             <strong>Ana Costa</strong>
                             <span>Mãe da Sofia, 3 anos</span>
+                        </div>
                     </div>
-                    </div>
-                    </div>
+                </div>
                 <div class="testimonial-card">
                     <div class="testimonial-content">
                         <p>"Meu filho aprendeu inglês brincando! As aulas são super divertidas e ele nem percebe que está estudando."</p>
                         <div class="testimonial-author">
                             <strong>Patrícia Lima</strong>
                             <span>Mãe do Lucas, 6 anos</span>
-                </div>
+                        </div>
                     </div>
                 </div>
                 <div class="testimonial-card">
@@ -957,17 +884,17 @@
                 <div class="benefit-item" onclick="window.location.href='musicas.html'">
                     <div class="benefit-icon">
                         <i data-lucide="music"></i>
-                </div>
+                    </div>
                     <h3>Músicas Educativas</h3>
                     <p>Cores, números e valores cristãos através da música</p>
                 </div>
                 <div class="benefit-item" onclick="window.location.href='videos.html'">
                     <div class="benefit-icon">
                         <i data-lucide="play-circle"></i>
-                </div>
+                    </div>
                     <h3>Vídeos Seguros</h3>
                     <p>Conteúdo educativo sem anúncios ou distrações</p>
-            </div>
+                </div>
                 <div class="benefit-item" onclick="window.location.href='ingles.html'">
                     <div class="benefit-icon">
                         <i data-lucide="globe"></i>
@@ -1032,14 +959,14 @@
                     <div class="platform-header youtube-header">
                         <div class="platform-logo">
                             <i class="fab fa-youtube"></i>
-                    </div>
+                        </div>
                         <h3>YouTube Kids</h3>
                         <span class="platform-status danger">Risco Alto</span>
-                </div>
+                    </div>
                     <div class="platform-header our-header">
                         <div class="platform-logo">
                             <i class="fas fa-shield-alt"></i>
-                    </div>
+                        </div>
                         <h3>Meu Bebê Inteligente</h3>
                         <span class="platform-status safe">100% Seguro</span>
                     </div>
@@ -1050,22 +977,22 @@
                         <div class="feature-label">
                             <i class="fas fa-ad"></i>
                             <span>Sem anúncios</span>
-                    </div>
+                        </div>
                         <div class="feature-result youtube-result">
                             <i class="fas fa-times-circle"></i>
                             <span>Tem anúncios</span>
-                </div>
+                        </div>
                         <div class="feature-result our-result">
                             <i class="fas fa-check-circle"></i>
                             <span>Zero anúncios</span>
+                        </div>
                     </div>
-                </div>
-                
+                    
                     <div class="feature-row" data-feature="content">
                         <div class="feature-label">
                             <i class="fas fa-filter"></i>
                             <span>Conteúdo curado</span>
-                    </div>
+                        </div>
                         <div class="feature-result youtube-result">
                             <i class="fas fa-times-circle"></i>
                             <span>Algoritmo automático</span>
@@ -1074,13 +1001,13 @@
                             <i class="fas fa-check-circle"></i>
                             <span>Curadoria manual</span>
                         </div>
-                </div>
-                
+                    </div>
+                    
                     <div class="feature-row" data-feature="values">
                         <div class="feature-label">
                             <i class="fas fa-cross"></i>
                             <span>Valores cristãos</span>
-                    </div>
+                        </div>
                         <div class="feature-result youtube-result">
                             <i class="fas fa-times-circle"></i>
                             <span>Conteúdo secular</span>
@@ -1089,13 +1016,13 @@
                             <i class="fas fa-check-circle"></i>
                             <span>Baseado na fé</span>
                         </div>
-                </div>
-                
+                    </div>
+                    
                     <div class="feature-row" data-feature="safety">
                         <div class="feature-label">
                             <i class="fas fa-shield-check"></i>
                             <span>100% seguro</span>
-                    </div>
+                        </div>
                         <div class="feature-result youtube-result">
                             <i class="fas fa-times-circle"></i>
                             <span>Falhas de filtragem</span>
@@ -1104,13 +1031,13 @@
                             <i class="fas fa-check-circle"></i>
                             <span>Garantia total</span>
                         </div>
-                </div>
-                
+                    </div>
+                    
                     <div class="feature-row" data-feature="education">
                         <div class="feature-label">
                             <i class="fas fa-graduation-cap"></i>
                             <span>Foco educativo</span>
-                    </div>
+                        </div>
                         <div class="feature-result youtube-result">
                             <i class="fas fa-times-circle"></i>
                             <span>Entretenimento</span>
@@ -1726,12 +1653,12 @@
                 });
             } else {
                 // Fallback para a seção de preços se o plano starter não for encontrado
-            const pricingSection = document.getElementById('pricing');
-            if (pricingSection) {
-                pricingSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                const pricingSection = document.getElementById('pricing');
+                if (pricingSection) {
+                    pricingSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             }
         }

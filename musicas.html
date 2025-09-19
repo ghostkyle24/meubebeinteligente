@@ -205,13 +205,22 @@
         }
         
         .video-modal-content {
-            background: #1a1a1a;
+            background: #1a1a1a !important;
             border-radius: var(--border-radius-xl);
             padding: var(--spacing-xl);
             max-width: 800px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+        }
+        
+        /* Garantir que todos os elementos filhos tenham fundo sólido */
+        .video-modal-content * {
+            background-color: inherit;
+        }
+        
+        .video-modal-content .video-item {
+            background: #2a2a2a !important;
         }
         
         .video-modal-header {
@@ -238,6 +247,9 @@
         .video-list {
             display: grid;
             gap: var(--spacing-md);
+            background: #1a1a1a;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
         }
         
         .video-item {
@@ -247,12 +259,12 @@
             padding: var(--spacing-md);
             border: 1px solid #333333;
             border-radius: var(--border-radius-md);
-            background: #2a2a2a;
+            background: #2a2a2a !important;
             transition: all 0.3s ease;
         }
         
         .video-item:hover {
-            background: #333333;
+            background: #333333 !important;
         }
         
         .video-thumbnail {
@@ -1250,56 +1262,56 @@
                         title: "Tabuada do 2", 
                         description: "Aprenda a tabuada do 2 cantando", 
                         duration: "2:30",
-                        thumbnail: "https://img.youtube.com/vi/tab2abc123/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
                     },
                     { 
                         id: "tab3def456",
                         title: "Tabuada do 3", 
                         description: "Aprenda a tabuada do 3 cantando", 
                         duration: "2:45",
-                        thumbnail: "https://img.youtube.com/vi/tab3def456/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
                     },
                     { 
                         id: "tab4ghi789",
                         title: "Tabuada do 4", 
                         description: "Aprenda a tabuada do 4 cantando", 
                         duration: "3:00",
-                        thumbnail: "https://img.youtube.com/vi/tab4ghi789/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
                     },
                     { 
                         id: "tab5jkl012",
                         title: "Tabuada do 5", 
                         description: "Aprenda a tabuada do 5 cantando", 
                         duration: "2:15",
-                        thumbnail: "https://img.youtube.com/vi/tab5jkl012/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
                     },
                     { 
                         id: "tab6mno345",
                         title: "Tabuada do 6", 
                         description: "Aprenda a tabuada do 6 cantando", 
                         duration: "2:50",
-                        thumbnail: "https://img.youtube.com/vi/tab6mno345/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
                     },
                     { 
                         id: "tab7pqr678",
                         title: "Tabuada do 7", 
                         description: "Aprenda a tabuada do 7 cantando", 
                         duration: "3:10",
-                        thumbnail: "https://img.youtube.com/vi/tab7pqr678/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
                     },
                     { 
                         id: "tab8stu901",
                         title: "Tabuada do 8", 
                         description: "Aprenda a tabuada do 8 cantando", 
                         duration: "2:40",
-                        thumbnail: "https://img.youtube.com/vi/tab8stu901/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
                     },
                     { 
                         id: "tab9vwx234",
                         title: "Tabuada do 9", 
                         description: "Aprenda a tabuada do 9 cantando", 
                         duration: "2:55",
-                        thumbnail: "https://img.youtube.com/vi/tab9vwx234/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/V3n5TJKGenw/hqdefault.jpg"
                     }
                 ]
             },
@@ -1319,56 +1331,56 @@
                         title: "A Criação do Mundo", 
                         description: "História bíblica da criação", 
                         duration: "4:20",
-                        thumbnail: "https://img.youtube.com/vi/bibl1criacao/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
                     },
                     { 
                         id: "bibl2noe",
                         title: "Noé e a Arca", 
                         description: "A história do dilúvio", 
                         duration: "5:15",
-                        thumbnail: "https://img.youtube.com/vi/bibl2noe/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
                     },
                     { 
                         id: "bibl3davi",
                         title: "Davi e Golias", 
                         description: "A coragem de Davi", 
                         duration: "4:45",
-                        thumbnail: "https://img.youtube.com/vi/bibl3davi/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
                     },
                     { 
                         id: "bibl4daniel",
                         title: "Daniel na Cova dos Leões", 
                         description: "A fé de Daniel", 
                         duration: "4:30",
-                        thumbnail: "https://img.youtube.com/vi/bibl4daniel/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
                     },
                     { 
                         id: "bibl5jesus",
                         title: "Jesus e os Peixes", 
                         description: "O milagre da multiplicação", 
                         duration: "3:50",
-                        thumbnail: "https://img.youtube.com/vi/bibl5jesus/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
                     },
                     { 
                         id: "bibl6moises",
                         title: "Moisés e o Mar Vermelho", 
                         description: "A libertação do povo de Israel", 
                         duration: "4:10",
-                        thumbnail: "https://img.youtube.com/vi/bibl6moises/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
                     },
                     { 
                         id: "bibl7josue",
                         title: "Josué e Jericó", 
                         description: "As muralhas de Jericó", 
                         duration: "3:35",
-                        thumbnail: "https://img.youtube.com/vi/bibl7josue/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
                     },
                     { 
                         id: "bibl8jonas",
                         title: "Jonas e a Baleia", 
                         description: "A história de Jonas", 
                         duration: "4:00",
-                        thumbnail: "https://img.youtube.com/vi/bibl8jonas/hqdefault.jpg"
+                        thumbnail: "https://img.youtube.com/vi/_W1tutUNNTw/hqdefault.jpg"
                     }
                 ]
             }
