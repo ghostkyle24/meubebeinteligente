@@ -1,8 +1,8 @@
 // Configuração do Pixel da Meta
 const META_PIXEL_CONFIG = {
-    // Pixel ID real
-    PIXEL_ID: '636104805955276',
-    ACCESS_TOKEN: 'EAAPZBiaTYbAkBPXrv4sDTGeaYKB8JOnArQvHHgGoQwtJGfS5VkHYb7Pvf8ISfUVWUR6Xk3rlD1f15DQPcniM6qy62hZCXIg75AUvEcseuzJnqTyGFIVf3y3DJRATxaHTXKccIHuagOjgaI3X2xFHJXddIMc71aHSMiYHYmIwoH7O5H1G9lha0HSSNg0QZDZD',
+    // Configurações Meta (serão injetadas pelo servidor)
+    PIXEL_ID: window.META_PIXEL_ID || '636104805955276', // fallback para desenvolvimento
+    ACCESS_TOKEN: window.META_ACCESS_TOKEN || '',
     
     // Configurações dos planos para eventos
     PLANS: {

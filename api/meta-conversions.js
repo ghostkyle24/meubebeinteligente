@@ -23,11 +23,9 @@ export default async function handler(req, res) {
             browser_data
         } = req.body;
 
-        // Token de acesso da Meta
-        const ACCESS_TOKEN = 'EAAPZBiaTYbAkBPXrv4sDTGeaYKB8JOnArQvHHgGoQwtJGfS5VkHYb7Pvf8ISfUVWUR6Xk3rlD1f15DQPcniM6qy62hZCXIg75AUvEcseuzJnqTyGFIVf3y3DJRATxaHTXKccIHuagOjgaI3X2xFHJXddIMc71aHSMiYHYmIwoH7O5H1G9lha0HSSNg0QZDZD';
-        
-        // Pixel ID real
-        const PIXEL_ID = '636104805955276';
+        // Configurações da Meta (usando variáveis de ambiente)
+        const ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
+        const PIXEL_ID = process.env.META_PIXEL_ID;
 
         // Obter IP real do cliente
         const clientIP = req.headers['x-forwarded-for'] || 

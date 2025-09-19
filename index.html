@@ -41,23 +41,16 @@
         const CONFIG = {
             // Supabase - Configurações diretas
             SUPABASE_URL: 'https://htmofgizynztknpekfbu.supabase.co',
-            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0bW9mZ2l6eW56dGtucGVrZmJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzYwMTYsImV4cCI6MjA3MzExMjAxNn0.a_3_-ncgdXkY2At0ougpZWsXuCrYe-T60RhezGPiE-w',
+            // ⚠️ SUPABASE_ANON_KEY removida por segurança - será injetada pelo servidor
             
-            // Pagar.me - Configurações diretas
-            PAGARME_API_KEY: 'sk_85c717614bea451eb81fa2b9e4b09109',
-            
-            // Admin - Configurações diretas
-            ADMIN_EMAIL: 'ashercongintencia@gmail.com',
-            ADMIN_EMAIL_ALT: 'ashercontingencia@gmail.com',
-            ADMIN_PASSWORD: 'DIVJroiDIVJ#18072002',
+            // ⚠️ Outras configurações sensíveis movidas para variáveis de ambiente
             
             // Configurações do Site
             SITE_NAME: 'Meu Bebê Inteligente',
             SITE_URL: 'https://meubebeinteligente.vercel.app',
             
-            // Meta Pixel
+            // Meta Pixel (ID público, ACCESS_TOKEN será injetado pelo servidor)
             META_PIXEL_ID: '636104805955276',
-            META_ACCESS_TOKEN: 'EAAPZBiaTYbAkBPXrv4sDTGeaYKB8JOnArQvHHgGoQwtJGfS5VkHYb7Pvf8ISfUVWUR6Xk3rlD1f15DQPcniM6qy62hZCXIg75AUvEcseuzJnqTyGFIVf3y3DJRATxaHTXKccIHuagOjgaI3X2xFHJXddIMc71aHSMiYHYmIwoH7O5H1G9lha0HSSNg0QZDZD',
             
             // Planos - Configurados para produção
             PLANS: {
@@ -100,7 +93,9 @@
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
         
-        // Pixel será inicializado pelo meta-pixel-config.js
+        // Inicializar Pixel
+        fbq('init', '636104805955276');
+        fbq('track', 'PageView');
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"

@@ -1,6 +1,6 @@
-// Configurações do Asaas (PRODUÇÃO)
-const ASAAS_API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojc0ZGY5MDE5LTgzNmMtNDk4NS1hMWFiLTU5YjA2NmIxNzM0ZDo6JGFhY2hfNGRlZmM2NzUtMGQ1Ny00ZjI2LWIxYjYtMDBiNDA3ODMzZTQw';
-const ASAAS_BASE_URL = 'https://api.asaas.com/v3';
+// Configurações do Asaas (usando variáveis de ambiente)
+const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
+const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL;
 
 export default async function handler(req, res) {
     // Configurar CORS

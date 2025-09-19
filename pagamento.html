@@ -1058,6 +1058,32 @@
         }
         
         function showPaymentSuccess() {
+            // Obter dados do usuário para envio à Meta
+            const urlParams = new URLSearchParams(window.location.search);
+            const planName = urlParams.get('plan') || 'monthly';
+            const userData = JSON.parse(localStorage.getItem('tempUserData') || '{}');
+            
+            // Enviar evento de Purchase para Meta Pixel (client-side)
+            if (typeof fbq !== 'undefined' && userData.email) {
+                const planPrices = {
+                    monthly: 29,
+                    quarterly: 79,
+                    yearly: 299
+                };
+                
+                const planPrice = planPrices[planName] || 29;
+                
+                fbq('track', 'Purchase', {
+                    value: planPrice,
+                    currency: 'BRL',
+                    content_name: `Plano ${planName} - Meu Bebê Inteligente`,
+                    content_category: 'Educação Infantil',
+                    content_type: 'subscription'
+                });
+                
+                console.log('✅ Evento Purchase enviado para Meta Pixel');
+            }
+            
             // Limpar dados temporários
             localStorage.removeItem('tempUserData');
             
