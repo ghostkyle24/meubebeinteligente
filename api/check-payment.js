@@ -1,5 +1,5 @@
-// Configurações do Asaas (PRODUÇÃO - obrigatório usar variáveis de ambiente)
-const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
+// Configurações do Asaas (PRODUÇÃO - com fallback temporário)
+const ASAAS_API_KEY = process.env.ASAAS_API_KEY || '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjYwM2JhY2NkLTAzOTAtNDYyYS1iMDBkLTIxZGE4Yjg3NGFjMDo6JGFhY2hfOTQyODMzNzMtNjNiNC00M2Y3LTk5YjQtNTExNDg1YTU3N2Vj';
 const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL || 'https://api.asaas.com/v3';
 
 export default async function handler(req, res) {
