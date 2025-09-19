@@ -32,6 +32,9 @@ export default async function handler(req, res) {
         // Debug: Verificar variáveis de ambiente
         console.log('🔍 Debug - process.env.ASAAS_API_KEY:', process.env.ASAAS_API_KEY ? 'EXISTE' : 'NÃO EXISTE');
         console.log('🔍 Debug - Primeiros 20 chars:', process.env.ASAAS_API_KEY ? process.env.ASAAS_API_KEY.substring(0, 20) : 'UNDEFINED');
+        console.log('🔍 Debug - NODE_ENV:', process.env.NODE_ENV);
+        console.log('🔍 Debug - VERCEL:', process.env.VERCEL);
+        console.log('🔍 Debug - Todas as env vars Asaas:', Object.keys(process.env).filter(key => key.includes('ASAAS')));
         console.log('🔍 Debug - Todas as env vars relacionadas ao Asaas:', {
             ASAAS_API_KEY: process.env.ASAAS_API_KEY ? 'DEFINIDA' : 'UNDEFINED',
             ASAAS_BASE_URL: process.env.ASAAS_BASE_URL || 'UNDEFINED'
