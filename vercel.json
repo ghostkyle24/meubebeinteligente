@@ -1,0 +1,28 @@
+{
+  "functions": {
+    "api/create-payment.js": {
+      "maxDuration": 30
+    },
+    "api/check-payment.js": {
+      "maxDuration": 30
+    },
+    "api/meta-conversions.js": {
+      "maxDuration": 30
+    },
+    "api/webhook-asaas.js": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "ASAAS_API_KEY": "@asaas-api-key",
+    "ASAAS_BASE_URL": "https://api.asaas.com/v3",
+    "META_ACCESS_TOKEN": "@meta-access-token",
+    "META_PIXEL_ID": "636104805955276"
+  },
+  "build": {
+    "env": {
+      "ASAAS_API_KEY": "@asaas-api-key",
+      "META_ACCESS_TOKEN": "@meta-access-token"
+    }
+  }
+}

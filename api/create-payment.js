@@ -25,8 +25,8 @@ export default async function handler(req, res) {
         console.log('🔍 Payment method original:', paymentMethod);
         console.log('🔍 Payment method normalizado:', normalizedPaymentMethod);
 
-        // Configurações do Asaas (PRODUÇÃO - com fallback temporário)
-        const ASAAS_API_KEY = process.env.ASAAS_API_KEY || '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjYwM2JhY2NkLTAzOTAtNDYyYS1iMDBkLTIxZGE4Yjg3NGFjMDo6JGFhY2hfOTQyODMzNzMtNjNiNC00M2Y3LTk5YjQtNTExNDg1YTU3N2Vj';
+        // Configurações do Asaas (PRODUÇÃO - OBRIGATÓRIO usar variáveis de ambiente)
+        const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
         const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL || 'https://api.asaas.com/v3';
         
         // Debug: Verificar variáveis de ambiente
