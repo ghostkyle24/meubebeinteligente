@@ -14,6 +14,19 @@ test-supabase-connection.html
 simple-admin.html
 admin-login.html
 
+# Arquivos de teste com chaves API (NUNCA COMMITAR)
+test-asaas-*.js
+test-*.js
+
+# Backups que podem conter chaves
+*-backup.html
+index-backup.html
+
+# Documentos com dados sensíveis
+PRODUCTION-SETUP.md
+DEBUG-ASAAS.md
+META-PIXEL-SETUP.md
+
 # Arquivos SQL com dados sensíveis
 add-admin-column.sql
 update-admin-password.sql
