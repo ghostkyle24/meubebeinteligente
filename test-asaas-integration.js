@@ -1,7 +1,7 @@
 // Teste da integração com Asaas
 // Execute este arquivo para testar a conexão com a API do Asaas
 
-const ASAAS_API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojc0ZGY5MDE5LTgzNmMtNDk4NS1hMWFiLTU5YjA2NmIxNzM0ZDo6JGFhY2hfNGRlZmM2NzUtMGQ1Ny00ZjI2LWIxYjYtMDBiNDA3ODMzZTQw';
+const ASAAS_API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjYwM2JhY2NkLTAzOTAtNDYyYS1iMDBkLTIxZGE4Yjg3NGFjMDo6JGFhY2hfOTQyODMzNzMtNjNiNC00M2Y3LTk5YjQtNTExNDg1YTU3N2Vj';
 const ASAAS_BASE_URL = 'https://api.asaas.com/v3';
 
 // Dados de teste (conforme documentação oficial do Asaas)

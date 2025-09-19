@@ -12,7 +12,7 @@ Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
 ```env
 # ASAAS API - PRODUÇÃO
-ASAAS_API_KEY=sua_chave_api_asaas_real_aqui
+ASAAS_API_KEY=$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjYwM2JhY2NkLTAzOTAtNDYyYS1iMDBkLTIxZGE4Yjg3NGFjMDo6JGFhY2hfOTQyODMzNzMtNjNiNC00M2Y3LTk5YjQtNTExNDg1YTU3N2Vj
 ASAAS_WALLET_ID=seu_wallet_id_aqui
 ASAAS_BASE_URL=https://api.asaas.com/v3
 
