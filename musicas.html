@@ -258,12 +258,12 @@
         .video-thumbnail {
             width: 120px;
             height: 68px;
-            background: var(--color-gray-light);
+            background: #404040;
             border-radius: var(--border-radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--color-gray-medium);
+            color: #cccccc;
             font-size: var(--font-size-lg);
             position: relative;
             overflow: hidden;
@@ -363,12 +363,14 @@
             padding: var(--spacing-md);
             border-radius: var(--border-radius-md);
             margin-bottom: var(--spacing-sm);
+            background: #2a2a2a;
+            border: 1px solid #333333;
             transition: background-color 0.3s ease;
             cursor: pointer;
         }
         
         .song-item:hover {
-            background: var(--color-gray-light);
+            background: #333333;
         }
         
         .song-item.playing {
@@ -396,11 +398,12 @@
         .song-title {
             font-weight: 600;
             margin-bottom: var(--spacing-xs);
+            color: white;
         }
         
         .song-description {
             font-size: var(--font-size-sm);
-            color: var(--color-gray-medium);
+            color: #cccccc;
         }
         
         .play-button {
