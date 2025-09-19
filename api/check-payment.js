@@ -1,5 +1,10 @@
-// Configurações do Asaas (PRODUÇÃO - com fallback temporário)
-const ASAAS_API_KEY = process.env.ASAAS_API_KEY || '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjYwM2JhY2NkLTAzOTAtNDYyYS1iMDBkLTIxZGE4Yjg3NGFjMDo6JGFhY2hfOTQyODMzNzMtNjNiNC00M2Y3LTk5YjQtNTExNDg1YTU3N2Vj';
+// Configurações do Asaas (PRODUÇÃO)
+let ASAAS_API_KEY = process.env.ASAAS_API_KEY ? process.env.ASAAS_API_KEY.trim() : null;
+
+// Fix: Se a chave não começar com $, adicionar (Vercel às vezes corta o $)
+if (ASAAS_API_KEY && !ASAAS_API_KEY.startsWith('$')) {
+    ASAAS_API_KEY = '$' + ASAAS_API_KEY;
+}
 const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL || 'https://api.asaas.com/v3';
 
 export default async function handler(req, res) {

@@ -26,7 +26,13 @@ export default async function handler(req, res) {
         console.log('🔍 Payment method normalizado:', normalizedPaymentMethod);
 
         // Configurações do Asaas (PRODUÇÃO - OBRIGATÓRIO usar variáveis de ambiente)
-        const ASAAS_API_KEY = process.env.ASAAS_API_KEY ? process.env.ASAAS_API_KEY.trim() : null;
+        let ASAAS_API_KEY = process.env.ASAAS_API_KEY ? process.env.ASAAS_API_KEY.trim() : null;
+        
+        // Fix: Se a chave não começar com $, adicionar (Vercel às vezes corta o $)
+        if (ASAAS_API_KEY && !ASAAS_API_KEY.startsWith('$')) {
+            ASAAS_API_KEY = '$' + ASAAS_API_KEY;
+            console.log('🔧 Fix: Adicionado $ no início da chave API');
+        }
         const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL || 'https://api.asaas.com/v3';
         
         // Debug: Verificar variáveis de ambiente
