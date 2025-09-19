@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configurações inline para evitar problemas de carregamento
@@ -620,10 +619,6 @@
                     <i class="fas fa-qrcode"></i>
                     <span>PIX</span>
                 </button>
-                <button class="payment-btn" data-method="card">
-                    <i class="fas fa-credit-card"></i>
-                    <span>Cartão de Crédito</span>
-                </button>
             </div>
             
             <button class="btn-process-payment" id="processPaymentBtn">
@@ -941,11 +936,10 @@
                 <div style="text-align: center; padding: var(--spacing-2xl);">
                     <h3 style="color: var(--color-blue); margin-bottom: var(--spacing-lg);">📱 PIX Gerado!</h3>
                     <p style="color: var(--color-gray-medium); margin-bottom: var(--spacing-lg);">
-                        Escaneie o QR Code com seu app de pagamento ou copie o código PIX
+                        Copie o código PIX abaixo e cole no seu app de pagamento
                     </p>
-                    <div id="pixQRCode" style="margin: var(--spacing-lg) 0;"></div>
-                    <div id="pixCode" style="background: #f8f9fa; border: 2px solid #e9ecef; padding: var(--spacing-md); border-radius: var(--border-radius-lg); font-family: monospace; word-break: break-all; margin-bottom: var(--spacing-lg); color: #495057; font-weight: 500;"></div>
-                    <button onclick="copyPixCode()" style="background: #3498db; color: white; border: none; padding: var(--spacing-md) var(--spacing-lg); border-radius: var(--border-radius-lg); cursor: pointer; margin-bottom: var(--spacing-lg); box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);">
+                    <div id="pixCode" style="background: #f8f9fa; border: 2px solid #e9ecef; padding: var(--spacing-lg); border-radius: var(--border-radius-lg); font-family: monospace; word-break: break-all; margin-bottom: var(--spacing-lg); color: #495057; font-weight: 500; font-size: 14px;"></div>
+                    <button onclick="copyPixCode()" style="background: #3498db; color: white; border: none; padding: var(--spacing-lg) var(--spacing-xl); border-radius: var(--border-radius-lg); cursor: pointer; margin-bottom: var(--spacing-lg); box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4); font-size: 16px; font-weight: 600;">
                         📋 Copiar Código PIX
                     </button>
                     <p style="color: var(--color-amber); font-weight: 600;">
@@ -981,56 +975,10 @@
                 console.error('❌ Código PIX não encontrado na resposta:', result);
             }
             
-            // Gerar QR Code se tiver o código PIX
-            if (pixCode && typeof QRCode !== 'undefined') {
-                try {
-                    const qrCodeElement = document.getElementById('pixQRCode');
-                    QRCode.toCanvas(qrCodeElement, pixCode, {
-                        width: 200,
-                        margin: 2,
-                        color: {
-                            dark: '#000000',
-                            light: '#FFFFFF'
-                        }
-                    });
-                    console.log('✅ QR Code gerado com sucesso');
-                } catch (error) {
-                    console.error('❌ Erro ao gerar QR Code:', error);
-                }
-            } else if (qrCodeUrl && typeof QRCode !== 'undefined') {
-                try {
-                    const qrCodeElement = document.getElementById('pixQRCode');
-                    QRCode.toCanvas(qrCodeElement, qrCodeUrl, {
-                        width: 200,
-                        margin: 2,
-                        color: {
-                            dark: '#000000',
-                            light: '#FFFFFF'
-                        }
-                    });
-                    console.log('✅ QR Code gerado com URL');
-                } catch (error) {
-                    console.error('❌ Erro ao gerar QR Code com URL:', error);
-                }
-            } else {
-                console.log('⚠️ QRCode library não carregada - tentando carregar...');
-                
-                // Tentar carregar a biblioteca QRCode dinamicamente
-                if (typeof QRCode === 'undefined') {
-                    loadQRCodeLibrary().then(() => {
-                        console.log('✅ QRCode library carregada, gerando QR Code...');
-                        generateQRCode(pixCode || qrCodeUrl);
-                    }).catch(() => {
-                        console.log('❌ Falha ao carregar QRCode library');
-                        showQRCodeFallback(pixCode || qrCodeUrl);
-                    });
-                }
-                
-                // Se o PIX está pendente, iniciar polling
-                if (result.pix_pending && result.payment_id) {
-                    console.log('🔄 Iniciando polling para buscar dados do PIX...');
-                    startPixPolling(result.payment_id);
-                }
+            // Se o PIX está pendente, iniciar polling
+            if (result.pix_pending && result.payment_id) {
+                console.log('🔄 Iniciando polling para buscar dados do PIX...');
+                startPixPolling(result.payment_id);
             }
             
             // Iniciar verificação de pagamento
@@ -1062,50 +1010,6 @@
             });
         }
         
-        function loadQRCodeLibrary() {
-            return new Promise((resolve, reject) => {
-                if (typeof QRCode !== 'undefined') {
-                    resolve();
-                    return;
-                }
-                
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-                script.onload = () => resolve();
-                script.onerror = () => reject();
-                document.head.appendChild(script);
-            });
-        }
-        
-        function generateQRCode(pixCode) {
-            if (typeof QRCode !== 'undefined' && pixCode) {
-                try {
-                    const qrCodeElement = document.getElementById('pixQRCode');
-                    QRCode.toCanvas(qrCodeElement, pixCode, {
-                        width: 200,
-                        margin: 2,
-                        color: {
-                            dark: '#000000',
-                            light: '#FFFFFF'
-                        }
-                    });
-                    console.log('✅ QR Code gerado com sucesso!');
-                } catch (error) {
-                    console.error('❌ Erro ao gerar QR Code:', error);
-                    showQRCodeFallback(pixCode);
-                }
-            }
-        }
-        
-        function showQRCodeFallback(pixCode) {
-            const qrCodeElement = document.getElementById('pixQRCode');
-            qrCodeElement.innerHTML = `
-                <div style="padding: 20px; text-align: center; border: 2px dashed #ccc; border-radius: 10px;">
-                    <p style="color: #666; margin-bottom: 10px;">QR Code não disponível</p>
-                    <p style="font-size: 12px; color: #999;">Use o código PIX abaixo para pagar</p>
-                </div>
-            `;
-        }
         
         function startPixPolling(paymentId) {
             const pixInterval = setInterval(async () => {
@@ -1119,7 +1023,10 @@
                         clearInterval(pixInterval);
                         
                         // Atualizar a interface com os dados do PIX
-                        updatePixInterface(result.pix);
+                        const pixCode = result.pix.pixCopiaECola || result.pix.pix_copia_e_cola || result.pix.qr_code_url;
+                        if (pixCode) {
+                            document.getElementById('pixCode').textContent = pixCode;
+                        }
                     }
                 } catch (error) {
                     console.error('Erro ao buscar PIX:', error);
@@ -1133,31 +1040,6 @@
             }, 120000);
         }
         
-        function updatePixInterface(pixData) {
-            // Atualizar código PIX
-            if (pixData.pixCopiaECola || pixData.pix_copia_e_cola || pixData.qr_code_url) {
-                const pixCode = pixData.pixCopiaECola || pixData.pix_copia_e_cola || pixData.qr_code_url;
-                document.getElementById('pixCode').textContent = pixCode;
-                
-                // Gerar QR Code
-                if (typeof QRCode !== 'undefined') {
-                    try {
-                        const qrCodeElement = document.getElementById('pixQRCode');
-                        QRCode.toCanvas(qrCodeElement, pixCode, {
-                            width: 200,
-                            margin: 2,
-                            color: {
-                                dark: '#000000',
-                                light: '#FFFFFF'
-                            }
-                        });
-                        console.log('✅ QR Code gerado via polling!');
-                    } catch (error) {
-                        console.error('❌ Erro ao gerar QR Code via polling:', error);
-                    }
-                }
-            }
-        }
         
         function startPaymentVerification() {
             const checkInterval = setInterval(async () => {
