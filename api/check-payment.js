@@ -1,6 +1,6 @@
-// Configurações do Asaas (SANDBOX)
-const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmNmNjUzNjFiLTEyMjUtNGMzMy04ZDhjLWUwMzQ3ZjdjOTYxODo6JGFhY2hfNTI2ZWJjMDAtZTQ3YS00ZWM3LTg1MzktMTg2OGM3YTZlZTZm';
-const ASAAS_BASE_URL = 'https://sandbox.asaas.com/api/v3';
+// Configurações do Asaas (PRODUÇÃO)
+const ASAAS_API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojc0ZGY5MDE5LTgzNmMtNDk4NS1hMWFiLTU5YjA2NmIxNzM0ZDo6JGFhY2hfNGRlZmM2NzUtMGQ1Ny00ZjI2LWIxYjYtMDBiNDA3ODMzZTQw';
+const ASAAS_BASE_URL = 'https://api.asaas.com/v3';
 
 export default async function handler(req, res) {
     // Configurar CORS

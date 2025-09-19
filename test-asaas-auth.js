@@ -1,6 +1,6 @@
 // Teste específico para diagnóstico do erro 401 do Asaas
-const ASAAS_API_KEY = '$aact_YTU5YTE0M2M2NDUxYjlkZmM2MTJkNDkxNTUzMDMxM2M6OjAwMDAwMDAwMDAwMDAwNzI2NDI6OiRhYWN0XzE1NDU5YTE0M2M2NDUxYjlkZmM2MTJkNDkxNTUzMDMxM2M=';
-const ASAAS_BASE_URL = 'https://sandbox.asaas.com/api/v3';
+const ASAAS_API_KEY = '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6Ojc0ZGY5MDE5LTgzNmMtNDk4NS1hMWFiLTU5YjA2NmIxNzM0ZDo6JGFhY2hfNGRlZmM2NzUtMGQ1Ny00ZjI2LWIxYjYtMDBiNDA3ODMzZTQw';
+const ASAAS_BASE_URL = 'https://api.asaas.com/api/v3';
 
 async function testAuth() {
     console.log('🔍 Testando autenticação com Asaas...');
