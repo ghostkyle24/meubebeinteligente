@@ -26,19 +26,17 @@ export default async function handler(req, res) {
         console.log('🔍 Payment method normalizado:', normalizedPaymentMethod);
 
         // Configurações do Asaas (PRODUÇÃO - OBRIGATÓRIO usar variáveis de ambiente)
-        const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
+        const ASAAS_API_KEY = process.env.ASAAS_API_KEY ? process.env.ASAAS_API_KEY.trim() : null;
         const ASAAS_BASE_URL = process.env.ASAAS_BASE_URL || 'https://api.asaas.com/v3';
         
         // Debug: Verificar variáveis de ambiente
-        console.log('🔍 Debug - process.env.ASAAS_API_KEY:', process.env.ASAAS_API_KEY ? 'EXISTE' : 'NÃO EXISTE');
-        console.log('🔍 Debug - Primeiros 20 chars:', process.env.ASAAS_API_KEY ? process.env.ASAAS_API_KEY.substring(0, 20) : 'UNDEFINED');
-        console.log('🔍 Debug - NODE_ENV:', process.env.NODE_ENV);
-        console.log('🔍 Debug - VERCEL:', process.env.VERCEL);
-        console.log('🔍 Debug - Todas as env vars Asaas:', Object.keys(process.env).filter(key => key.includes('ASAAS')));
-        console.log('🔍 Debug - Todas as env vars relacionadas ao Asaas:', {
-            ASAAS_API_KEY: process.env.ASAAS_API_KEY ? 'DEFINIDA' : 'UNDEFINED',
-            ASAAS_BASE_URL: process.env.ASAAS_BASE_URL || 'UNDEFINED'
-        });
+        console.log('🔍 Debug - ASAAS_API_KEY existe:', !!process.env.ASAAS_API_KEY);
+        console.log('🔍 Debug - ASAAS_API_KEY length:', process.env.ASAAS_API_KEY ? process.env.ASAAS_API_KEY.length : 0);
+        console.log('🔍 Debug - ASAAS_API_KEY trimmed length:', ASAAS_API_KEY ? ASAAS_API_KEY.length : 0);
+        console.log('🔍 Debug - Primeiros 30 chars:', ASAAS_API_KEY ? ASAAS_API_KEY.substring(0, 30) : 'UNDEFINED');
+        console.log('🔍 Debug - Últimos 10 chars:', ASAAS_API_KEY ? ASAAS_API_KEY.substring(ASAAS_API_KEY.length - 10) : 'UNDEFINED');
+        console.log('🔍 Debug - Starts with $aact_:', ASAAS_API_KEY ? ASAAS_API_KEY.startsWith('$aact_') : false);
+        console.log('🔍 Debug - Contains prod:', ASAAS_API_KEY ? ASAAS_API_KEY.includes('prod') : false);
         
         // Verificar se a chave API é válida
         if (!ASAAS_API_KEY) {
