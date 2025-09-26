@@ -80,7 +80,25 @@
             }
         };
     </script>
-    <script src="config.js"></script>
+    <!-- Configurações inline (já que config.js está no .gitignore) -->
+    <script>
+        const CONFIG = {
+            SUPABASE_URL: 'https://htmofgizynztknpekfbu.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0bW9mZ2l6eW56dGtucGVrZmJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzYwMTYsImV4cCI6MjA3MzExMjAxNn0.a_3_-ncgdXkY2At0ougpZWsXuCrYe-T60RhezGPiE-w',
+            ADMIN_EMAIL: 'ashercongintencia@gmail.com',
+            ADMIN_EMAIL_ALT: 'ashercontingencia@gmail.com',
+            ADMIN_PASSWORD: 'DIVJroiDIVJ#18072002',
+            SITE_NAME: 'Meu Bebê Inteligente',
+            SITE_URL: 'https://meubebeinteligente.vercel.app',
+            META_PIXEL_ID: '636104805955276',
+            PLANS: {
+                monthly: { price: 29, duration: 1, period: 'month', name: 'Mensal' },
+                quarterly: { price: 79, duration: 3, period: 'months', name: 'Trimestral' },
+                yearly: { price: 299, duration: 12, period: 'months', name: 'Anual' }
+            }
+        };
+        window.CONFIG = CONFIG;
+    </script>
     <script src="meta-pixel-config.js"></script>
     
     <!-- Meta Pixel Code -->
