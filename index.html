@@ -2868,12 +2868,27 @@
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            console.log('🚀 === INÍCIO DO LOGIN ===');
+            
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const submitBtn = document.getElementById('loginSubmitBtn');
             
+            console.log('📧 Email digitado:', email);
+            console.log('🔑 Senha digitada:', password ? '***' + password.slice(-4) : 'VAZIA');
+            console.log('🌐 CONFIG disponível?', typeof CONFIG);
+            
+            if (typeof CONFIG === 'object') {
+                console.log('✅ CONFIG carregado:', {
+                    ADMIN_EMAIL: CONFIG.ADMIN_EMAIL,
+                    ADMIN_PASSWORD: CONFIG.ADMIN_PASSWORD ? '***' + CONFIG.ADMIN_PASSWORD.slice(-4) : 'undefined'
+                });
+            } else {
+                console.error('❌ CONFIG não está disponível!');
+            }
             
             if (!email || !password) {
+                console.error('❌ Campos vazios - email ou senha');
                 alert('Por favor, preencha todos os campos.');
                 return;
             }
@@ -2883,9 +2898,24 @@
             submitBtn.disabled = true;
             
             try {
+                console.log('🔍 Verificando se é email de admin...');
+                
                 // Verificar se é admin (aceita versão correta e com erro de digitação)
-                const isAdminEmail = email.toLowerCase() === 'ashercongintencia@gmail.com' || 
-                                   email.toLowerCase() === 'ashercontingencia@gmail.com';
+                const emailLower = email.toLowerCase();
+                const adminEmail1 = 'ashercongintencia@gmail.com';
+                const adminEmail2 = 'ashercontingencia@gmail.com';
+                
+                console.log('📝 Email processado:', emailLower);
+                console.log('🎯 Comparando com:', adminEmail1);
+                console.log('🎯 Comparando com:', adminEmail2);
+                
+                const isAdmin1 = emailLower === adminEmail1;
+                const isAdmin2 = emailLower === adminEmail2;
+                const isAdminEmail = isAdmin1 || isAdmin2;
+                
+                console.log('✅ É admin email 1?', isAdmin1);
+                console.log('✅ É admin email 2?', isAdmin2);
+                console.log('🎯 RESULTADO: É admin?', isAdminEmail);
                 
                 if (isAdminEmail) {
                     await loginAsAdmin(email, password);
@@ -2894,22 +2924,32 @@
                 }
                 
             } catch (error) {
-                console.error('Erro no login:', error);
+                console.error('💥 === ERRO NO LOGIN ===');
+                console.error('Tipo do erro:', typeof error);
+                console.error('Mensagem:', error.message);
+                console.error('Stack:', error.stack);
+                console.error('Erro completo:', error);
                 
                 // Mensagem de erro mais específica
                 let errorMessage = 'Erro ao fazer login. ';
                 if (error.message.includes('supabase') || error.message.includes('banco de dados')) {
                     errorMessage += 'Problema de conexão com o banco de dados. Tente novamente em alguns instantes.';
+                    console.log('🔍 Erro identificado como: Problema de banco de dados');
                 } else if (error.message.includes('Senha incorreta')) {
                     errorMessage += 'Senha incorreta. Verifique e tente novamente.';
+                    console.log('🔍 Erro identificado como: Senha incorreta');
                 } else if (error.message.includes('Usuário não encontrado')) {
                     errorMessage += 'Usuário não encontrado. Verifique o email ou crie uma conta.';
+                    console.log('🔍 Erro identificado como: Usuário não encontrado');
                 } else if (error.message.includes('assinatura expirou')) {
                     errorMessage += 'Sua assinatura expirou. Renove para continuar acessando.';
+                    console.log('🔍 Erro identificado como: Assinatura expirada');
                 } else {
                     errorMessage += 'Verifique suas credenciais e tente novamente.';
+                    console.log('🔍 Erro não identificado, usando mensagem genérica');
                 }
                 
+                console.log('📢 Mensagem para usuário:', errorMessage);
                 alert(errorMessage);
             } finally {
                 submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
@@ -2918,12 +2958,23 @@
         });
         
         async function loginAsAdmin(email, password) {
+            console.log('🔐 === FUNÇÃO loginAsAdmin CHAMADA ===');
+            console.log('📧 Email recebido:', email);
+            console.log('🔑 Senha recebida:', password ? '***' + password.slice(-4) : 'VAZIA');
+            
             // Verificar senha do admin
             const correctPassword = 'DIVJroiDIVJ#18072002';
+            console.log('🎯 Senha esperada:', '***' + correctPassword.slice(-4));
+            console.log('✅ Senhas coincidem?', password === correctPassword);
             
             if (password !== correctPassword) {
+                console.error('❌ SENHA INCORRETA!');
+                console.error('Fornecida:', password);
+                console.error('Esperada:', correctPassword);
                 throw new Error('Senha incorreta');
             }
+            
+            console.log('✅ Senha correta! Continuando login...');
             
             // Verificar se o admin existe no banco (opcional)
             try {
@@ -2950,6 +3001,9 @@
             Object.entries(adminData).forEach(([key, value]) => {
                 localStorage.setItem(key, value);
             });
+            
+            console.log('🎉 LOGIN ADMIN CONCLUÍDO COM SUCESSO!');
+            console.log('🏠 Redirecionando para dashboard...');
             
             // Fechar modal
             closeLoginModal();
