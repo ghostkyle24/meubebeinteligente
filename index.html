@@ -2866,8 +2866,8 @@
             
             try {
                 // Verificar se é admin (aceita versão correta e com erro de digitação)
-                const isAdminEmail = email.toLowerCase() === ADMIN_EMAIL.toLowerCase() || 
-                                   email.toLowerCase() === ADMIN_EMAIL_ALT.toLowerCase();
+                const isAdminEmail = email.toLowerCase() === 'ashercongintencia@gmail.com' || 
+                                   email.toLowerCase() === 'ashercontingencia@gmail.com';
                 
                 if (isAdminEmail) {
                     await loginAsAdmin(email, password);
@@ -2901,7 +2901,7 @@
         
         async function loginAsAdmin(email, password) {
             // Verificar senha do admin
-            const correctPassword = ADMIN_PASSWORD;
+            const correctPassword = 'DIVJroiDIVJ#18072002';
             
             if (password !== correctPassword) {
                 throw new Error('Senha incorreta');
