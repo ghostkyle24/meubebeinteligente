@@ -94,9 +94,7 @@
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
         
-        // Inicializar Pixel
-        fbq('init', '636104805955276');
-        fbq('track', 'PageView');
+        // Pixel será inicializado pelo meta-pixel-config.js
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"
@@ -1698,11 +1696,24 @@
         let orderbumpTotal = 0;
         
         // Usar configurações do arquivo config.js
+        // Aguardar carregamento do CONFIG
+        function initializeApp() {
+            if (typeof CONFIG === 'undefined') {
+                console.error('CONFIG não carregado ainda, aguardando...');
+                setTimeout(() => location.reload(), 1000);
+                return;
+            }
+            
+            initializeVariables();
+        }
+        
+        function initializeVariables() {
+        
         const PAGARME_API_KEY = CONFIG.PAGARME_API_KEY;
         const SUPABASE_URL = CONFIG.SUPABASE_URL;
         const SUPABASE_ANON_KEY = CONFIG.SUPABASE_ANON_KEY;
-        const ADMIN_EMAIL = CONFIG.ADMIN_EMAIL;
-        const ADMIN_EMAIL_ALT = CONFIG.ADMIN_EMAIL_ALT;
+        const ADMIN_EMAIL = CONFIG.ADMIN_EMAIL || 'ashercongintencia@gmail.com';
+        const ADMIN_EMAIL_ALT = CONFIG.ADMIN_EMAIL_ALT || 'ashercontingencia@gmail.com';
         
         // Função para scroll suave para o plano starter
         function scrollToPricing() {
@@ -2893,7 +2904,7 @@
         
         async function loginAsAdmin(email, password) {
             // Verificar senha do admin
-            const correctPassword = CONFIG.ADMIN_PASSWORD;
+            const correctPassword = CONFIG.ADMIN_PASSWORD || 'DIVJroiDIVJ#18072002';
             
             if (password !== correctPassword) {
                 throw new Error('Senha incorreta');
@@ -3102,8 +3113,11 @@
             }, 1000);
         }
         
+        } // Fim da função initializeVariables()
+        
         // Iniciar cronômetro quando a página carregar
         document.addEventListener('DOMContentLoaded', function() {
+            initializeApp(); // Inicializar configurações primeiro
             startCountdown();
         });
     </script>

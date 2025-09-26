@@ -73,7 +73,11 @@ export default async function handler(req, res) {
         }
         
         console.log('🔑 Ambiente detectado:', ASAAS_API_KEY.startsWith('$aact_prod_') ? 'PRODUÇÃO' : 'SANDBOX');
-        console.log('🔑 Chave API completa:', ASAAS_API_KEY);
+        console.log('🔑 Chave API (primeiros 50 chars):', ASAAS_API_KEY.substring(0, 50) + '...');
+        
+        // Teste adicional: verificar se a chave tem o formato correto
+        const isValidFormat = /^\$aact_(prod|YmFzZQ)_[A-Za-z0-9+/=:]+$/.test(ASAAS_API_KEY);
+        console.log('🔑 Formato da chave válido:', isValidFormat);
 
         // Parse do telefone para extrair código de área e número
         let phone = customer.phone || '4738010919';
