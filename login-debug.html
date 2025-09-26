@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login - Meu Bebê Inteligente</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .test-section { margin-bottom: 25px; padding: 15px; border: 2px solid #ddd; border-radius: 8px; }
+        .test-section h3 { margin-top: 0; color: #555; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin: 5px 0; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 15px; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 14px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin: 5px 0; }
+        .log { background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Debug Login System</h1>
+        
+        <div class="test-section">
+            <h3>1. Verificar CONFIG</h3>
+            <button onclick="testConfig()">🧪 Testar CONFIG</button>
+            <div id="configResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Testar Credenciais</h3>
+            <input type="email" id="testEmail" placeholder="Email" value="ashercongintencia@gmail.com">
+            <input type="password" id="testPassword" placeholder="Senha" value="DIVJroiDIVJ#18072002">
+            <button onclick="testCredentials()">🔐 Testar Login</button>
+            <div id="credResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Testar Supabase</h3>
+            <button onclick="testSupabase()">🗄️ Testar Conexão Supabase</button>
+            <div id="supabaseResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. Logs em Tempo Real</h3>
+            <div id="realTimeLogs" class="log">Aguardando testes...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>5. Forçar Login Direto</h3>
+            <button onclick="forceLogin()">⚡ Login Direto (Bypass)</button>
+            <div id="forceResult"></div>
+        </div>
+    </div>
+
+    <script>
+        // Log function
+        function log(message) {
+            const logsDiv = document.getElementById('realTimeLogs');
+            const timestamp = new Date().toLocaleTimeString();
+            logsDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(message);
+        }
+
+        // CONFIG inline
+        const CONFIG = {
+            SUPABASE_URL: 'https://htmofgizynztknpekfbu.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0bW9mZ2l6eW56dGtucGVrZmJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzYwMTYsImV4cCI6MjA3MzExMjAxNn0.a_3_-ncgdXkY2At0ougpZWsXuCrYe-T60RhezGPiE-w',
+            ADMIN_EMAIL: 'ashercongintencia@gmail.com',
+            ADMIN_EMAIL_ALT: 'ashercontingencia@gmail.com',
+            ADMIN_PASSWORD: 'DIVJroiDIVJ#18072002'
+        };
+
+        function testConfig() {
+            log('🧪 Testando CONFIG...');
+            const result = document.getElementById('configResult');
+            
+            try {
+                if (typeof CONFIG === 'undefined') {
+                    throw new Error('CONFIG não definido');
+                }
+                
+                const configInfo = {
+                    tipo: typeof CONFIG,
+                    adminEmail: CONFIG.ADMIN_EMAIL,
+                    adminPassword: CONFIG.ADMIN_PASSWORD ? '***' + CONFIG.ADMIN_PASSWORD.slice(-4) : 'undefined',
+                    supabaseURL: CONFIG.SUPABASE_URL ? 'Definida' : 'undefined'
+                };
+                
+                result.innerHTML = `
+                    <div class="result success">
+                        <strong>✅ CONFIG OK!</strong><br>
+                        Tipo: ${configInfo.tipo}<br>
+                        Admin Email: ${configInfo.adminEmail}<br>
+                        Admin Password: ${configInfo.adminPassword}<br>
+                        Supabase URL: ${configInfo.supabaseURL}
+                    </div>
+                `;
+                log('✅ CONFIG carregado com sucesso');
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ ERRO CONFIG:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+                log('❌ Erro no CONFIG: ' + error.message);
+            }
+        }
+
+        function testCredentials() {
+            log('🔐 Testando credenciais...');
+            const result = document.getElementById('credResult');
+            const email = document.getElementById('testEmail').value.trim();
+            const password = document.getElementById('testPassword').value;
+            
+            try {
+                log('📧 Email: ' + email);
+                log('🔑 Senha: ***' + password.slice(-4));
+                
+                // Verificar email
+                const emailLower = email.toLowerCase();
+                const adminEmail1 = 'ashercongintencia@gmail.com';
+                const adminEmail2 = 'ashercontingencia@gmail.com';
+                
+                const isAdmin1 = emailLower === adminEmail1;
+                const isAdmin2 = emailLower === adminEmail2;
+                const isAdminEmail = isAdmin1 || isAdmin2;
+                
+                log('📝 Email processado: ' + emailLower);
+                log('✅ É admin email 1? ' + isAdmin1);
+                log('✅ É admin email 2? ' + isAdmin2);
+                log('🎯 É admin? ' + isAdminEmail);
+                
+                if (!isAdminEmail) {
+                    throw new Error('Email não é de admin');
+                }
+                
+                // Verificar senha
+                const correctPassword = 'DIVJroiDIVJ#18072002';
+                const passwordMatch = password === correctPassword;
+                
+                log('🔑 Senha correta? ' + passwordMatch);
+                
+                if (!passwordMatch) {
+                    throw new Error('Senha incorreta');
+                }
+                
+                result.innerHTML = `
+                    <div class="result success">
+                        <strong>✅ CREDENCIAIS VÁLIDAS!</strong><br>
+                        Email: ${email}<br>
+                        Senha: Correta<br>
+                        Status: Admin confirmado
+                    </div>
+                `;
+                log('🎉 Credenciais válidas!');
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ CREDENCIAIS INVÁLIDAS:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+                log('❌ Erro nas credenciais: ' + error.message);
+            }
+        }
+
+        function testSupabase() {
+            log('🗄️ Testando Supabase...');
+            const result = document.getElementById('supabaseResult');
+            
+            try {
+                // Tentar carregar Supabase
+                if (typeof window.supabase === 'undefined') {
+                    // Carregar Supabase
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                    script.onload = () => {
+                        log('📦 Supabase JS carregado');
+                        initSupabase();
+                    };
+                    document.head.appendChild(script);
+                } else {
+                    log('✅ Supabase já carregado');
+                    initSupabase();
+                }
+                
+                function initSupabase() {
+                    try {
+                        const supabase = window.supabase.createClient(
+                            CONFIG.SUPABASE_URL,
+                            CONFIG.SUPABASE_ANON_KEY
+                        );
+                        
+                        result.innerHTML = `
+                            <div class="result success">
+                                <strong>✅ SUPABASE OK!</strong><br>
+                                URL: ${CONFIG.SUPABASE_URL}<br>
+                                Status: Conectado
+                            </div>
+                        `;
+                        log('✅ Supabase inicializado');
+                        
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ ERRO SUPABASE:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+                log('❌ Erro no Supabase: ' + error.message);
+            }
+        }
+
+        function forceLogin() {
+            log('⚡ Forçando login direto...');
+            const result = document.getElementById('forceResult');
+            
+            try {
+                // Salvar dados do admin diretamente
+                const adminData = {
+                    isAdmin: 'true',
+                    adminEmail: 'ashercongintencia@gmail.com',
+                    isLoggedIn: 'true',
+                    userPlan: 'Administrador',
+                    paymentConfirmed: 'true',
+                    adminLoginTime: new Date().toISOString()
+                };
+                
+                Object.entries(adminData).forEach(([key, value]) => {
+                    localStorage.setItem(key, value);
+                    log(`💾 Salvando: ${key} = ${value}`);
+                });
+                
+                result.innerHTML = `
+                    <div class="result success">
+                        <strong>✅ LOGIN FORÇADO!</strong><br>
+                        Status: Admin logado<br>
+                        <button onclick="window.location.href='dashboard.html'">🏠 Ir para Dashboard</button>
+                    </div>
+                `;
+                log('🎉 Login forçado com sucesso!');
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ ERRO NO LOGIN FORÇADO:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+                log('❌ Erro no login forçado: ' + error.message);
+            }
+        }
+
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Sistema de debug carregado');
+            setTimeout(testConfig, 500);
+        });
+    </script>
+</body>
+</html>
