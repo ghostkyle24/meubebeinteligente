@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Bebê Inteligente - VERSÃO CORRIGIDA [LOGIN FUNCIONAL]</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div style="text-align: center; padding: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <h1 style="color: white; font-size: 3rem;">🚀 VERSÃO DE EMERGÊNCIA</h1>
+        <h2 style="color: white; margin: 20px 0;">LOGIN DE ADMIN FUNCIONANDO</h2>
+        
+        <div style="background: white; max-width: 400px; margin: 0 auto; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <h3 style="color: #333; margin-bottom: 30px;">🔐 Login Administrativo</h3>
+            
+            <form id="emergencyLoginForm">
+                <div style="margin-bottom: 20px; text-align: left;">
+                    <label for="adminEmail" style="display: block; margin-bottom: 5px; color: #666;">Email:</label>
+                    <input type="email" id="adminEmail" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;" placeholder="admin@exemplo.com" required>
+                </div>
+                
+                <div style="margin-bottom: 30px; text-align: left;">
+                    <label for="adminPassword" style="display: block; margin-bottom: 5px; color: #666;">Senha:</label>
+                    <input type="password" id="adminPassword" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;" placeholder="Digite sua senha" required>
+                </div>
+                
+                <button type="submit" id="emergencyLoginBtn" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer;">
+                    🚀 LOGIN DE EMERGÊNCIA
+                </button>
+            </form>
+            
+            <div id="messageArea" style="margin-top: 20px; padding: 10px; border-radius: 8px; display: none;"></div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <a href="index.html" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 25px;">
+                ← Voltar ao Site Principal
+            </a>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 PÁGINA DE EMERGÊNCIA CARREGADA - VERSÃO CORRIGIDA!');
+        console.log('⚡ LOGIN SEM DEPENDÊNCIAS - DIRETO E FUNCIONAL!');
+        
+        // Credenciais hardcoded (garantia absoluta)
+        const ADMIN_CREDENTIALS = {
+            email1: 'ashercongintencia@gmail.com',
+            email2: 'ashercontingencia@gmail.com',
+            password: 'DIVJroiDIVJ#18072002'
+        };
+        
+        function showMessage(message, type = 'info') {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.style.display = 'block';
+            messageArea.style.background = type === 'success' ? '#d4edda' : type === 'error' ? '#f8d7da' : '#d1ecf1';
+            messageArea.style.color = type === 'success' ? '#155724' : type === 'error' ? '#721c24' : '#0c5460';
+            messageArea.style.border = `1px solid ${type === 'success' ? '#c3e6cb' : type === 'error' ? '#f5c6cb' : '#b8daff'}`;
+            messageArea.innerHTML = message;
+        }
+        
+        document.getElementById('emergencyLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            console.log('🔐 === INÍCIO DO LOGIN DE EMERGÊNCIA ===');
+            
+            const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+            const password = document.getElementById('adminPassword').value;
+            const submitBtn = document.getElementById('emergencyLoginBtn');
+            
+            console.log('📧 Email digitado:', email);
+            console.log('🔑 Senha digitada:', password ? '***' + password.slice(-4) : 'VAZIA');
+            
+            // Validar campos
+            if (!email || !password) {
+                showMessage('❌ Por favor, preencha todos os campos.', 'error');
+                return;
+            }
+            
+            // Mostrar loading
+            submitBtn.innerHTML = '⏳ Verificando...';
+            submitBtn.disabled = true;
+            
+            // Verificar credenciais
+            const isValidEmail = email === ADMIN_CREDENTIALS.email1.toLowerCase() || 
+                                email === ADMIN_CREDENTIALS.email2.toLowerCase();
+            const isValidPassword = password === ADMIN_CREDENTIALS.password;
+            
+            console.log('✅ Email válido?', isValidEmail);
+            console.log('✅ Senha válida?', isValidPassword);
+            
+            if (!isValidEmail || !isValidPassword) {
+                console.error('❌ CREDENCIAIS INVÁLIDAS!');
+                showMessage('❌ Email ou senha incorretos. Tente novamente.', 'error');
+                submitBtn.innerHTML = '🚀 LOGIN DE EMERGÊNCIA';
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            console.log('🎉 LOGIN REALIZADO COM SUCESSO!');
+            showMessage('✅ Login realizado com sucesso! Redirecionando...', 'success');
+            
+            // Salvar dados do admin no localStorage
+            const adminData = {
+                isAdmin: 'true',
+                adminEmail: email,
+                isLoggedIn: 'true',
+                userPlan: 'Administrador',
+                paymentConfirmed: 'true',
+                adminLoginTime: new Date().toISOString(),
+                emergencyLogin: 'true'
+            };
+            
+            Object.entries(adminData).forEach(([key, value]) => {
+                localStorage.setItem(key, value);
+                console.log(`💾 Salvou: ${key} = ${value}`);
+            });
+            
+            // Redirecionar após 1 segundo
+            setTimeout(() => {
+                console.log('🚀 Redirecionando para dashboard...');
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        });
+        
+        // Verificar se já está logado
+        if (localStorage.getItem('isAdmin') === 'true') {
+            console.log('👑 Usuário já está logado como admin');
+            showMessage('✅ Você já está logado como administrador!', 'success');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
